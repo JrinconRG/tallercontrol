@@ -1,0 +1,90 @@
+:root {
+  /* ===== BRAND PRIMARY ===== */
+  --brand-50:  #F0F7FF;
+  --brand-100: #E0F2FE;
+  --brand-200: #BCE6FB;
+  --brand-300: #8CD1F8;
+  --brand-400: #3BC0F3;
+  --brand-500: #0B83FF;
+  --brand-600: #0782C2;
+  --brand-700: #07688D;
+  --brand-800: #065B82;
+  --brand-900: #01496B;
+  --brand-950: #002147;
+
+  /* ===== NEUTRAL ===== */
+  --neutral-50:  #F9FAFB;
+  --neutral-100: #F5F6F9;
+  --neutral-200: #F2F4F7;
+  --neutral-300: #E5E7EB;
+  --neutral-400: #D0D5DD;
+  --neutral-500: #9CA3AF;
+  --neutral-600: #6B7280;
+  --neutral-700: #374151;
+  --neutral-800: #222834;
+  --neutral-900: #14171F;
+  --neutral-950: #0B0B0B;
+
+  /* ===== POSITIVE ===== */
+  --success-50:  #ECFDF3;
+  --success-100:#D1FAE5;
+  --success-200:#A7F3D0;
+  --success-300:#6EE7B7;
+  --success-400:#3CE3A0;
+  --success-500:#1A3A7C;
+  --success-600:#027A48;
+  --success-700:#05603A;
+  --success-800:#054F31;
+  --success-900:#043F2A;
+
+  /* ===== NEGATIVE ===== */
+  --danger-50:  #FDF2F2;
+  --danger-100:#FEE2E2;
+  --danger-200:#FECACA;
+  --danger-300:#FCA5A5;
+  --danger-400:#F87171;
+  --danger-500:#EF4444;
+  --danger-600:#DC2626;
+  --danger-700:#B91C1C;
+  --danger-800:#7F1D1D;
+  --danger-900:#450A0A;
+}
+:root {
+  /* ===== BACKGROUNDS ===== */
+  --bg-page: var(--neutral-50);
+  --bg-card: var(--neutral-50);
+  --bg-border: var(--neutral-400);
+  --bg-sidebar: var(--neutral-200);
+
+  /* ===== TEXT ===== */
+  --text-primary: var(--neutral-900);
+  --text-secondary: var(--neutral-600);
+  --text-muted: var(--neutral-500);
+  --text-inverse: #FFFFFF;
+
+  /* ===== BORDERS ===== */
+  --border-default: var(--neutral-300);
+
+  /* ===== ACTIONS ===== */
+  --action-primary: var(--brand-500);
+  --action-primary-hover: var(--brand-600);
+
+  --action-success: var(--success-500);
+  --action-danger: var(--danger-500);
+
+  /* ===== STATUS ===== */
+  --status-success-bg: var(--success-100);
+  --status-danger-bg: var(--danger-100);
+
+  /* ===== RADIUS ===== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* ===== SHADOW ===== */
+  --shadow-card: 0 4px 12px rgba(0,0,0,0.06);
+
+  /* ===== TYPO ===== */
+  --font-base: 'Inter', system-ui, sans-serif;
+  --font-title: 'Poppins', system-ui, sans-serif;
+}

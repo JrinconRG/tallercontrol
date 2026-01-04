@@ -1,0 +1,9 @@
+/* index.css */
+@import './styles/variables.css';
+@import './styles/globals.css';
+@import './styles/buttons.css';
+@import './styles/forms.css';
+@import './styles/layout.css';
+
+
+
