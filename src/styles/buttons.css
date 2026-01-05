@@ -1,0 +1,39 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--bg-buttom);
+
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--primary-600);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--primary-700);
+}
+
+.btn-primary:disabled {
+  background: var(--neutral-300);
+  cursor: not-allowed;
+}
+.btn-header {
+  border-radius: 100px;
+  transition: background-color 0.3s ease;
+
+  
+  font-weight: 600;
+  padding: 12px 20px;
+}

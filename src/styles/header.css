@@ -20,12 +20,11 @@
   align-items: center;
 }
 
-.header-button {
-  padding: 8px 16px;
-  border-radius: var(--radius-md);
-  border: none;
-  background-color: var(--color-primary);
-  color: white;
-  cursor: pointer;
-  font-weight: 500;
-}
+.header-contenedor-boton{
+  background: linear-gradient(90deg, var(--border-primarybuttom-header) 0%, var(--border-secondarybuttom-header) 100%);
+  
+  padding: 2px; /* Grosor del borde */
+  border-radius: 100px; /* Esquinas redondeadas */
+  display: inline-block; /* Para que se ajuste al tamaño del botón */
+   box-shadow: 0 0 6px 6px rgba(30, 131, 255, 0.15); /* Sombra alrededor del borde */
+}   

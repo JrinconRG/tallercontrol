@@ -37,3 +37,9 @@
   color: var(--color-primary);
   font-weight: 600;
 }
+
+.sidebar-conjunto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

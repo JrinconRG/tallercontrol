@@ -55,6 +55,7 @@
   --bg-card: var(--neutral-50);
   --bg-border: var(--neutral-400);
   --bg-sidebar: var(--neutral-200);
+  --bg-buttom: var(--neutral-100);
 
   /* ===== TEXT ===== */
   --text-primary: var(--neutral-900);
@@ -64,6 +65,8 @@
 
   /* ===== BORDERS ===== */
   --border-default: var(--neutral-300);
+  --border-primarybuttom-header: var(--brand-500);
+  --border-secondarybuttom-header: var(--brand-700);
 
   /* ===== ACTIONS ===== */
   --action-primary: var(--brand-500);

@@ -6,7 +6,10 @@ export default function Header() {
       <div className="header-title">Nómina</div>
 
       <div className="header-actions">
-        <button className="header-button">Generar nómina</button>
+        <div className="header-contenedor-boton">
+        <button className="btn btn-header">
+            Generar nómina</button>
+        </div>
       </div>
     </header>
   );
