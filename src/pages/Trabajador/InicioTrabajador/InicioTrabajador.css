@@ -1,0 +1,7 @@
+.page-content-trabajador {
+    flex-direction: column;
+    display: flex;
+    gap: 20px;
+
+    
+}

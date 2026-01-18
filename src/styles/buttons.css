@@ -29,11 +29,12 @@
   background: var(--neutral-300);
   cursor: not-allowed;
 }
+
 .btn-header {
   border-radius: 100px;
   transition: background-color 0.3s ease;
 
-  
+
   font-weight: 600;
   padding: 12px 20px;
 }

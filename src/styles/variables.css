@@ -1,6 +1,6 @@
 :root {
   /* ===== BRAND PRIMARY ===== */
-  --brand-50:  #F0F7FF;
+  --brand-50: #F0F7FF;
   --brand-100: #E0F2FE;
   --brand-200: #BCE6FB;
   --brand-300: #8CD1F8;
@@ -13,7 +13,7 @@
   --brand-950: #002147;
 
   /* ===== NEUTRAL ===== */
-  --neutral-50:  #F9FAFB;
+  --neutral-50: #F9FAFB;
   --neutral-100: #F5F6F9;
   --neutral-200: #F2F4F7;
   --neutral-300: #E5E7EB;
@@ -26,29 +26,30 @@
   --neutral-950: #0B0B0B;
 
   /* ===== POSITIVE ===== */
-  --success-50:  #ECFDF3;
-  --success-100:#D1FAE5;
-  --success-200:#A7F3D0;
-  --success-300:#6EE7B7;
-  --success-400:#3CE3A0;
-  --success-500:#1A3A7C;
-  --success-600:#027A48;
-  --success-700:#05603A;
-  --success-800:#054F31;
-  --success-900:#043F2A;
+  --success-50: #ECFDF3;
+  --success-100: #D1FAE5;
+  --success-200: #A7F3D0;
+  --success-300: #6EE7B7;
+  --success-400: #3CE3A0;
+  --success-500: #1A3A7C;
+  --success-600: #027A48;
+  --success-700: #05603A;
+  --success-800: #054F31;
+  --success-900: #043F2A;
 
   /* ===== NEGATIVE ===== */
-  --danger-50:  #FDF2F2;
-  --danger-100:#FEE2E2;
-  --danger-200:#FECACA;
-  --danger-300:#FCA5A5;
-  --danger-400:#F87171;
-  --danger-500:#EF4444;
-  --danger-600:#DC2626;
-  --danger-700:#B91C1C;
-  --danger-800:#7F1D1D;
-  --danger-900:#450A0A;
+  --danger-50: #FDF2F2;
+  --danger-100: #FEE2E2;
+  --danger-200: #FECACA;
+  --danger-300: #FCA5A5;
+  --danger-400: #F87171;
+  --danger-500: #EF4444;
+  --danger-600: #DC2626;
+  --danger-700: #B91C1C;
+  --danger-800: #7F1D1D;
+  --danger-900: #450A0A;
 }
+
 :root {
   /* ===== BACKGROUNDS ===== */
   --bg-page: var(--neutral-50);
@@ -56,7 +57,10 @@
   --bg-border: var(--neutral-400);
   --bg-sidebar: var(--neutral-200);
   --bg-buttom: var(--neutral-100);
-
+  --bg-buttom2: var(--brand-50);
+  --bg-buttom2-hover: var(--brand-100);
+  --bg-card-login: #ffffff;
+  --bg-buttom-hover1: var(--brand-200);
   /* ===== TEXT ===== */
   --text-primary: var(--neutral-900);
   --text-secondary: var(--neutral-600);
@@ -67,7 +71,7 @@
   --border-default: var(--neutral-300);
   --border-primarybuttom-header: var(--brand-500);
   --border-secondarybuttom-header: var(--brand-700);
-
+  --border-imput-focus: var(--brand-500);
   /* ===== ACTIONS ===== */
   --action-primary: var(--brand-500);
   --action-primary-hover: var(--brand-600);
@@ -85,7 +89,7 @@
   --radius-lg: 20px;
 
   /* ===== SHADOW ===== */
-  --shadow-card: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
 
   /* ===== TYPO ===== */
   --font-base: 'Inter', system-ui, sans-serif;

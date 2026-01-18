@@ -1,0 +1,77 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("../assets/login-bg.png");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+
+}
+
+
+.login-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.422);
+}
+
+
+.login-card {
+
+    background-color: var(--bg-card-login);
+    backdrop-filter: blur(10px);
+
+    width: 100%;
+    max-width: 400px;
+    border-radius: var(--radius-md);
+    padding: 32px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--bg-border);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-form h2 {
+    text-align: center;
+    color: var(--text-primary);
+    font-family: var(--font-title);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.login-form button {
+    margin-top: 10px;
+    padding: 0.8rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-default);
+    width: 50%;
+}
+
+.login-form button:hover {
+    background-color: var(--brand-50);
+    cursor: pointer;
+    color: var(--neutral-800);
+    border-color: var(--border-imput-focus);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+
+
+}
+
+.login-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.login-texto-imputs {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 15px;
+}
