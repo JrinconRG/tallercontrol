@@ -1,20 +1,18 @@
 import { supabase } from '../lib/supabase'
 
-export async function obtenerSubprocesosTrabajador(trabajadorId) {
-  const { data, error } = await supabase
-    .from('vw_subprocesos_por_trabajador')
-    .select('*')
-    .eq('tc_trabajador_id', trabajadorId)
-    .eq('sub_estado', 'EN_PROCESO')
-    .order('sub_fecha_inicio', { ascending: true })
+export async function crearProceso(referenciaId) {
+  const { data, error } = await supabase.rpc('sp_crear_proceso', {
+    p_referencia_id: referenciaId
+  })
 
   if (error) {
-    console.error('Error cargando subprocesos:', error)
+    console.error('Error creando proceso:', error)
     throw error
   }
 
-  return data
+  return data // devuelve pro_id
 }
+
 
 export async function obtenerProcesosActivos() {
   const { data, error } = await supabase

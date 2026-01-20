@@ -2,8 +2,10 @@ import "../../styles/sidebar.css";
 import { Icon } from "../ui/Icon";
 import { menuSidebardByRole } from "./menuconfig";
 import { NavLink } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore.js";
 
-export default function Sidebar({ role }) {
+export default function Sidebar() {
+  const { role } = useAuthStore();
   const menu = menuSidebardByRole[role] || [];
   return (
     <aside className="sidebar">
@@ -19,7 +21,8 @@ export default function Sidebar({ role }) {
             }>
             <div className="sidebar-conjunto">
 
-              <Icon name={item.icon} /> {item.label}
+              <Icon name={item.icon} /> 
+              <div className="sidebar-item-label">{item.label}</div>
             </div>
           </NavLink>
 

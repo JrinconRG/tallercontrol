@@ -5,13 +5,13 @@ import "./styles/layout.css";
 import { Routes, Route } from "react-router-dom";
 //Layouts
 import PublicLayout from "./components/layout/PublicLayout";
+import PrivateLayout from "./components/layout/PrivateLayout";
+import RequireRole from "./components/auth/RequireRole";
 
-import GerenteLayout from "./components/layout/GerenteLayout";
-import TrabajadorLayout from "./components/layout/TrabajadorLayout";
-//Pages 
-import LoginPage from "./pages/auth/LoginPage";
+import LoginPage from "./pages/auth/LoginPage/LoginPage";
 import InicioTrabajador from "./pages/Trabajador/InicioTrabajador/InicioTrabajador";
 import Gerente from "./pages/Gerente/Gerente";
+import NoAutorizado from "./pages/NoAutorizado";
 
 function App() {
   return (
@@ -22,12 +22,26 @@ function App() {
       </Route>
 
       {/* PRIVADO */}
-      <Route element={<GerenteLayout />}>
-        <Route path="/gerente" element={<Gerente />} />
-      </Route>
+      <Route element={<PrivateLayout />}>
+        <Route
+          path="/gerente"
+          element={
+            <RequireRole allowedRoles={["gerente"]}>
+              <Gerente />
+            </RequireRole>
+          }
+        />
 
-      <Route element={<TrabajadorLayout />}>
-        <Route path="/InicioTrabajador" element={<InicioTrabajador />} />
+        <Route
+          path="/InicioTrabajador"
+          element={
+            <RequireRole allowedRoles={["trabajador"]}>
+              <InicioTrabajador />
+            </RequireRole>
+          }
+        />
+
+        <Route path="/no-autorizado" element={<NoAutorizado />} />
       </Route>
     </Routes>
   );

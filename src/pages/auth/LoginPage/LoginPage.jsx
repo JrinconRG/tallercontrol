@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../stores/authStore";
+import { useAuthStore } from "../../../stores/authStore";
 import toast from "react-hot-toast";
-import "../../styles/login.css";
+import "../../../styles/login.css";
 
 export default function LoginPage() {
     const [usuario, setUsuario] = useState('');

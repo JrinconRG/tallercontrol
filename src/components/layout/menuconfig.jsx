@@ -1,6 +1,6 @@
 export const menuSidebardByRole = {
     trabajador: [
-        { label: "Inicio", icon: "Home", path: "/trabajador" },
+        { label: "Inicio", icon: "Home", path: "/Iniciotrabajador" },
         { label: "Procesos", icon: "Layers", path: "/trabajador/procesos" },
         { label: "Historial", icon: "History", path: "/trabajador/historial" },
     ],
@@ -12,3 +12,4 @@ export const menuSidebardByRole = {
         { label: "Historial", icon: "History", path: "/gerente/historial" },
     ],
 };
+

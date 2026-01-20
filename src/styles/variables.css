@@ -1,29 +1,30 @@
 :root {
   /* ===== BRAND PRIMARY ===== */
-  --brand-50: #F0F7FF;
-  --brand-100: #E0F2FE;
-  --brand-200: #BCE6FB;
-  --brand-300: #8CD1F8;
-  --brand-400: #3BC0F3;
-  --brand-500: #0B83FF;
+  --brand-50: #F0F9FF;
+  --brand-100: #E1F2FD;
+  --brand-200: #BCE5FB;
+  --brand-300: #81D2F8;
+  --brand-400: #3DBBF3;
+  --brand-500: #1E83FF;
   --brand-600: #0782C2;
-  --brand-700: #07688D;
-  --brand-800: #065B82;
-  --brand-900: #01496B;
-  --brand-950: #002147;
+  --brand-700: #07689D;
+  --brand-800: #0A5882;
+  --brand-900: #0F496B;
+  --brand-950: #0A2F47;
+  --brand-1000: #2563eb;
 
   /* ===== NEUTRAL ===== */
   --neutral-50: #F9FAFB;
   --neutral-100: #F5F6F9;
   --neutral-200: #F2F4F7;
   --neutral-300: #E5E7EB;
-  --neutral-400: #D0D5DD;
-  --neutral-500: #9CA3AF;
-  --neutral-600: #6B7280;
-  --neutral-700: #374151;
+  --neutral-400: #D0D4DC;
+  --neutral-500: #9BA2B0;
+  --neutral-600: #677084;
+  --neutral-700: #373F51;
   --neutral-800: #222834;
   --neutral-900: #14171F;
-  --neutral-950: #0B0B0B;
+  --neutral-950: #1B1B1B;
 
   /* ===== POSITIVE ===== */
   --success-50: #ECFDF3;
@@ -38,16 +39,17 @@
   --success-900: #043F2A;
 
   /* ===== NEGATIVE ===== */
-  --danger-50: #FDF2F2;
-  --danger-100: #FEE2E2;
-  --danger-200: #FECACA;
-  --danger-300: #FCA5A5;
-  --danger-400: #F87171;
-  --danger-500: #EF4444;
-  --danger-600: #DC2626;
-  --danger-700: #B91C1C;
-  --danger-800: #7F1D1D;
-  --danger-900: #450A0A;
+  --danger-50: #FDF3F3;
+  --danger-100: #FCE4E5;
+  --danger-200: #FACED0;
+  --danger-300: #F4ADB0;
+  --danger-400: #EC7D81;
+  --danger-500: #E05359;
+  --danger-600: #CC363C;
+  --danger-700: #A5282D;
+  --danger-800: #8E262A;
+  --danger-900: #772528;
+  --danger-950: #400F11;
 }
 
 :root {
@@ -66,7 +68,9 @@
   --text-secondary: var(--neutral-600);
   --text-muted: var(--neutral-500);
   --text-inverse: #FFFFFF;
-
+  --text-blanco: #FFFFFF;
+  --text-items: var(--neutral-700);
+  --text-black: #171717;
   /* ===== BORDERS ===== */
   --border-default: var(--neutral-300);
   --border-primarybuttom-header: var(--brand-500);
