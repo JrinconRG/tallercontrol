@@ -14,7 +14,7 @@ export const useAuthStore = create(
                 set({ isLoading: true })
 
                 try {
-                    // Validar credenciales
+                    // Validar credenciales con la tabla personalizada tbl_usuarios
                     const { data, error } = await supabase.rpc('validar_login', {
                         p_usuario: usuario,
                         p_password: password
@@ -25,6 +25,21 @@ export const useAuthStore = create(
 
                     const userData = data[0]
 
+                    //Crear sesion real de supabase Auth con el email del usuario
+                    const email = `${usuario}@tuempresa.local`
+                    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password
+
+                    })
+
+                    if (authError) {
+                        console.error('Error creando sesion de supabase:', authError)
+                        throw new Error('Error de autenticación')
+
+                    }
+                    console.log('✅ Sesión de Supabase creada:', authData.user.email)
+                    // guardar datos en zustand
                     set({
                         user: userData,
                         role: userData.rol,
@@ -39,7 +54,10 @@ export const useAuthStore = create(
                 }
             },
 
-            logout: () => {
+            logout: async () => {
+                // Cerrar sesión en Supabase Auth
+                await supabase.auth.signOut()
+                console.log('✅ Sesión de Supabase cerrada')
                 set({
                     user: null,
                     role: null,
