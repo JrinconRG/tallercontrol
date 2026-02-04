@@ -1,23 +1,123 @@
 .page-content-trabajador {
-    flex-direction: column;
-    display: flex;
-    gap: 20px;
+  flex-direction: column;
+  display: flex;
+  gap: 20px;
 
-    
+
 }
+
 .trabajador-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 
 }
-.acciones-proceso{
-    margin-top: 10px;
+
+.acciones-proceso {
+  margin-top: 10px;
+}
+
+.page-content-trabajador {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.grid-procesos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  justify-content: start;
+
+}
+
+.card-body.activo {
+  display: flex;
+  /* 👈 tamaño ideal */
+  flex-direction: column;
+  gap: 14px;
+}
+
+.info-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.info-principal p {
+  margin: 0;
+}
+
+.info-principal progress {
+  width: 80%;
+  height: 29px;
+  overflow: hidden;
+  margin: 6px 0;
+  border-radius: 10px;
+}
+
+.label {
+  color: var(--brand-700);
+  font-weight: 500;
 }
 
 
-.grid-procesos{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+progress::-webkit-progress-bar {
+  background: var(--info--100);
+}
+
+progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.estado-espera {
+  margin-top: 6px;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.panel-activo {
+  background: var(--neutral-50);
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--neutral-400);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panel-activo h4 {
+  margin: 0 0 4px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--brand-700);
+
+}
+
+.badge {
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.badge-proceso {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.duracion {
+  margin-left: 6px;
+}
+
+.info-titulo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* ajusta el espacio entre los títulos */
+  padding-top: 10px;
+  font-size: 0.95rem;
 }

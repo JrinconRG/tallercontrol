@@ -27,16 +27,16 @@
   --neutral-950: #1B1B1B;
 
   /* ===== POSITIVE ===== */
-  --success-50: #ECFDF3;
-  --success-100: #D1FAE5;
-  --success-200: #A7F3D0;
-  --success-300: #6EE7B7;
+  --success-50: #ecfdf6;
+  --success-100: #d2f9e7;
+  --success-200: #a9f1d4;
+  --success-300: #71e4bc;
   --success-400: #3CE3A0;
-  --success-500: #1A3A7C;
-  --success-600: #027A48;
-  --success-700: #05603A;
-  --success-800: #054F31;
-  --success-900: #043F2A;
+  --success-500: #13A47C;
+  --success-600: #028764;
+  --success-700: #07654C;
+  --success-800: #085242;
+  --success-900: #074236;
 
   /* ===== NEGATIVE ===== */
   --danger-50: #FDF3F3;
@@ -50,6 +50,20 @@
   --danger-800: #8E262A;
   --danger-900: #772528;
   --danger-950: #400F11;
+
+
+  /*=====info====*/
+  --info--50: #f1f3fd;
+  --info--100: #dee3fb;
+  --info--200: #c5d0f8;
+  --info--300: #9db2f3;
+  --info--400: #6f8beb;
+  --info--500: #4a61e3;
+  --info--600: #3946d7;
+  --info--700: #2f34c6;
+  --info--800: #2c2da1;
+  --info--900: #292b7f;
+  --info--950: #1d1d4e;
 }
 
 :root {
