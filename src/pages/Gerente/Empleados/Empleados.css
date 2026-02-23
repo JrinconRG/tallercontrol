@@ -1,0 +1,23 @@
+.page-content-Empleados {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Empleados-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.Empleados-title {
+    font-weight: 500;
+}
+
+.cargos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}

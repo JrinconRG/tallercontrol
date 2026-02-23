@@ -7,22 +7,29 @@ import { Routes, Route } from "react-router-dom";
 import PublicLayout from "./components/layout/PublicLayout";
 import PrivateLayout from "./components/layout/PrivateLayout";
 import RequireRole from "./components/auth/RequireRole";
-
+//Páginas
 import LoginPage from "./pages/auth/LoginPage/LoginPage";
 import InicioTrabajador from "./pages/Trabajador/InicioTrabajador/InicioTrabajador";
+import Historial from "./pages/Trabajador/Historial/Historial";
 import Gerente from "./pages/Gerente/Gerente";
 import NoAutorizado from "./pages/NoAutorizado";
+import Tarifas from "./pages/Gerente/Tarifas/Tarifas";
+
+//Gerente routes
+import Empleados from "./pages/Gerente/Empleados/Empleados";
+
 
 function App() {
   return (
     <Routes>
-      {/* PÚBLICO */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<LoginPage />} />
       </Route>
 
       {/* PRIVADO */}
       <Route element={<PrivateLayout />}>
+
+        {/* GERENTE */}
         <Route
           path="/gerente"
           element={
@@ -33,17 +40,48 @@ function App() {
         />
 
         <Route
-          path="/InicioTrabajador"
+          path="/gerente/empleados"
+          element={
+            <RequireRole allowedRoles={["gerente"]}>
+              <Empleados />
+            </RequireRole>
+          }
+        />
+
+        <Route
+          path="/gerente/tarifas"
+          element={
+            <RequireRole allowedRoles={["gerente"]}>
+              <Tarifas />
+            </RequireRole>
+          }
+        />
+
+
+
+
+
+
+        <Route
+          path="/trabajador/inicio"
           element={
             <RequireRole allowedRoles={["trabajador"]}>
               <InicioTrabajador />
             </RequireRole>
           }
         />
+        <Route
+          path="/trabajador/historial"
+          element={
+            <RequireRole allowedRoles={["trabajador"]}>
+              <Historial />
+            </RequireRole>
+          }
+        />
 
         <Route path="/no-autorizado" element={<NoAutorizado />} />
       </Route>
-    </Routes>
+    </Routes >
   );
 }
 

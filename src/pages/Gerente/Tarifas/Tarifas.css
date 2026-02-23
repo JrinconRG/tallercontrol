@@ -1,0 +1,93 @@
+/* ─── Título de página ───────────────────────────────── */
+.tarifas-titulo {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--neutral-800);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    display: flex;
+}
+
+
+
+
+
+/* ─── Headers de tabla con color ─────────────────────── */
+
+
+
+
+/* ─── Inputs de precio ───────────────────────────────── */
+.input-con-precio,
+.input-sin-precio {
+    font-size: 20px;
+    font-weight: 600;
+    width: 180px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid transparent;
+    text-align: right;
+    transition: all 0.15s;
+}
+
+/* Con precio → brand */
+.input-con-precio {
+    background: var(--brand-50);
+    border-color: var(--brand-200);
+    color: var(--brand-600);
+}
+
+.input-con-precio:hover {
+    border-color: var(--brand-400);
+}
+
+.input-con-precio:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--brand-600);
+    color: var(--neutral-800);
+    box-shadow: 0 0 0 3px var(--brand-50);
+}
+
+/* Sin precio → gris */
+.input-sin-precio {
+    background: var(--neutral-50);
+    border-color: var(--neutral-200);
+    color: var(--neutral-400);
+}
+
+.input-sin-precio:hover {
+    border-color: var(--neutral-400);
+    background: #ffffff;
+}
+
+.input-sin-precio:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--brand-600);
+    color: var(--neutral-800);
+    box-shadow: 0 0 0 3px var(--brand-50);
+}
+
+.input-precio-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.input-precio-simbolo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--brand-600);
+}
+
+/* Quitar flechas number */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
+}

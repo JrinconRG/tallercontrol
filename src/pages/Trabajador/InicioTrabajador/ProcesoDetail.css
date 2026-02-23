@@ -1,0 +1,155 @@
+.divider {
+    height: 1px;
+    background: var(--neutral-300);
+    margin: 16px 0;
+}
+
+
+.content-tittle-detail {
+    margin-bottom: 10px;
+}
+
+.tittle-detail-process {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--brand-700);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    /* Usar rem es mejor para responsive que px */
+    line-height: 1.2;
+}
+
+.proceso-detail-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Para que todas las cards de una fila midan lo mismo */
+}
+
+.proceso-detail-badge {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.proceso-detail-header {
+    /* En lugar de height, usamos padding y min-height */
+    padding-bottom: 8px;
+    min-height: auto;
+}
+
+.badge {
+    padding: 4px 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+}
+
+/* Verde */
+.badge-activo {
+    background-color: var(--success-100);
+    color: var(--success-800);
+    border: 1px solid var(--success-800);
+
+}
+
+/* Azul */
+.badge-default {
+    background-color: #dbeafe;
+    color: var(--brand-700);
+}
+
+.info-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+.next-phase {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+
+    white-space: nowrap;
+    /* Evita que el texto salte a la siguiente línea */
+    overflow: hidden;
+    /* Seguridad: si es demasiado largo, no rompe la card */
+    text-overflow: ellipsis
+}
+
+
+.proceso-detail-body {
+    font-size: 20px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.proceso-detail-footer {
+    margin: 0;
+    /* Reducimos el margen superior */
+    width: 100%;
+    /* Eliminamos cualquier padding del contenedor para que el botón pegue a los bordes */
+}
+
+.footer-action-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Padding solo a los lados */
+    border: none;
+    background-color: transparent;
+    /* Para que no se vea el recuadro a menos que hagas hover */
+    cursor: pointer;
+    font-size: 20px;
+    /* Bajamos un poco el tamaño para que quepa en una sola línea */
+    font-weight: 700;
+}
+
+/* Para que el texto interno no empuje el botón hacia arriba */
+.footer-action-btn span {
+    line-height: 40px;
+}
+
+.iniciar-boton {
+    color: var(--brand-700);
+}
+
+.terminar-boton {
+    color: var(--danger-800);
+}
+
+/* Hover: aquí es donde el usuario ve que es un botón */
+
+.iniciar-boton:hover {
+    background-color: var(--brand-100);
+    border-radius: var(--radius-md);
+}
+
+.terminar-boton:hover {
+    background-color: var(--danger-100);
+    border-radius: var(--radius-md);
+}

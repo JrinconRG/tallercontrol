@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useProcesosActivos, useFaseActualProcesos } from '../../../hooks/useProcesos'
 import { calcularDuracion } from '../../../utils/tiempo'
 import { useSubprocesoActual } from '../../../hooks/useSubprocesos'
@@ -8,7 +8,7 @@ import Card from '../../../components/card/card'
 import CrearProceso from './components/CrearProceso'
 import CrearSubproceso from './components/CrearSubproceso'
 import FinalizarSubproceso from './components/FinalizarSubproceso'
-
+import ProcesoDetail from './ProcesoDetail'
 
 import './InicioTrabajador.css'
 
@@ -123,81 +123,31 @@ export default function InicioTrabajador() {
           return (
             <Card
               key={p.pro_id_proceso}
-              title={`Cofre   ${p.rc_nombre} - ${p.rc_codigo}`}
-              description="">
-              <div className={`card-body ${subprocesoActual ? "activo" : "inactivo"}`}>
-                {/*lado izquiero - info del proceso */}
-                <div className="info-principal">
-                  <div className="info-titulo">
-                    <p><span className="label">Id:</span>  {p.pro_codigo_cofre}</p>
-                    <p><span className="label">Estado:</span> {p.pro_estado}</p>
-                  </div>
-
-                  <progress
-                    value={fasesCompletadas}
-                    max={totalFases}
-                  />
-
-                  <p>{avance}% completado ({fasesCompletadas}/{totalFases} fases)</p>
-                  {fase?.siguiente_fase_orden && !subprocesoActual && (
-                    <div className="acciones-proceso">
-                      <button
-                        className="btn-secondary"
-                        onClick={() => abrirModalIniciarFase(p, fase)}
-                      >
-                        Iniciar fase {fase.siguiente_fase_orden}
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {subprocesoActual ? (
-                  <div className="panel-activo">
-                    <h4>Fase en Proceso</h4>
-                    <div className="info-subproceso">
-                      <p>
-                        <strong>Fase:</strong> {fase?.siguiente_fase_orden} - {fase?.siguiente_cargo_nombre}
-                      </p>
-                      <p>
-                        <strong>Encargado:</strong> {subprocesoActual.t_nombre}
-                      </p>
-                      <p>
-                        <strong>Estado:</strong>
-                        <span className="badge badge-proceso">
-                          {subprocesoActual.sub_estado}
-                        </span>
-                      </p>
-                      <p>
-                        <strong>Duración:</strong>
-                        <span className="duracion">
-                          {calcularDuracion(subprocesoActual.sub_fecha_inicio)}
-                        </span>
-                      </p>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => abrirModalFinalizar({
-                          ...subprocesoActual,
-                          pro_id_proceso: p.pro_id_proceso,
-                          rc_nombre: p.rc_nombre,
-                          rc_codigo: p.rc_codigo,
-                          id_nombre_proceso: p.pro_codigo_cofre,
-
-                          nombre_fase: fase?.siguiente_cargo_nombre
-                        })}
-                      >
-                        Finalizar fase
-                      </button>
-
-
-                    </div>
-                  </div>
-                ) : (
-                  <div className="estado-espera">
-                    <p>   Aún no ha iniciado el proceso</p>
-                  </div>
-                )}
-              </div>
+              title={``}
+            >
+              <ProcesoDetail
+                proceso={p}
+                fase={fase}
+                subprocesoActual={subprocesoActual}
+                fasesCompletadas={fasesCompletadas}
+                totalFases={totalFases}
+                avance={avance}
+                calcularDuracion={calcularDuracion}
+                onIniciarFase={abrirModalIniciarFase}
+                onFinalizarFase={(data) =>
+                  abrirModalFinalizar({
+                    ...data,
+                    pro_id_proceso: p.pro_id_proceso,
+                    rc_nombre: p.rc_nombre,
+                    rc_codigo: p.rc_codigo,
+                    id_nombre_proceso: p.pro_codigo_cofre,
+                    nombre_fase: fase?.siguiente_cargo_nombre
+                  })
+                }
+              />
             </Card>
+
+
           );
 
         })}

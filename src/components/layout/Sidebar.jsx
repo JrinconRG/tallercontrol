@@ -9,7 +9,7 @@ export default function Sidebar() {
   const menu = menuSidebardByRole[role] || [];
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo">COFRES LUZ</div>
+      <div className="sidebar-logo">SIGEC</div>
 
       <nav className="sidebar-menu">
         {menu.map((item) => (
@@ -21,7 +21,7 @@ export default function Sidebar() {
             }>
             <div className="sidebar-conjunto">
 
-              <Icon name={item.icon} /> 
+              <Icon name={item.icon} size={25} />
               <div className="sidebar-item-label">{item.label}</div>
             </div>
           </NavLink>

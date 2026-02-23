@@ -1,7 +1,7 @@
 import "../../styles/header.css";
 import { useAuthStore } from "../../stores/authStore";
 export default function Header() {
-  const {role,user,logout} = useAuthStore();
+  const { role, user, logout } = useAuthStore();
   const titleByRole = {
     trabajador: "Bienvenidos",
     gerente: "Nómina",
@@ -10,9 +10,9 @@ export default function Header() {
   const actionByRole = {
     gerente: (
       <div className="header-contenedor-boton">
-      <button className="btn btn-header">
-        Generar nómina
-      </button>
+        <button className="btn btn-header">
+          Generar nómina
+        </button>
       </div>
     ),
     trabajador: null
@@ -21,18 +21,19 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-title">
-      {titleByRole[role]}
+        {titleByRole[role]}
 
       </div>
 
       <div className="header-actions">
-      {actionByRole[role]}
-      <button
+        <button
           className="btn btn-primary"
           onClick={logout}
         >
-        Cerrar sesión
-      </button>
+          Cerrar sesión
+        </button>
+        {actionByRole[role]}
+
       </div>
 
     </header>

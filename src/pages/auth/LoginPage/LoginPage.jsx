@@ -28,7 +28,7 @@ export default function LoginPage() {
             if (result.role === 'gerente') {
                 navigate("/gerente")
             } else {
-                navigate("/InicioTrabajador")
+                navigate("/trabajador/inicio")
             }
         } else {
             toast.error(result.error || "Error al iniciar sesión.");
