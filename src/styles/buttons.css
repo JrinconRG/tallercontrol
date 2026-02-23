@@ -4,7 +4,7 @@
   gap: 8px;
 
   padding: 10px 16px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
 
   font-family: var(--font-primary);
   font-size: 14px;
@@ -22,6 +22,7 @@
   border: 1px solid var(--neutral-400);
   padding: 10px 16px;
 }
+
 .btn-primary:hover {
   background: var(--neutral-600);
   color: var(--text-blanco);
@@ -41,14 +42,18 @@
   padding: 12px 20px;
 }
 
+.btn-header:hover {
+  background: var(--brand-600);
+  color: var(--text-blanco);
+}
+
 
 .btn-secondary {
-  background: var(  --brand-600);
+  background: var(--border-secondarybuttom-header);
   color: var(--text-blanco);
   padding: 10px 16px;
-  border-radius: 5px;
-  border: none;
-  
+  border: 1px solid var(--neutral-400);
+
 
 }
 

@@ -10,7 +10,7 @@
 .sidebar-logo {
   font-family: var(--font-title);
   font-weight: 700;
-  font-size: 18px;
+  font-size: 25px;
   text-align: center;
 
 }
@@ -25,18 +25,20 @@
 .sidebar-item {
   padding: 12px 16px;
   border-radius: 5px;
-  color: var(--text-items);
+  color: var(--neutral-800);
   cursor: pointer;
   transition: background 0.2s;
   text-decoration: none;
+  font-size: 25px;
+  font-weight: 400;
 
 }
 
 .sidebar-item:hover {
   background-color: var(--neutral-400);
   font-weight: 600;
-  
-  
+
+
 }
 
 .sidebar-item.active {
@@ -45,6 +47,7 @@
   font-weight: 600;
 
 }
+
 .sidebar-item.active .sidebar-item-label {
   color: inherit;
 
@@ -59,7 +62,6 @@
 
 
 
-.sidebar-item-label { 
-  color: var(--text-secondary);
+.sidebar-item-label {
+  color: var(--neutral-800);
 }
-
