@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { obtenerTrabajadoresPorCargo } from '../services/trabajadores'
+import { obtenerTrabajadoresPorCargo, getInformacionEmpleados, getTrabajadoresSelect } from '../services/trabajadores'
 
 export function useTrabajadoresPorCargo(cargoId) {
     const [trabajadores, setTrabajadores] = useState([])
@@ -16,7 +16,7 @@ export function useTrabajadoresPorCargo(cargoId) {
                 setLoading(true);
                 setError(null);
                 const datos = await obtenerTrabajadoresPorCargo(cargoId);
-                setTrabajadores(datos||[]);
+                setTrabajadores(datos || []);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -25,5 +25,56 @@ export function useTrabajadoresPorCargo(cargoId) {
         };
         cargarTrabajadores();
     }, [cargoId]); // se recarga si cambia el cargoId
-    return { trabajadores, loading, error};
+    return { trabajadores, loading, error };
 }
+
+
+export function useTrabajadoresSelect() {
+    const [trabajadores, setTrabajadores] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const cargarTrabajadoresSelect = async () => {
+        try {
+
+            const datos = await getTrabajadoresSelect();
+            setTrabajadores(datos || []);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        cargarTrabajadoresSelect();
+    }, []);
+    return { trabajadores, loading, error };
+}
+
+
+
+export function useEmpleadosConCargos() {
+
+    const [empleados, setEmpleados] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+
+    const cargarEmpleados = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const datos = await getInformacionEmpleados();
+            setEmpleados(datos || []);
+            console.log('Empleados con cargos cargados:', datos);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        cargarEmpleados();
+    }, []); // se carga una vez al montar el componente
+
+    return { empleados, loading, error, refetch: cargarEmpleados };
+} // refetch para recargar los datos

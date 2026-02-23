@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 
+
 export async function crearProceso(referenciaId) {
   const { data, error } = await supabase.rpc('sp_crear_proceso', {
     p_referencia_id: referenciaId
@@ -14,6 +15,7 @@ export async function crearProceso(referenciaId) {
 }
 
 
+
 export async function obtenerProcesosActivos() {
   const { data, error } = await supabase
     .from('vw_procesos_activos')
@@ -23,6 +25,22 @@ export async function obtenerProcesosActivos() {
 
   if (error) {
     console.error('Error cargando procesos activos:', error)
+    throw error
+  }
+
+  return data
+}
+
+
+export async function obtenerHistorialProcesos() {
+  const { data, error } = await supabase
+    .from('vw_historial_trabajador')
+    .select('*')
+
+    .order('pro_fecha_fin', { ascending: false }) // false = Los más nuevos primero
+
+  if (error) {
+    console.error('Error cargando historial de procesos:', error)
     throw error
   }
 

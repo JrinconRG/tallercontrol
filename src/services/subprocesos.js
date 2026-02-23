@@ -38,8 +38,7 @@ export async function crearSubproceso(procesoId, cargoId, trabajadorId) {
   })
   console.log(supabase)
 
-
-  const { error } = await supabase.rpc('sp_crear_subproceso', {
+  const { data, error } = await supabase.rpc('sp_crear_subproceso', {
     p_proceso_id: procesoId,
     p_cargo_id: cargoId,
     p_trabajador_id: trabajadorId
@@ -50,6 +49,7 @@ export async function crearSubproceso(procesoId, cargoId, trabajadorId) {
     throw error
 
   }
+  return data
 }
 
 export async function finalizarSubproceso(evidenciaPath, subprocesoId) {
