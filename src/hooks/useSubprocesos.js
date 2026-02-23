@@ -64,11 +64,13 @@ export function useCrearSubproceso() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const crearSubproceso = async (procesoId, cargoId, trabajadorId) => {
+    const crearSubprocesohook = async (procesoId, cargoId, trabajadorId) => {
         try {
+
             setLoading(true);
             setError(null);
             await crearSubproceso(procesoId, cargoId, trabajadorId);
+            console.log('Subproceso creado con éxito');
             return { success: true };
         } catch (error) {
             setError(error.message);
@@ -77,7 +79,7 @@ export function useCrearSubproceso() {
             setLoading(false);
         }
     };
-    return { crearSubproceso, loading, error };
+    return { crearSubprocesohook, loading, error };
 }
 // Hook para finalizar un subproceso(acciones)
 export function useFinalizarSubproceso() {

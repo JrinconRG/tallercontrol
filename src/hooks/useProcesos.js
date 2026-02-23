@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { obtenerProcesosActivos, obtenerFaseActualProcesos } from '../services/procesos'
+import { obtenerProcesosActivos, obtenerFaseActualProcesos, obtenerHistorialProcesos } from '../services/procesos'
 
 export function useProcesosActivos() {
     const [procesos, setProcesos] = useState([]);
@@ -11,7 +11,8 @@ export function useProcesosActivos() {
             setLoading(true);
             setError(null);
             const datos = await obtenerProcesosActivos();
-            setProcesos(datos||[]);
+            console.log('Datos cargados:', datos);
+            setProcesos(datos || []);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -21,7 +22,8 @@ export function useProcesosActivos() {
     useEffect(() => {
         cargarDatos();
     }, []);
-    return { procesos, loading, error, refetch: cargarDatos };} // refetch para recargar los datos
+    return { procesos, loading, error, refetch: cargarDatos };
+} // refetch para recargar los datos
 
 
 export function useFaseActualProcesos() {
@@ -35,7 +37,7 @@ export function useFaseActualProcesos() {
             setLoading(true);
             setError(null);
             const datos = await obtenerFaseActualProcesos();
-            setFases(datos||[]);
+            setFases(datos || []);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -45,4 +47,29 @@ export function useFaseActualProcesos() {
     useEffect(() => {
         cargarDatos();
     }, []);
-    return { fases, loading, error, refetch: cargarDatos };} // refetch para recargar los datos
+    return { fases, loading, error, refetch: cargarDatos };
+} // refetch para recargar los datos
+
+
+export function useHistorialProcesos() {
+    const [historial, setHistorial] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const cargarDatos = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const datos = await obtenerHistorialProcesos();
+            setHistorial(datos || []);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        cargarDatos();
+    }, []);
+    return { historial, loading, error, refetch: cargarDatos };
+}
