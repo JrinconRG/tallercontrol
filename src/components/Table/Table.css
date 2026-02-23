@@ -1,0 +1,103 @@
+/* Contenedor con scroll lateral inteligente */
+.table-container {
+    background-color: #ffffff;
+    width: calc(100% + 32px);
+    margin: 0px -16px;
+    margin-bottom: -16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    /* Permite que las columnas se ajusten al contenido */
+    min-width: 700px;
+    /* Evita que los datos se amontonen en pantallas pequeñas */
+}
+
+/* Encabezados */
+.custom-table thead tr th {
+    padding: 16px 22px;
+    text-align: left;
+    font-size: 22px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--neutral-400);
+    white-space: nowrap;
+
+}
+
+/* Celdas */
+.custom-table tbody tr td {
+    padding: 14px 22px;
+    color: var(--neutral-700);
+    font-size: 20px;
+    border-bottom: 1px solid var(--neutral-400);
+    vertical-align: middle;
+}
+
+.custom-table tbody tr:active {
+    background-color: var(--neutral-50);
+    /* Efecto feedback al tocar en tablet */
+}
+
+/* --- CLASES DE UTILIDAD PARA COLUMNAS --- */
+
+.col-sh {
+    width: 200px;
+    white-space: nowrap;
+}
+
+/* Shorts: IDs, Códigos, Documentos */
+.col-main {
+    width: auto;
+    min-width: 200px;
+}
+
+/* La que crece (Nombres) */
+.col-date {
+    width: 160px;
+    font-size: 20px !important;
+}
+
+/* Fechas */
+.col-num {
+    width: 140px;
+    text-align: right !important;
+    font-weight: 700 !important;
+    color: var(--brand-600) !important;
+}
+
+.col-status {
+    width: 130px;
+    text-align: center !important;
+}
+
+/* Ajuste de padding para los extremos */
+.custom-table th:first-child,
+.custom-table td:first-child {
+    padding-left: 32px;
+}
+
+.custom-table th:last-child,
+.custom-table td:last-child {
+    padding-right: 32px;
+}
+
+/* Chips de cargos en la tabla de empleados */
+.cargos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.cargo-chip {
+    background-color: var(--brand-50);
+    color: var(--brand-700);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 20px;
+    font-weight: 600;
+    border: 1px solid var(--brand-100);
+}
