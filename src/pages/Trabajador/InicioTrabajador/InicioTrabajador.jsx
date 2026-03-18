@@ -5,9 +5,9 @@ import { useSubprocesoActual } from '../../../hooks/useSubprocesos'
 
 
 import Card from '../../../components/card/card'
-import CrearProceso from './components/CrearProceso'
-import CrearSubproceso from './components/CrearSubproceso'
-import FinalizarSubproceso from './components/FinalizarSubproceso'
+import CrearProceso from './funciones/CrearProceso'
+import CrearSubproceso from './funciones/CrearSubproceso'
+import FinalizarSubproceso from './funciones/FinalizarSubproceso'
 import ProcesoDetail from './ProcesoDetail'
 
 import './InicioTrabajador.css'
@@ -84,6 +84,76 @@ export default function InicioTrabajador() {
   if (loading) return <p>Cargando procesos…</p>
 
 
+  // dividir por secciones
+  const procesosPorIniciar = [];
+  const procesosEnCurso = [];
+
+  procesos.forEach(p => {
+
+    const fase = fases.find(f => f.pro_id_proceso === p.pro_id_proceso);
+
+    const subprocesoActual = subprocesosActivos.find(
+      sub => sub.sub_proceso_id === p.pro_id_proceso
+    );
+
+    if (!fase || (fase.fases_completadas === 0 && !subprocesoActual)) {
+      procesosPorIniciar.push(p);
+
+    } else {
+      procesosEnCurso.push(p)
+
+    }
+
+  });
+
+  function renderProcesos(lista) {
+    console.log("lista " + lista);
+    return lista.map(p => {
+
+      const fase = fases.find(f => f.pro_id_proceso === p.pro_id_proceso);
+
+      const fasesCompletadas = fase?.fases_completadas || 0;
+      const totalFases = fase?.total_fases || 1;
+
+      const subprocesoActual = subprocesosActivos.find(
+        sub => sub.sub_proceso_id === p.pro_id_proceso
+      );
+
+      return (
+        <Card
+          key={p.pro_id_proceso}
+          className={"card-proceso"}
+          borderColor={!fase || fase.fases_completadas === 0 ? "green" : "gray"}
+          style={{ padding: "18px" }}
+        >
+          <ProcesoDetail
+            proceso={p}
+            fase={fase}
+            subprocesoActual={subprocesoActual}
+            fasesCompletadas={fasesCompletadas}
+            totalFases={totalFases}
+            calcularDuracion={calcularDuracion}
+            onIniciarFase={abrirModalIniciarFase}
+            onFinalizarFase={(data) =>
+              abrirModalFinalizar({
+                ...data,
+                pro_id_proceso: p.pro_id_proceso,
+                rc_nombre: p.rc_nombre,
+                rc_codigo: p.rc_codigo,
+                id_nombre_proceso: p.pro_codigo_cofre,
+                nombre_fase: fase?.siguiente_cargo_nombre
+              })
+            }
+          />
+        </Card >
+      );
+    });
+  }
+
+
+
+
+
 
 
 
@@ -91,7 +161,7 @@ export default function InicioTrabajador() {
     <div className='page-content-trabajador'>
       <div className='trabajador-header'>
         <div className='trabajador-header-title'>
-          <h2>Procesos activos</h2>
+          <h1 className='trabajadoe-title'>Procesos activos</h1>
         </div>
         <div className='trabajador-header-actions'>
           <button className='btn btn-primary'
@@ -103,77 +173,51 @@ export default function InicioTrabajador() {
       </div>
 
 
-      <div className="grid-procesos">
-        {procesos.map(p => {
 
-          const fase = fases.find(f => f.pro_id_proceso === p.pro_id_proceso);
+      <div className="seccion-procesos">
+        <h3 className='title-procesos'>Por iniciar</h3>
+        <div className="grid-procesos">
 
-          const fasesCompletadas = fase?.fases_completadas || 0;
-          const totalFases = fase?.total_fases || 1;
-          const avance = Math.round((fasesCompletadas / totalFases) * 100);
-
-
-          //subproceso actuvo
-          const subprocesoActual = subprocesosActivos.find(
-            sub => sub.sub_proceso_id === p.pro_id_proceso
-          );
+          {renderProcesos(procesosPorIniciar)}
+        </div>
 
 
-
-          return (
-            <Card
-              key={p.pro_id_proceso}
-              title={``}
-            >
-              <ProcesoDetail
-                proceso={p}
-                fase={fase}
-                subprocesoActual={subprocesoActual}
-                fasesCompletadas={fasesCompletadas}
-                totalFases={totalFases}
-                avance={avance}
-                calcularDuracion={calcularDuracion}
-                onIniciarFase={abrirModalIniciarFase}
-                onFinalizarFase={(data) =>
-                  abrirModalFinalizar({
-                    ...data,
-                    pro_id_proceso: p.pro_id_proceso,
-                    rc_nombre: p.rc_nombre,
-                    rc_codigo: p.rc_codigo,
-                    id_nombre_proceso: p.pro_codigo_cofre,
-                    nombre_fase: fase?.siguiente_cargo_nombre
-                  })
-                }
-              />
-            </Card>
-
-
-          );
-
-        })}
+        <h3 className='title-procesos'>En curso</h3>
+        <div className="grid-procesos">
+          {renderProcesos(procesosEnCurso)}
+        </div>
       </div>
 
-      {modalCrearProceso && (
-        <CrearProceso
-          onClose={() => setModalCrearProceso(false)}
-          onSuccess={handleSuccess}
-        />
-      )}
-      {modalCrearSubproceso && (
-        <CrearSubproceso
-          contexto={contextoFase}
-          onClose={() => setModalCrearSubproceso(false)}
-          onSuccess={handleSuccess}
-        />
-      )}
 
-      {modalFinalizar && (
-        <FinalizarSubproceso
-          subproceso={subprocesoSeleccionado}
-          onClose={() => setModalFinalizar(false)}
-          onSuccess={handleSuccess}
-        />
-      )}
-    </div>
+
+
+      {
+        modalCrearProceso && (
+          <CrearProceso
+            onClose={() => setModalCrearProceso(false)}
+            onSuccess={handleSuccess}
+          />
+        )
+      }
+      {
+        modalCrearSubproceso && (
+          <CrearSubproceso
+            contexto={contextoFase}
+            onClose={() => setModalCrearSubproceso(false)}
+            onSuccess={handleSuccess}
+          />
+        )
+      }
+
+      {
+        modalFinalizar && (
+          <FinalizarSubproceso
+            subproceso={subprocesoSeleccionado}
+            onClose={() => setModalFinalizar(false)}
+            onSuccess={handleSuccess}
+          />
+        )
+      }
+    </div >
   );
 }

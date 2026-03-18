@@ -8,12 +8,19 @@ export default function Modal({
   onConfirm,
   confirmText = 'Confirmar',
   cancelText = 'Cancelar',
-  loading = false
+  loading = false,
+  className = "",
+  style = {},
+  borderColor
 }) {
   if (!isOpen) return null
 
   return (
-    <div className="modal-overlay">
+    <div className={`modal-overlay ${className}`}
+      style={{
+        border: borderColor ? `2px solid ${borderColor}` : `2px solid var(--neutral-400)`,
+        ...style
+      }} >
       <div className="modal-container">
         <header className="modal-header">
           <h3>{title}</h3>
@@ -21,8 +28,8 @@ export default function Modal({
         </header>
 
         <section className="modal-body">
-            <div className="modal-body-content">
-          {children}
+          <div className="modal-body-content">
+            {children}
           </div>
         </section>
 
@@ -44,6 +51,6 @@ export default function Modal({
           </button>
         </footer>
       </div>
-    </div>
+    </div >
   )
 }
