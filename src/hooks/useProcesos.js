@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { obtenerProcesosActivos, obtenerFaseActualProcesos, obtenerHistorialProcesos } from '../services/procesos'
+import { obtenerProcesosActivos, obtenerFaseActualProcesos, obtenerHistorialProcesos , obtenerDetallesProcesosGerente} from '../services/procesos'
 
 export function useProcesosActivos() {
     const [procesos, setProcesos] = useState([]);
@@ -61,7 +61,15 @@ export function useHistorialProcesos() {
             setLoading(true);
             setError(null);
             const datos = await obtenerHistorialProcesos();
-            setHistorial(datos || []);
+
+            const datosLimpios = (datos || []).map((row) => ({
+                ...row,
+                detalle_subprocesos: Array.isArray(row.detalle_subprocesos)
+                ? row.detalle_subprocesos
+                : JSON.parse(row.detalle_subprocesos || "[]"),
+            }));
+
+            setHistorial(datosLimpios);
         } catch (error) {
             setError(error.message);
         } finally {
@@ -72,4 +80,27 @@ export function useHistorialProcesos() {
         cargarDatos();
     }, []);
     return { historial, loading, error, refetch: cargarDatos };
+}
+
+export function useDetalleProcesos() {
+    const [procesosDetalle, setProcesosDetalle] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const cargarDatos = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const datos = await obtenerDetallesProcesosGerente();
+            setProcesosDetalle(datos || []);
+        } catch (error_) {
+            setError(error_.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        cargarDatos();
+    }, []);
+    return { procesosDetalle, loading, error, refetch: cargarDatos };
 }

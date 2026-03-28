@@ -1,5 +1,3 @@
-
-
 import "./styles/variables.css";
 import "./styles/layout.css";
 import { Routes, Route } from "react-router-dom";
@@ -11,13 +9,12 @@ import RequireRole from "./components/auth/RequireRole";
 import LoginPage from "./pages/auth/LoginPage/LoginPage";
 import InicioTrabajador from "./pages/Trabajador/InicioTrabajador/InicioTrabajador";
 import Historial from "./pages/Trabajador/Historial/Historial";
-import Gerente from "./pages/Gerente/Gerente";
+import Dashboard from "./pages/Gerente/Dashboard/Dashboard";
 import NoAutorizado from "./pages/NoAutorizado";
 import Tarifas from "./pages/Gerente/Tarifas/Tarifas";
 
 //Gerente routes
 import Empleados from "./pages/Gerente/Empleados/Empleados";
-
 
 function App() {
   return (
@@ -28,13 +25,12 @@ function App() {
 
       {/* PRIVADO */}
       <Route element={<PrivateLayout />}>
-
         {/* GERENTE */}
         <Route
           path="/gerente"
           element={
             <RequireRole allowedRoles={["gerente"]}>
-              <Gerente />
+              <Dashboard />
             </RequireRole>
           }
         />
@@ -57,11 +53,6 @@ function App() {
           }
         />
 
-
-
-
-
-
         <Route
           path="/trabajador/inicio"
           element={
@@ -81,9 +72,8 @@ function App() {
 
         <Route path="/no-autorizado" element={<NoAutorizado />} />
       </Route>
-    </Routes >
+    </Routes>
   );
 }
 
 export default App;
-

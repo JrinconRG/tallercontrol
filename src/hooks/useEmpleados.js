@@ -12,10 +12,10 @@ export function useCrearEmpleado() {
             setLoading(true);
             setError(null);
             await crearEmpleado(nombre, apellidos, numeroDocumento, celular);
-            return { success: true };
+            return true ;
         } catch (error) {
             setError(error.message);
-            return { success: false, error: error.message };
+            throw error;
         } finally {
             setLoading(false);
         }

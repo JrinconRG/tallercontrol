@@ -16,18 +16,17 @@ export default function Sidebar() {
           <NavLink
             key={item.label}
             to={item.path}
+            end
             className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
-            }>
+            }
+          >
             <div className="sidebar-conjunto">
-
               <Icon name={item.icon} size={25} />
               <div className="sidebar-item-label">{item.label}</div>
             </div>
           </NavLink>
-
         ))}
-
       </nav>
     </aside>
   );

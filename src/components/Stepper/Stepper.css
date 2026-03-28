@@ -1,0 +1,183 @@
+
+:root {
+  --sf-done-color:          #0f6e56;
+  --sf-done-bg:             #e1f5ee;
+  --sf-done-bg-sel:         #9fe1cb;
+  --sf-done-border-sel:     #085041;
+
+  --sf-active-color:        #185fa5;
+  --sf-active-bg:           #e6f1fb;
+  --sf-active-bg-sel:       #b5d4f4;
+  --sf-active-border:       #378add;
+  --sf-active-border-sel:   #185fa5;
+
+  --sf-pending-color:       #888780;
+  --sf-pending-border:      #c8c8c0;
+  --sf-pending-bg:          #f1efe8;
+
+  --sf-line-default:        #dedad2;
+  --sf-btn-size:            44px;
+  --sf-btn-size-sel:        52px;
+}
+
+/* ── Contenedor ── */
+.sf-stepper {
+  position: relative;          /* contexto para la línea absoluta */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0 0.25rem;
+}
+
+/* ── Línea continua de fondo ── */
+/*
+   Está detrás de los botones (z-index: 0).
+   Usamos un flex container que ocupa exactamente el espacio entre
+   el primer y último círculo → left/right = (btn-size / 2).
+*/
+.sf-track {
+  position: absolute;
+  top: calc(var(--sf-btn-size) / 2 + 0.5rem); /* centrada con los botones */
+  left:  calc(var(--sf-btn-size) / 2);
+  right: calc(var(--sf-btn-size) / 2);
+  height: 2px;
+  display: flex;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sf-track-segment {
+  flex: 1;
+  height: 2px;
+  background: var(--sf-line-default);
+  transition: background 0.4s ease;
+}
+
+.sf-track-segment--done   { background: var(--sf-done-color); }
+.sf-track-segment--active { background: var(--sf-active-border); }
+
+/* ── Paso ── */
+.sf-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;           /* sobre la línea */
+}
+
+/* ── Botón círculo ── */
+.sf-btn {
+  width: var(--sf-btn-size);
+  height: var(--sf-btn-size);
+  border-radius: 50%;
+  border: 2px solid var(--sf-pending-border);
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sf-pending-color);
+  transition: width 0.2s ease, height 0.2s ease,
+              background 0.2s ease, border-color 0.2s ease,
+              transform 0.2s cubic-bezier(.34,1.56,.64,1);
+  outline: none;
+}
+
+.sf-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.3);
+}
+
+/* hover genérico */
+.sf-btn:hover { transform: scale(1.1); }
+
+/* finalizado */
+.sf-btn--finalizado {
+  border-color: var(--sf-done-color);
+  background:   var(--sf-done-bg);
+  color:        var(--sf-done-color);
+}
+.sf-btn--finalizado.sf-btn--selected {
+  width: var(--sf-btn-size-sel);
+  height: var(--sf-btn-size-sel);
+  background:   var(--sf-done-bg-sel);
+  border-color: var(--sf-done-border-sel);
+}
+
+/* en_proceso */
+.sf-btn--en_proceso {
+  border-color: var(--sf-active-border);
+  background:   var(--sf-active-bg);
+  color:        var(--sf-active-border);
+}
+.sf-btn--en_proceso.sf-btn--selected {
+  width: var(--sf-btn-size-sel);
+  height: var(--sf-btn-size-sel);
+  background:   var(--sf-active-bg-sel);
+  border-color: var(--sf-active-border-sel);
+}
+
+/* pendiente */
+.sf-btn--pendiente {
+  border-color: var(--sf-pending-border);
+  background:   #fff;
+  color:        var(--sf-pending-color);
+}
+.sf-btn--pendiente.sf-btn--selected {
+  width: var(--sf-btn-size-sel);
+  height: var(--sf-btn-size-sel);
+  border-color: var(--sf-active-border);
+  background:   var(--sf-active-bg);
+  color:        var(--sf-active-border);
+}
+
+/* ── Meta (texto) ── */
+.sf-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 10px;
+  padding: 0 4px;
+  gap: 2px;
+}
+
+.sf-num {
+  font-size: 15px;
+  font-weight: 500;
+  color: #888780;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sf-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c2c2a;
+  line-height: 1.3;
+}
+
+.sf-status {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sf-status--pendiente  { color: var(--sf-pending-color); }
+.sf-status--en_proceso { color: var(--sf-active-color);  }
+.sf-status--finalizado { color: var(--sf-done-color);    }
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  :root {
+    --sf-btn-size:     36px;
+    --sf-btn-size-sel: 42px;
+  }
+  .sf-track {
+    top: calc(var(--sf-btn-size) / 2 + 0.5rem);
+    left: calc(var(--sf-btn-size) / 2);
+    right: calc(var(--sf-btn-size) / 2);
+  }
+  .sf-name { font-size: 11px; }
+  .sf-num  { font-size: 9px;  }
+}
