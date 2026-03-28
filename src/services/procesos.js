@@ -8,7 +8,7 @@ export async function crearProceso(referenciaId) {
 
   if (error) {
     console.error('Error creando proceso:', error)
-    throw error
+    throw new Error(error.message) 
   }
 
   return data // devuelve pro_id
@@ -25,7 +25,7 @@ export async function obtenerProcesosActivos() {
 
   if (error) {
     console.error('Error cargando procesos activos:', error)
-    throw error
+    throw new Error(error.message) 
   }
 
   return data
@@ -41,7 +41,7 @@ export async function obtenerHistorialProcesos() {
 
   if (error) {
     console.error('Error cargando historial de procesos:', error)
-    throw error
+    throw new Error(error.message) 
   }
 
   return data
@@ -54,7 +54,7 @@ export async function obtenerFaseActualProcesos() {
 
   if (error) {
     console.error('Error cargando fase actual:', error)
-    throw error
+    throw new Error(error.message) 
   }
 
   return data
@@ -68,8 +68,29 @@ export async function validarSiguienteFase(procesoId, cargoId) {
 
   if (error) {
     console.error('Error validando siguiente fase:', error)
-    throw error
+    throw new Error(error.message) 
   }
 
   return data // true | false
 }
+
+
+export async function obtenerDetallesProcesosGerente() {
+  const { data, error } = await supabase
+    .from('vista_dashboard_gerente')
+    .select('pro_id_proceso, pro_codigo_cofre, pro_estado, rc_nombre, fase_actual, fases')
+
+
+  if (error) {
+    console.error('Error cargando el detalle de procesos:', error)
+    throw new Error(error.message) 
+  }
+
+  return (data ?? []).map(p => ({
+  ...p,
+  fases: typeof p.fases === 'string' ? JSON.parse(p.fases) : (p.fases ?? [])
+}))
+}
+
+  
+  
