@@ -29,3 +29,13 @@
     flex-direction: column;
     gap: 14px;
 }
+
+
+
+.card-iniciar {
+    border-left: 5px solid #22c55e;
+}
+
+.card-curso {
+    border-left: 5px solid #3b82f6;
+}

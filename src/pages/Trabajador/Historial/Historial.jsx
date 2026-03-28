@@ -1,89 +1,182 @@
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistorialProcesos } from "../../../hooks/useProcesos";
 import Table from "../../../components/Table/Table";
 import TableHeader from "../../../components/Table/TableHeader";
-import Card from "../../../components/card/card";
+import Card from "../../../components/card/Card";
+import MostrarImagenesModal from "../../../components/mostrarImagenModal/MostrarImagenModal";
 import "./Historial.css";
 export default function Historial() {
-    const [search, setSearch] = useState('');
-    const [estado, setEstado] = useState('');
+  const [search, setSearch] = useState("");
+  const [estado, setEstado] = useState("");
+  const [procesoDetalle, setProcesoDetalle] = useState(null);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState({
+    path: null,
+    fase: "",
+  });
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        cerrarDrawer();
+      }
+    };
 
-    // uso de hook personalizado para obtener el historial de procesos 
-    const { historial, loading, error } = useHistorialProcesos();
-    if (loading) return <p>Cargando historial..</p>
+    if (procesoDetalle) {
+      globalThis.addEventListener("keydown", handleKeyDown);
+    }
 
+    return () => {
+      globalThis.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [procesoDetalle]);
 
+  // uso de hook personalizado para obtener el historial de procesos
+  const { historial, loading, error } = useHistorialProcesos();
+  if (loading) return <p>Cargando historial..</p>;
+  if (error) return <p>Error al cargar historial..</p>;
+  const handleDrawerClick = (e) => {
+    e.stopPropagation();
+  };
+  const cerrarDrawer = () => setProcesoDetalle(null);
 
+  return (
+    <div className="page-content-historial">
+      <div className="page-header-historial">
+        <h1>Historial de Cofres</h1>
+        <p>Seguimiento de procesos registrados</p>
+      </div>
+      <Card className="card-historial" style={{ backgroundColor: "#ffffff" }}>
+        <TableHeader
+          searchValue={search}
+          onSearchChange={setSearch}
+          filters={[
+            {
+              name: "estado",
+              value: estado,
+              onChange: setEstado,
+              options: [],
+            },
+          ]}
+        ></TableHeader>
 
-    return (
+        <Table
+          columns={[
+            {
+              key: "pro_codigo_cofre",
+              label: "Código",
+            },
+            {
+              key: "rc_nombre",
+              label: "Nombre del Cofre",
+            },
+            {
+              key: "pro_fecha_inicio",
+              label: "Inicio",
+              render: (row) =>
+                new Date(row.pro_fecha_inicio).toLocaleDateString(),
+            },
+            {
+              key: "pro_fecha_fin",
+              label: "Fin",
+              render: (row) =>
+                row.pro_fecha_fin
+                  ? new Date(row.pro_fecha_fin).toLocaleDateString()
+                  : "-",
+            },
+            {
+              key: "total_acumulado",
+              label: "Valor Total",
+              render: (row) => `$${row.total_acumulado?.toLocaleString()}`,
+            },
+            {
+              key: "pro_estado",
+              label: "Estado",
+              render: (row) => (
+                <span className={`badge-finalizado`}>
+                  {row.pro_estado.toUpperCase()}
+                </span>
+              ),
+            },
+          ]}
+          data={historial}
+          onRowClick={(row) => {
+            setProcesoDetalle({
+              ...row,
+              subprocesos: row.detalle_subprocesos || [],
+            });
+          }}
+        />
+      </Card>
+      {procesoDetalle && (
+        <div className="drawer-overlay">
+          <div
+            className="drawer"
+            onClick={handleDrawerClick}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="drawer-header">
+              <h3>{procesoDetalle.pro_codigo_cofre}</h3>
+              <button
+                className="btn btn-primary"
+                onClick={cerrarDrawer}
+                aria-label="Cerrar detalle"
+              >
+                ✖
+              </button>
+            </div>
 
-        <div className="page-content-historial">
-            <Card className="card-historial" style={{ backgroundColor: '#ffffff' }} >
-                <TableHeader
-                    searchValue={search}
-                    onSearchChange={setSearch}
-                    filters={[
-                        {
-                            name: 'estado', value: estado, onChange: setEstado, options: [
-
-                            ]
+            <div className="drawer-body">
+              <Table
+                columns={[
+                  { key: "fase", label: "Fase" },
+                  { key: "trabajador", label: "Trabajador" },
+                  {
+                    key: "fecha_inicio",
+                    label: "Inicio",
+                    render: (row) =>
+                      new Date(row.fecha_inicio).toLocaleString(),
+                  },
+                  {
+                    key: "fecha_fin",
+                    label: "Fin",
+                    render: (row) => new Date(row.fecha_fin).toLocaleString(),
+                  },
+                  {
+                    key: "valor",
+                    label: "Valor",
+                    render: (row) => `$${Number(row.valor).toLocaleString()}`,
+                  },
+                  {
+                    key: "foto",
+                    label: "Evidencia",
+                    render: (row) => (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          setImagenSeleccionada({
+                            path: row.foto,
+                            fase: row.fase,
+                          })
                         }
-                    ]}
-                ></TableHeader>
-
-                <Table
-                    columns={[
-                        {
-                            key: 'pro_codigo_cofre',
-                            label: 'Código',
-                            className: 'col-sh'
-                        },
-                        {
-                            key: 'rc_nombre',
-                            label: 'Nombre del Cofre',
-                            className: 'col-main'
-                        },
-                        {
-                            key: 'pro_fecha_inicio',
-                            label: 'Inicio',
-                            className: 'col-date',
-                            render: (row) => new Date(row.pro_fecha_inicio).toLocaleDateString()
-                        },
-                        {
-                            key: 'pro_fecha_fin',
-                            label: 'Fin',
-                            className: 'col-date',
-                            render: (row) => row.pro_fecha_fin ? new Date(row.pro_fecha_fin).toLocaleDateString() : '-'
-                        },
-                        {
-                            key: 'total_acumulado',
-                            label: 'Total Ganado',
-                            className: 'col-num',
-                            render: (row) => `$${row.total_acumulado?.toLocaleString()}`
-                        },
-                        {
-                            key: 'pro_estado',
-                            label: 'Estado',
-                            className: 'col-status',
-                            render: (row) => (
-                                <span className={`badge-${row.pro_estado}`}>
-                                    {row.pro_estado.toUpperCase()}
-                                </span>
-                            )
-                        },
-                    ]}
-                    data={historial}
-                    onRowClick={(row) => console.log("Ver detalle del cofre", row.pro_id_proceso)}
-                />
-            </Card>
-
+                      >
+                        Ver
+                      </button>
+                    ),
+                  },
+                ]}
+                data={procesoDetalle.subprocesos}
+              />
+            </div>
+          </div>
         </div>
-    );
-
+      )}
+      <MostrarImagenesModal
+        isOpen={Boolean(imagenSeleccionada.path)}
+        path={imagenSeleccionada.path}
+        fase={imagenSeleccionada.fase} // Aquí pasas el nombre de la fase
+        onClose={() => setImagenSeleccionada({ path: null, fase: "" })}
+      />
+    </div>
+  );
 }
-
-
-
-

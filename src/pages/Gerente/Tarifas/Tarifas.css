@@ -1,93 +1,105 @@
-/* ─── Título de página ───────────────────────────────── */
+/* Tarifas.css */
+
+
+
+.page-header-tarifas {
+  margin-bottom: 24px;
+}
+
 .tarifas-titulo {
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--neutral-800);
-    margin-bottom: 20px;
-    letter-spacing: -0.5px;
-    display: flex;
+  font-family: var(--font-title);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
 }
 
-
-
-
-
-/* ─── Headers de tabla con color ─────────────────────── */
-
-
-
-
-/* ─── Inputs de precio ───────────────────────────────── */
-.input-con-precio,
-.input-sin-precio {
-    font-size: 20px;
-    font-weight: 600;
-    width: 180px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1.5px solid transparent;
-    text-align: right;
-    transition: all 0.15s;
+.card-tarifas {
+  padding: 24px;
 }
 
-/* Con precio → brand */
-.input-con-precio {
-    background: var(--brand-50);
-    border-color: var(--brand-200);
-    color: var(--brand-600);
+/* Toolbar con badge de cambios pendientes */
+.tarifas-toolbar {
+  min-height: 28px;           /* evita el layout shift cuando no hay badge */
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.input-con-precio:hover {
-    border-color: var(--brand-400);
+.badge-cambios {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: var(--brand-50);
+  color: var(--brand-700);
+  border: 1px solid var(--brand-200);
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
-.input-con-precio:focus {
-    outline: none;
-    background: #ffffff;
-    border-color: var(--brand-600);
-    color: var(--neutral-800);
-    box-shadow: 0 0 0 3px var(--brand-50);
+/* Mensaje de feedback */
+.mensaje {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--success-50);
+  color: var(--success-700);
+  border: 1px solid var(--success-200);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin-bottom: 12px;
 }
 
-/* Sin precio → gris */
-.input-sin-precio {
-    background: var(--neutral-50);
-    border-color: var(--neutral-200);
-    color: var(--neutral-400);
-}
-
-.input-sin-precio:hover {
-    border-color: var(--neutral-400);
-    background: #ffffff;
-}
-
-.input-sin-precio:focus {
-    outline: none;
-    background: #ffffff;
-    border-color: var(--brand-600);
-    color: var(--neutral-800);
-    box-shadow: 0 0 0 3px var(--brand-50);
-}
-
+/* Inputs de precio dentro de la tabla */
 .input-precio-wrapper {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--neutral-100);
+  border: 1.5px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  transition: border-color 0.15s ease;
+}
+
+.input-precio-wrapper:focus-within {
+  border-color: var(--brand-500);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--brand-100);
 }
 
 .input-precio-simbolo {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--brand-600);
+  color: var(--neutral-500);
+  font-size: 0.9rem;
+  font-weight: 600;
+  user-select: none;
 }
 
-/* Quitar flechas number */
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.input-precio-wrapper input[type="number"] {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  width: 90px;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-family: var(--font-base);
 }
 
-input[type='number'] {
-    -moz-appearance: textfield;
+/* Quitar flechas del input number */
+.input-precio-wrapper input[type="number"]::-webkit-inner-spin-button,
+.input-precio-wrapper input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Estado: con precio cargado */
+.input-con-precio {
+  color: var(--text-primary);
+}
+
+/* Estado: vacío / sin precio */
+.input-sin-precio {
+  color: var(--neutral-400);
 }

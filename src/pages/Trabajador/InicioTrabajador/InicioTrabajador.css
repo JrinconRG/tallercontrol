@@ -1,53 +1,83 @@
+/* =============================================
+   InicioTrabajador.css
+   ============================================= */
+
+/* ── Página ── */
 .page-content-trabajador {
-  flex-direction: column;
   display: flex;
-  gap: 20px;
-
-
+  flex-direction: column;
+  gap: 28px;
+  margin: 0 auto;
 }
 
+/* ── Header de la página ── */
 .trabajador-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.acciones-proceso {
-  margin-top: 10px;
+.trabajador-header-title h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
 }
 
-.page-content-trabajador {
+
+
+/* ── Secciones (Por iniciar / En curso) ── */
+.seccion-procesos {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
+.seccion-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Título de sección — etiqueta discreta, no encabezado */
 .title-procesos {
-  margin-bottom: 20px;
-  font-size: 25px;
-  font-weight: 500;
-
+  font-size: 1cqmax;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-primary);
+  padding-left: 2px;
+  margin: 0;
 }
 
+/* ── Grid de cards ── */
 .grid-procesos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 350px));
-  gap: 22px;
-  justify-content: start;
-  margin-bottom: 20px;
-
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 16px;
 }
 
-
-
-
-
-
-
-
-
-.badge {
-  padding: 2px 8px;
+/* ── Card de proceso ── */
+.card-proceso {
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-300);
+  border-left-width: 4px;
+  border-left-color: var(--neutral-300); /* fallback */
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  overflow: hidden;
 }
+
+.card-proceso:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Colores del borde izquierdo según estado */
+.card-proceso.enProceso    { border-left-color: var(--danger-500); }
+.card-proceso.porIniciar   { border-left-color: var(--success-500); }
+.card-proceso.siguientFase { border-left-color: var(--brand-500); }

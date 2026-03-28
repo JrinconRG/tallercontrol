@@ -1,6 +1,6 @@
 /* Contenedor con scroll lateral inteligente */
 .table-container {
-    background-color: #ffffff;
+    background-color: none;
     width: calc(100% + 32px);
     margin: 0px -16px;
     margin-bottom: -16px;
@@ -83,6 +83,11 @@
 .custom-table th:last-child,
 .custom-table td:last-child {
     padding-right: 32px;
+
+}
+
+table tr:last-child td {
+    border-bottom: none;
 }
 
 /* Chips de cargos en la tabla de empleados */
@@ -91,6 +96,7 @@
     flex-wrap: wrap;
     gap: 6px;
 }
+
 
 .cargo-chip {
     background-color: var(--brand-50);

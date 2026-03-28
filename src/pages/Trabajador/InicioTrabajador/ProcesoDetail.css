@@ -1,155 +1,191 @@
-.divider {
-    height: 1px;
-    background: var(--neutral-300);
-    margin: 16px 0;
-}
 
-
-.content-tittle-detail {
-    margin-bottom: 10px;
-}
-
-.tittle-detail-process {
-    font-size: 30px;
-    font-weight: 700;
-    color: var(--brand-700);
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-    /* Usar rem es mejor para responsive que px */
-    line-height: 1.2;
-}
-
+/* ── Contenedor interno de la card ── */
 .proceso-detail-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    /* Para que todas las cards de una fila midan lo mismo */
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  padding: 16px 18px 0 18px; /* el footer maneja su propio padding */
 }
-
-.proceso-detail-badge {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-    margin-bottom: 10px;
-
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
+ 
+/* ── Header ── */
 .proceso-detail-header {
-    /* En lugar de height, usamos padding y min-height */
-    padding-bottom: 8px;
-    min-height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+ 
+/* Fila superior: título + badge */
+.content-tittle-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+ 
+.tittle-detail-process {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin: 0;
 }
 
-.badge {
-    padding: 4px 12px;
-    border-radius: var(--radius-md);
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-
+ 
+/* Fila del código + badge */
+.proceso-detail-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 1.4rem;
+  color: var(--text-secondary);
 }
-
-/* Verde */
-.badge-activo {
-    background-color: var(--success-100);
-    color: var(--success-800);
-    border: 1px solid var(--success-800);
-
-}
-
-/* Azul */
-.badge-default {
-    background-color: #dbeafe;
-    color: var(--brand-700);
-}
-
-.info-line {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: var(--text-secondary);
-}
-
-.next-phase {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-
+ 
+/* Fecha de inicio */
 .info-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-
-    white-space: nowrap;
-    /* Evita que el texto salte a la siguiente línea */
-    overflow: hidden;
-    /* Seguridad: si es demasiado largo, no rompe la card */
-    text-overflow: ellipsis
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-
+ 
+/* ── Badges de estado ── */
+.badge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+}
+ 
+.badge-activo {
+  background-color: var(--success-100);
+  color: var(--success-800);
+  border: 1px solid var(--success-800);
+}
+ 
+.badge-default {
+  background-color: var(--brand-50);
+  color: var(--brand-700);
+  border: 1px solid var(--brand-200);
+}
+ 
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: var(--neutral-400);
+  margin: 0 -18px; /* sangra hasta los bordes de la card */
+}
+ 
+/* ── Body — info lines ── */
 .proceso-detail-body {
-    font-size: 20px;
-    color: var(--text-secondary);
-    font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 0;
+  flex: 1;
 }
-
+ 
+.info-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+ 
+/* Primera info-line (la fase) tiene más peso visual */
+.info-line:first-child {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+ 
+/* Fase activa (en proceso) */
+.info-line.enProceso {
+  color: var(--danger-500);
+  font-weight: 600;
+}
+ 
+/* Fase por iniciar */
+.info-line.porIniciar {
+  color: var(--success-500);
+  font-weight: 600;
+}
+ 
+/* Siguiente fase */
+.info-line.siguientFase {
+  color: var(--brand-500);
+  font-weight: 600;
+}
+ 
+/* ── Footer — botón de acción ── */
 .proceso-detail-footer {
-    margin: 0;
-    /* Reducimos el margen superior */
-    width: 100%;
-    /* Eliminamos cualquier padding del contenedor para que el botón pegue a los bordes */
+  margin: 0 -18px -0px; /* sangra hasta los bordes */
 }
-
+ 
 .footer-action-btn {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* Padding solo a los lados */
-    border: none;
-    background-color: transparent;
-    /* Para que no se vea el recuadro a menos que hagas hover */
-    cursor: pointer;
-    font-size: 20px;
-    /* Bajamos un poco el tamaño para que quepa en una sola línea */
-    font-weight: 700;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 18px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: var(--font-base);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  transition: background 0.15s ease;
+  text-align: left;
 }
-
-/* Para que el texto interno no empuje el botón hacia arriba */
-.footer-action-btn span {
-    line-height: 40px;
+ 
+.footer-action-btn .arrow-icon {
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
 }
-
+ 
+.footer-action-btn:hover .arrow-icon {
+  transform: translateX(4px);
+}
+ 
+/* Variantes de color por acción */
 .iniciar-boton {
-    color: var(--brand-700);
+  color: var(--success-700);
 }
-
-.terminar-boton {
-    color: var(--danger-800);
-}
-
-/* Hover: aquí es donde el usuario ve que es un botón */
-
 .iniciar-boton:hover {
-    background-color: var(--brand-100);
-    border-radius: var(--radius-md);
+  background-color: var(--success-100);
 }
-
+ 
+.terminar-boton {
+  color: var(--danger-800);
+}
 .terminar-boton:hover {
-    background-color: var(--danger-100);
-    border-radius: var(--radius-md);
+  background-color: var(--danger-100);
+}
+ 
+/* Proceso completado */
+.finalizado-container {
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.finalizado {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+.info-proceso{
+    font-size: 1.7rem;
 }
