@@ -29,3 +29,18 @@ export async function subirEvidencia(file, path) {
         throw error;
     }
 }
+
+export const getImageUrl = async (path) => {
+  if (!path) return null;
+
+  const { data, error } = await supabase.storage
+    .from("evidencias-subprocesos") 
+    .createSignedUrl(path, 60);
+
+  if (error) {
+    console.error("Error generando URL:", error);
+    return null;
+  }
+
+  return data.signedUrl;
+};
