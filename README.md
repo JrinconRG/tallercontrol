@@ -1,4 +1,4 @@
-TallerControl - Frontend
+Sigec - Frontend
 
 Sistema de gestión de procesos de fabricación de cofres fúnebres. Permite a los trabajadores registrar actividades con evidencia fotográfica y tiempos exactos, mientras el gerente supervisa en tiempo real y genera nóminas automáticas.
 
@@ -55,3 +55,4 @@ Sistema de gestión de procesos de fabricación de cofres fúnebres. Permite a l
 5. **Abrir en el navegador**
 ```
    http://localhost:5173
+
