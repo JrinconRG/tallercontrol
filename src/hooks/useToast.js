@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 
+const removeToast = (prev, id) => prev.filter((t) => t.id !== id);
+
 export function useToast() {
   const [toasts, setToasts] = useState([]);
 
@@ -8,7 +10,7 @@ export function useToast() {
       const id = Date.now();
       setToasts((prev) => [...prev, { id, message, type }]);
       setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
+        setToasts((prev) => removeToast(prev, id));
       }, duration);
     },
     [],

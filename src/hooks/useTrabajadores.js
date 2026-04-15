@@ -62,16 +62,8 @@ export function useEmpleadosConCargos() {
       setLoading(true);
       setError(null);
       const datos = await getInformacionEmpleados();
-      const normalizados = (datos || []).map((emp) => ({
-        ...emp,
-        cargos: (emp.cargos || []).map((c) => ({
-          id: c.id ?? c.c_id,
-          nombre: c.nombre ?? c.c_nombre,
-        })),
-      }));
 
-      setEmpleados(normalizados);
-      console.log("Empleados con cargos cargados:", datos);
+      setEmpleados(datos || []);
     } catch (error) {
       setError(error.message);
     } finally {

@@ -18,7 +18,9 @@ export default function Historial() {
   // uso de hook personalizado para obtener el historial de subprocesos
   const { historialSubProcesos, loading, error } =
     useHistorialSubprocesosTrabajadorNoPagado();
+
   if (loading) return <p>Cargando historial..</p>;
+
   if (error) return <p>Error al cargar historial..</p>;
   console.log(historialSubProcesos);
 

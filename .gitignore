@@ -24,3 +24,15 @@ dist-ssr
 *.sw?
 
 .env
+
+# SonarQube
+.scannerwork
+scannerwork/
+
+# testing
+coverage/
+coverage.xml
+.lcov
+lcov-report/
+
+scannerwork/

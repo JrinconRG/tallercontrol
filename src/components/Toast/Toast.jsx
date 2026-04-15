@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function Toast({ toasts }) {
   if (!toasts.length) return null;
 
@@ -40,3 +42,7 @@ export default function Toast({ toasts }) {
     </div>
   );
 }
+
+Toast.propTypes = {
+  toasts: PropTypes.object,
+};

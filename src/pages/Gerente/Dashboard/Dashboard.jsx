@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useDetalleProcesos } from "../../../hooks/useProcesos";
 import Stepper from "../../../components/Stepper/Stepper";
 import Card from "../../../components/card/Card";
-import FaseDetalle from "../../../components/FaseDetalle/FaseDetalle";
+import FaseDetalle from "../../../components/faseDetalle/FaseDetalle";
 import MostrarImagenesModal from "../../../components/mostrarImagenModal/MostrarImagenModal";
 
 import "./Dashboard.css";
