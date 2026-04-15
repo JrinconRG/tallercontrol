@@ -1,0 +1,36 @@
+.chip-confirm-btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  transition: opacity 0.15s;
+}
+
+.chip-confirm-btn:hover {
+  opacity: 0.8;
+}
+
+.chip-confirm-btn--yes {
+  background-color: #cc0000;
+  color: #fff;
+}
+
+.chip-confirm-btn--no {
+  background-color: transparent;
+  color: #cc0000;
+  border: 1px solid #ffb3b3;
+}
+
+.cargo-chip--confirming {
+  animation: shake 0.2s ease;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}

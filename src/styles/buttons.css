@@ -49,6 +49,23 @@
   cursor: not-allowed;
 }
 
+
+/* tercuiary - bordes griser y un hover gris */
+
+.btn-terciary {
+  background: transparent;
+  color: var(--neutral-800);
+  border-color: var(--neutral-500);
+
+  width: fit-content; /* 👈 clave */
+  padding: 10px 20px;  
+}
+
+
+.btn-terciary:hover:not(:disabled) {
+  background: var(--neutral-300);
+}
+
 /* GHOST — acción terciaria, sin borde */
 .btn-ghost {
   background: transparent;

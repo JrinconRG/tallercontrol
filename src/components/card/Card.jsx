@@ -1,4 +1,6 @@
 import "./Card.css";
+import PropTypes from "prop-types";
+
 export default function Card({
   title,
   description,
@@ -29,3 +31,11 @@ export default function Card({
     </div>
   );
 }
+Card.propTypes = {
+  title: PropTypes.string,
+  description: PropTypes.string,
+  children: PropTypes.node,
+  className: PropTypes.string,
+  style: PropTypes.object,
+  borderColor: PropTypes.string,
+};

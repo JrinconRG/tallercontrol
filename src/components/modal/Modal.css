@@ -20,6 +20,7 @@
     max-width: 500px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     animation: fadeIn 0.2s ease;
+    overflow: 'auto',   
 
 
   }
@@ -44,7 +45,7 @@
   .modal-close {
     background: none;
     border: none;
-    font-size: 1srem;
+    font-size: 1rem;
     cursor: pointer;
     color: var(--text-primary);
     transition: color 0.2s ease;

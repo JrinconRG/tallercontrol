@@ -1,3 +1,6 @@
+/* =============================================
+   ProcesoDetail.css
+   ============================================= */
 
 /* ── Contenedor interno de la card ── */
 .proceso-detail-card {
@@ -5,62 +8,56 @@
   flex-direction: column;
   flex: 1;
   height: 100%;
-  padding: 16px 18px 0 18px; /* el footer maneja su propio padding */
+  padding: 20px 22px 0 22px;
 }
- 
+
 /* ── Header ── */
 .proceso-detail-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
- 
-/* Fila superior: título + badge */
-.content-tittle-detail {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-}
- 
+
+/* Título principal — el código del cofre, único por proceso */
 .tittle-detail-process {
-  font-size: 1.6rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.3;
+  line-height: 1.2;
   margin: 0;
 }
 
- 
-/* Fila del código + badge */
+/* Fila del nombre/referencia + badge */
 .proceso-detail-badge {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
-  font-size: 1.4rem;
+  gap: 8px;
+  font-size: 1.1rem;
   color: var(--text-secondary);
+  font-weight: 500;
 }
- 
+
 /* Fecha de inicio */
 .info-header {
   display: flex;
   align-items: center;
-  font-size: 1.4rem;
-  color: var(--text-secondary);
+  gap: 6px;
+  font-size: 1.1rem;
+  color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
- 
+
 /* ── Badges de estado ── */
 .badge {
   flex-shrink: 0;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 100px;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -68,124 +65,153 @@
   display: inline-flex;
   align-items: center;
 }
- 
+
 .badge-activo {
   background-color: var(--success-100);
   color: var(--success-800);
   border: 1px solid var(--success-800);
 }
- 
+
 .badge-default {
   background-color: var(--brand-50);
   color: var(--brand-700);
   border: 1px solid var(--brand-200);
 }
- 
+
 /* ── Divider ── */
 .divider {
   height: 1px;
-  background: var(--neutral-400);
-  margin: 0 -18px; /* sangra hasta los bordes de la card */
+  background: var(--neutral-300);
+  margin: 0 -22px;
 }
- 
-/* ── Body — info lines ── */
+
+/* ── Body ── */
 .proceso-detail-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px 0;
+  padding: 16px 0;
   flex: 1;
+  gap: 10px;
 }
- 
+
+/* Bloque destacado del estado actual */
+.estado-bloque {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+}
+
+.estado-bloque.enProceso    { background-color: var(--danger-50,  #FDF3F3); }
+.estado-bloque.porIniciar   { background-color: var(--success-50, #ecfdf6); }
+.estado-bloque.siguientFase { background-color: var(--brand-50); }
+
+.estado-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.enProceso   .estado-dot { background: var(--danger-500); }
+.porIniciar  .estado-dot { background: var(--success-500); }
+.siguientFase .estado-dot { background: var(--brand-500); }
+
+.estado-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.estado-etiqueta {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.enProceso   .estado-etiqueta { color: var(--danger-600,  #CC363C); }
+.porIniciar  .estado-etiqueta { color: var(--success-700); }
+.siguientFase .estado-etiqueta { color: var(--brand-600); }
+
+.estado-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Info lines secundarias */
 .info-line {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: var(--text-secondary);
 }
- 
-/* Primera info-line (la fase) tiene más peso visual */
-.info-line:first-child {
-  font-weight: 600;
-  color: var(--text-primary);
+
+.info-proceso {
+  font-size: 1.15rem;
 }
- 
-/* Fase activa (en proceso) */
-.info-line.enProceso {
-  color: var(--danger-500);
-  font-weight: 600;
-}
- 
-/* Fase por iniciar */
-.info-line.porIniciar {
-  color: var(--success-500);
-  font-weight: 600;
-}
- 
-/* Siguiente fase */
-.info-line.siguientFase {
-  color: var(--brand-500);
-  font-weight: 600;
-}
- 
+
 /* ── Footer — botón de acción ── */
 .proceso-detail-footer {
-  margin: 0 -18px -0px; /* sangra hasta los bordes */
+  margin: 0 -22px 0;
 }
- 
+
 .footer-action-btn {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 13px 18px;
+  padding: 18px 22px;
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
   font-family: var(--font-base);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
   transition: background 0.15s ease;
   text-align: left;
+  gap: 12px;
+  min-height: 60px;
 }
- 
-.footer-action-btn .arrow-icon {
+
+.footer-action-btn svg {
   flex-shrink: 0;
   transition: transform 0.15s ease;
 }
- 
-.footer-action-btn:hover .arrow-icon {
-  transform: translateX(4px);
+
+.footer-action-btn:hover svg {
+  transform: translateX(5px);
 }
- 
-/* Variantes de color por acción */
-.iniciar-boton {
+
+.btn-porIniciar {
   color: var(--success-700);
 }
-.iniciar-boton:hover {
+.btn-porIniciar:hover {
   background-color: var(--success-100);
 }
- 
+.btn-siguientFase:hover {
+  background: var(--brand-100);
+}
+.btn-siguientFase{
+  color: var(--brand-700);
+}
 .terminar-boton {
   color: var(--danger-800);
 }
 .terminar-boton:hover {
   background-color: var(--danger-100);
 }
- 
-/* Proceso completado */
+
 .finalizado-container {
-  padding: 13px 18px;
+  padding: 18px 22px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  min-height: 60px;
 }
- 
+
 .finalizado {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--text-muted);
-}
-.info-proceso{
-    font-size: 1.7rem;
 }

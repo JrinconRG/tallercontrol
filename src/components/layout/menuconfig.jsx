@@ -5,11 +5,11 @@ export const menuSidebardByRole = {
   ],
 
   gerente: [
-    { label: "Inicio", icon: "Home", path: "/gerente/" },
+    { label: "Inicio", icon: "Home", path: "/gerente" },
     { label: "Empleados", icon: "Users", path: "/gerente/empleados" },
     { label: "Tarifas", icon: "Banknote", path: "/gerente/tarifas" },
 
-    { label: "Nómina", icon: "Wallet", path: "/gerente/nomina" },
+    { label: "Nómina", icon: "Wallet", path: "/gerente/nomina/fecha" },
     { label: "Historial", icon: "History", path: "/gerente/historial" },
   ],
 };

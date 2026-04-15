@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import {
   useProcesosActivos,
   useFaseActualProcesos,
 } from "../../../hooks/useProcesos";
 import { calcularDuracion } from "../../../utils/tiempo";
 import { useSubprocesoActual } from "../../../hooks/useSubprocesos";
+import { Icon } from "../../../components/ui/Icon";
 
 import Card from "../../../components/card/Card";
 import CrearProceso from "./funciones/CrearProceso";
@@ -14,6 +15,35 @@ import ProcesoDetail from "./ProcesoDetail";
 
 import "./InicioTrabajador.css";
 
+// FUERA DEL COMPONENTE
+const MENSAJES_EXITO = {
+  creado: ({ codigo, nombre }) => (
+    <>
+      El cofre <strong>{codigo}</strong> con referencia{" "}
+      <strong>{nombre}</strong> fue creado correctamente.
+    </>
+  ),
+  finalizado: ({ codigo, nombre }) => (
+    <>
+      El cofre <strong>{codigo}</strong> con referencia{" "}
+      <strong>{nombre}</strong> fue finalizado correctamente.
+    </>
+  ),
+  fase: ({ codigo, fase, nombre }) => (
+    <>
+      Se completó correctamente la fase <strong>{fase}</strong> del cofre{" "}
+      <strong>{codigo}</strong> con referencia <strong>{nombre}</strong>.
+    </>
+  ),
+  nuevaFase: ({ codigo, fase, nombre, nombreTrabajador }) => (
+    <>
+      Se inició correctamente la fase <strong>{fase}</strong> del cofre{" "}
+      <strong>{codigo}</strong> con referencia <strong>{nombre}</strong> para el
+      trabajador <strong>{nombreTrabajador}</strong>.
+    </>
+  ),
+};
+
 export default function InicioTrabajador() {
   const [modalCrearProceso, setModalCrearProceso] = useState(false);
   const [modalCrearSubproceso, setModalCrearSubproceso] = useState(false);
@@ -21,6 +51,8 @@ export default function InicioTrabajador() {
 
   const [modalFinalizar, setModalFinalizar] = useState(false);
   const [subprocesoSeleccionado, setSubprocesoSeleccionado] = useState(null);
+  const [messageConfirmacion, setMessageConfirmacion] = useState(null);
+  const [visible, setVisible] = useState(false);
 
   //funcioon abrir modal finalizar subproceso
   function abrirModalFinalizar(subproceso) {
@@ -52,11 +84,18 @@ export default function InicioTrabajador() {
     refetch: refetchSubprocesos,
   } = useSubprocesoActual();
 
+  const iconos = {
+    creado: "CheckCircle",
+    finalizado: "PackageCheck",
+    fase: "RefreshCcw",
+  };
+
   //Actualizar duraacion cada minuto
-  const [, setTick] = useState(0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setTick((t) => t + 1);
+      forceUpdate();
     }, 60000); // cada 60 segundos
     return () => clearInterval(interval);
   }, []);
@@ -66,13 +105,32 @@ export default function InicioTrabajador() {
     setModalCrearSubproceso(true);
   }
 
-  async function handleSuccess() {
+  async function handleSuccess(resultado = null) {
+    setMessageConfirmacion(null);
     await Promise.all([
       refetchProcesos(),
       refetchFases(),
       refetchSubprocesos(),
     ]);
+
+    if (!resultado?.tipo) return;
+
+    const generarMensaje = MENSAJES_EXITO[resultado.tipo];
+    const mensajeGenerado = generarMensaje
+      ? generarMensaje(resultado)
+      : "Operacion exitosa";
+
+    setMessageConfirmacion({
+      tipo: resultado.tipo,
+      contenido: mensajeGenerado,
+    });
+
+    setVisible(true);
+
+    setTimeout(() => setVisible(false), 25000);
+    setTimeout(() => setMessageConfirmacion(null), 25500);
   }
+
   const loading = loadingProcesos || loadingFases || loadingSubprocesos;
 
   if (loading) return <p>Cargando procesos…</p>;
@@ -96,7 +154,6 @@ export default function InicioTrabajador() {
   });
 
   function renderProcesos(lista) {
-    console.log("lista " + lista);
     return lista.map((p) => {
       const fase = fases.find((f) => f.pro_id_proceso === p.pro_id_proceso);
 
@@ -107,36 +164,26 @@ export default function InicioTrabajador() {
         (sub) => sub.sub_proceso_id === p.pro_id_proceso,
       );
 
-      const estado = subprocesoActual
-        ? "enProceso"
-        : !fase || fase.fases_completadas === 0
-          ? "porIniciar"
-          : "siguientFase";
-
-      const colors = {
-        enProceso: "var(--danger-500)",
-        porIniciar: "var(--success-500)",
-        siguientFase: "var(--brand-500)",
+      const estado = () => {
+        if (subprocesoActual) return "enProceso";
+        if (!fase || fase.fases_completadas === 0) return "porIniciar";
+        return "siguientFase";
       };
 
-      const borderColor = colors[estado];
-
       return (
-        <Card
-          key={p.pro_id_proceso}
-          className={"card-proceso"}
-          style={{ padding: "18px", borderLeft: `5px solid ${borderColor}` }}
-        >
+        <Card key={p.pro_id_proceso} className={"card-proceso"}>
           <ProcesoDetail
             proceso={p}
-            colorTitulo={estado}
+            colorTitulo={estado()}
             fase={fase}
             subprocesoActual={subprocesoActual}
             fasesCompletadas={fasesCompletadas}
             totalFases={totalFases}
             calcularDuracion={calcularDuracion}
             onIniciarFase={abrirModalIniciarFase}
-            onFinalizarFase={(data) =>
+            onFinalizarFase={(data) => {
+              const esUltimaFase = fasesCompletadas + 1 === totalFases;
+
               abrirModalFinalizar({
                 ...data,
                 pro_id_proceso: p.pro_id_proceso,
@@ -144,8 +191,9 @@ export default function InicioTrabajador() {
                 rc_codigo: p.rc_codigo,
                 id_nombre_proceso: p.pro_codigo_cofre,
                 nombre_fase: fase?.siguiente_cargo_nombre,
-              })
-            }
+                esUltimaFase,
+              });
+            }}
           />
         </Card>
       );
@@ -156,7 +204,8 @@ export default function InicioTrabajador() {
     <div className="page-content-trabajador">
       <div className="trabajador-header">
         <div className="trabajador-header-title">
-          <h1 className="trabajadoe-title">Procesos activos</h1>
+          <h1 className="page-tittle">Procesos activos</h1>
+          <p className="page-mini-info">Seguimiento de cofres en curso</p>
         </div>
         <div className="trabajador-header-actions">
           <button
@@ -167,6 +216,15 @@ export default function InicioTrabajador() {
           </button>
         </div>
       </div>
+      {messageConfirmacion && (
+        <div className={`seccion-mensaje ${visible ? "visible" : "hidden"}`}>
+          <Icon name={iconos[messageConfirmacion.tipo]} size={22} />
+
+          <p className="mensaje-confirmacion">
+            {messageConfirmacion.contenido}
+          </p>
+        </div>
+      )}
 
       <div className="seccion-procesos">
         <h3 className="title-procesos">Por iniciar</h3>
@@ -175,6 +233,7 @@ export default function InicioTrabajador() {
         </div>
 
         <h3 className="title-procesos">En curso</h3>
+
         <div className="grid-procesos">{renderProcesos(procesosEnCurso)}</div>
       </div>
 

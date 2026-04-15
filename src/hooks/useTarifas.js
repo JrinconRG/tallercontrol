@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import { matrizPrecios, crearTarifa } from '../services/tarifas'
 
 //hook para obtener las tarifas de un trabajador

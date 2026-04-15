@@ -7,7 +7,7 @@ const normalize = (e = "") => e.toLowerCase();
 function Chip({ iconName, label, value, estado }) {
   return (
     <div className="fd-chip">
-      {iconName && <Icon name={iconName} size={13} />}
+      {iconName && <Icon name={iconName} size={20} />}
       {estado && <span className={`fd-chip-dot fd-chip-dot--${estado}`} />}
       <span className="fd-chip-label">{label}</span>
       {value && <strong className="fd-chip-value">{value}</strong>}
@@ -23,25 +23,22 @@ export default function FaseDetalle({ fase, onVerFotos }) {
     ? fase.foto.length > 0
     : !!fase.foto;
 
-  const cantFotos = Array.isArray(fase.foto)
-    ? fase.foto.length
-    : fase.foto
-      ? 1
-      : 0;
+  let cantFotos = 0;
+  if (Array.isArray(fase.foto)) {
+    cantFotos = fase.foto.length;
+  } else if (fase.foto) {
+    cantFotos = 1;
+  }
+  const renderEstado = (() => {
+    if (estado === "finalizado") return "Completado";
+    if (estado === "en_proceso") return "En progreso";
+    return "Pendiente";
+  })();
 
   return (
     <div className={`fd-panel fd-panel--${estado}`}>
       <div className="fd-chips">
-        <Chip
-          estado={estado}
-          label={
-            estado === "finalizado"
-              ? "Completado"
-              : estado === "en_proceso"
-                ? "En progreso"
-                : "Pendiente"
-          }
-        />
+        <Chip estado={estado} label={renderEstado} />
         {fase.trabajador ? (
           <Chip iconName="User" label={fase.trabajador} />
         ) : (
@@ -95,7 +92,7 @@ export default function FaseDetalle({ fase, onVerFotos }) {
           className="fd-fotos-btn"
           onClick={() => onVerFotos?.(fase)}
         >
-          <Icon name="Images" size={14} />
+          <Icon name="Images" size={20} />
           Ver fotos de evidencia ({cantFotos})
         </button>
       )}
@@ -103,7 +100,7 @@ export default function FaseDetalle({ fase, onVerFotos }) {
       {/* Aviso si está en proceso — fotos disponibles al terminar */}
       {estado === "en_proceso" && (
         <p className="fd-hint">
-          <Icon name="Info" size={12} />
+          <Icon name="Info" size={20} />
           Las fotos de evidencia estarán disponibles al completar la fase
         </p>
       )}
@@ -146,4 +143,10 @@ FaseDetalle.propTypes = {
     foto: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   }),
   onVerFotos: PropTypes.func,
+};
+Chip.propTypes = {
+  iconName: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  estado: PropTypes.string,
 };

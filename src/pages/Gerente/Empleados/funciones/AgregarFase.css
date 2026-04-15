@@ -1,0 +1,163 @@
+.agregar-fase-container {
+  position: relative;
+  display: inline-block;
+}
+
+.popover-fases {
+  position: fixed;
+ 
+  z-index: 100; 
+  width: 320px;
+  background: white;
+  border: 1px solid var(--neutral-500);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 10px rgba(0,0,0,0.12);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.popover-fases input {
+  font-size: 17px;
+}
+
+/* 🔹 Search */
+.popover-search {
+  width: 100%;
+  padding: 14px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--neutral-500);
+  font-size: 14px;
+}
+
+/* 🔹 Lista */
+.popover-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+
+/* 🔹 Item */
+.popover-item {
+  all: unset;                /* ← borra TODO el estilo nativo del botón */
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+
+.item-agregrar{
+  font-size: 20px;
+}
+.popover-item:hover {
+  background: var(--neutral-100, rgba(0, 0, 0, 0.04));
+}
+
+.popover-item--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.popover-item--selected {
+  background: var(--brand-50);
+  color: var(--brand-500, var(--brand--700));
+  font-weight: 500;
+}
+/* 🔹 Contenido */
+.item-content {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* 🔹 Check animado */
+.item-check {
+  font-size: 20px;
+  color: var(--primary-600);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.popover-item--selected .item-check {
+  opacity: 1;
+}
+
+/* 🔹 Badge */
+.popover-item-badge {
+  font-size:  18px;
+  color: var(--neutral-900);
+  background: var(--neutral-300);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* 🔹 Estados */
+.popover-item-muted {
+  padding: 8px 10px;
+  font-size: 20px;
+  color: var(--neutral-500);
+}
+
+/* 🔹 Error */
+.popover-error {
+  color: red;
+  font-size: 15px;
+    padding: 0 4px;
+
+}
+
+.multi-bar {
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding: 8px 4px 2px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  animation: slideUp 0.15s ease;
+  gap: 10px;
+
+}
+
+.multi-bar span {
+  font-size: 13px;
+  color: var(--neutral-500);
+}
+
+.multi-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* 🔹 Animación */
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Botones dentro del popover */
+
+
+/* Cancelar — fantasma */
+
+
+/* Asignar — sólido pequeño */
+
+

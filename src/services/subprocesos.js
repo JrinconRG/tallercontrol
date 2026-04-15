@@ -16,6 +16,19 @@ export async function obtenerSubprocesosTrabajador(trabajadorId) {
   return data
 }
 
+export const  getHistorialSubprocesosTrabajadorNoPagado = async ()=> {
+  try{
+        const{ data, error} = await supabase.from('vw_historial_subprocesos_pendientes').select('*');
+        if(error) throw error;
+        return data;
+  }catch(err){
+    console.log('errorr en getHistorialSubprocesosTrabajadorNoPagado: ', err);
+    throw err;
+  }
+};
+
+
+
 export const getInformacionSubprocesoActual = async () => {
   try {
     const { data, error } = await supabase
@@ -29,6 +42,7 @@ export const getInformacionSubprocesoActual = async () => {
     throw error;
   }
 };
+
 
 export async function crearSubproceso(procesoId, cargoId, trabajadorId) {
   console.log({

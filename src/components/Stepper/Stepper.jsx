@@ -23,11 +23,12 @@ export default function Stepper({ fases = [], selectedId, onSelectFase }) {
     <div className="sf-stepper">
       <div className="sf-track" aria-hidden="true">
         {sorted.map((fase, i) => {
+          const id = fase.sub_id ?? fase.c_id ?? `segment-${i}`;
           if (i === sorted.length - 1) return null;
           const estado = normalize(fase.estado ?? "pendiente");
           return (
             <div
-              key={`seg-${i}`}
+              key={`${id}`}
               className={[
                 "sf-track-segment",
                 estado === "finalizado" ? "sf-track-segment--done" : "",
@@ -40,10 +41,10 @@ export default function Stepper({ fases = [], selectedId, onSelectFase }) {
         })}
       </div>
 
-      {sorted.map((fase, index) => {
-        const id = fase.sub_id ?? fase.c_id ?? index;
-        const nombre = fase.fase ?? fase.c_nombre ?? `Fase ${index + 1}`;
-        const orden = fase.orden ?? fase.c_orden_proceso ?? index + 1;
+      {sorted.map((fase, i) => {
+        const id = fase.sub_id ?? fase.c_id ?? `fase-${i}`;
+        const nombre = fase.fase ?? fase.c_nombre;
+        const orden = fase.orden ?? fase.c_orden_proceso;
         const estado = normalize(fase.estado ?? "pendiente");
         const isSelected = selectedId === id;
 

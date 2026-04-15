@@ -1,11 +1,37 @@
 import { useState, useEffect } from 'react'
 import {
-    obtenerSubprocesosTrabajador, getInformacionSubprocesoActual, crearSubproceso
-
-} from '../services/subprocesos'
-import { finalizarSubproceso as finalizarSubprocesoService } from '../services/subprocesos'
+    obtenerSubprocesosTrabajador, getInformacionSubprocesoActual, crearSubproceso, 
+    finalizarSubproceso as finalizarSubprocesoService , getHistorialSubprocesosTrabajadorNoPagado} from '../services/subprocesos'
 
 import{getImageUrl} from "../services/storage"
+export function useHistorialSubprocesosTrabajadorNoPagado(){
+    const[historialSubProcesos, setHistorialSubProcesos] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [ error, setError] = useState(null);
+
+
+    const cargarDatosHistorial = async () => {
+        try{
+            setLoading(true);
+            setError(null);
+            const datos = await getHistorialSubprocesosTrabajadorNoPagado();
+            setHistorialSubProcesos(datos || []);
+        }catch(err){
+            setError(err.message);
+        }finally{
+            setLoading(false);
+        }
+    }
+        useEffect(() => {
+        cargarDatosHistorial()
+  }, []);
+
+  return {historialSubProcesos, loading, error, refetch:cargarDatosHistorial}
+
+}
+
+
+
 
 //hook para obtener subprocesos d eun trabajador
 export function useSubprocesosTrabajador(trabajadorId) {
@@ -25,6 +51,7 @@ export function useSubprocesosTrabajador(trabajadorId) {
                 const datos = await obtenerSubprocesosTrabajador(trabajadorId);
                 setSubprocesos(datos || []);
             } catch (error) {
+                setError(error.message)
             } finally {
                 setLoading(false);
             }

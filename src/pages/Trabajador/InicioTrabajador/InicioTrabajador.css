@@ -19,37 +19,23 @@
   gap: 12px;
 }
 
-.trabajador-header-title h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 2px 0;
-}
-
 
 
 /* ── Secciones (Por iniciar / En curso) ── */
 .seccion-procesos {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 32px;
 }
 
-.seccion-grupo {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* Título de sección — etiqueta discreta, no encabezado */
+/* Título de sección — etiqueta discreta */
 .title-procesos {
-  font-size: 1cqmax;
-  font-weight: 600;
+  font-size: 0.1.4rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-primary);
-  padding-left: 2px;
-  margin: 0;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 12px 2px;
 }
 
 /* ── Grid de cards ── */
@@ -63,9 +49,12 @@
 .card-proceso {
   background: #ffffff;
   border-radius: var(--radius-md);
-  border: 1px solid var(--neutral-300);
-  border-left-width: 4px;
-  border-left-color: var(--neutral-300); /* fallback */
+  /* Quitamos el padding inline que venía del componente Card.
+     El padding lo maneja proceso-detail-card internamente. */
+  padding: 0 !important;
+  /* Quitamos el border-left inline que venía del style prop.
+     Lo manejamos con clases CSS. */
+  border: 1px solid var(--neutral-300) !important;
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.18s ease, transform 0.18s ease;
@@ -77,7 +66,47 @@
   transform: translateY(-2px);
 }
 
-/* Colores del borde izquierdo según estado */
-.card-proceso.enProceso    { border-left-color: var(--danger-500); }
-.card-proceso.porIniciar   { border-left-color: var(--success-500); }
-.card-proceso.siguientFase { border-left-color: var(--brand-500); }
+/* Colores del borde izquierdo según estado.
+   Estas clases las aplica renderProcesos() via className={"card-proceso"} +
+   el estado se pasa como colorTitulo — ver nota en ProcesoDetail.jsx */
+.card-proceso.enProceso    { border-left-color: var(--danger-500) !important; }
+.card-proceso.porIniciar   { border-left-color: var(--success-500) !important; }
+.card-proceso.siguientFase { border-left-color: var(--brand-500) !important; }
+
+.seccion-mensaje{
+  margin: 20px 0;
+  width: 100%;
+  background: var(--info--100);
+  padding: 16px 20px;
+  border: 1px solid var(--info--300);    /* borde suave */
+  border-radius: var(--radius-md);  
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+
+
+  
+}
+.mensaje-confirmacion{
+
+  font-size: 20px;
+ 
+  margin: 0; 
+}
+
+
+.seccion-mensaje.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.seccion-mensaje.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+

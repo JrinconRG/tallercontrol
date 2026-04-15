@@ -1,6 +1,7 @@
 import SearchBar from "../ui/seachBar";
 import Select from "../ui/select";
 import "./TableHeader.css";
+import PropTypes from "prop-types";
 
 export default function TableHeader({
   nombre = null,
@@ -37,3 +38,10 @@ export default function TableHeader({
     </div>
   );
 }
+TableHeader.propTypes = {
+  nombre: PropTypes.string,
+  searchValue: PropTypes.string,
+  onSearchChange: PropTypes.func,
+  filters: PropTypes.array,
+  actions: PropTypes.array,
+};

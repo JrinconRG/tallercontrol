@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCrearEmpleado } from "../../../../hooks/useEmpleados";
 import Modal from "../../../../components/modal/Modal";
+import PropTypes from "prop-types";
 
 export default function RegistrarEmpleados({ onClose, onSuccess }) {
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [numeroDocumento, setNumeroDocumento] = useState("");
   const [celular, setCelular] = useState("");
-  const { crearEmpleadoHook, loading, error } = useCrearEmpleado();
+  const { crearEmpleadoHook, loading } = useCrearEmpleado();
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -41,26 +42,30 @@ export default function RegistrarEmpleados({ onClose, onSuccess }) {
         <p>Registrando empleado...</p>
       ) : (
         <>
-          <label>Nombre</label>
+          <labe htmlFor="nombre-registro">Nombre</labe>
           <input
+            id="nombre-registro"
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
           />
-          <label>Apellidos</label>
+          <label htmlFor="apellido-registro">Apellidos</label>
           <input
+            id="apellido-registro"
             type="text"
             value={apellidos}
             onChange={(e) => setApellidos(e.target.value)}
           />
-          <label>Número de Documento</label>
+          <label htmlFor="cedula-registro">Número de Documento</label>
           <input
+            id="cedula-registro"
             type="text"
             value={numeroDocumento}
             onChange={(e) => setNumeroDocumento(e.target.value)}
           />
-          <label>Celular</label>
+          <label htmlFor="celular-registro">Celular</label>
           <input
+            id="celular-registro"
             type="text"
             value={celular}
             onChange={(e) => setCelular(e.target.value)}
@@ -71,3 +76,7 @@ export default function RegistrarEmpleados({ onClose, onSuccess }) {
     </Modal>
   );
 }
+RegistrarEmpleados.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+};

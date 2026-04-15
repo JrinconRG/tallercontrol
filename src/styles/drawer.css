@@ -1,0 +1,182 @@
+/* =========================
+   OVERLAY (tipo Notion: sutil, no agresivo)
+========================= */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+  background: rgba(15, 15, 15, 0.25); /* suave tipo Notion */
+  backdrop-filter: blur(2px);
+}
+
+/* variante sin oscurecer fondo */
+.drawer-overlay.drawer-overlay--transparent {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+/* =========================
+   DRAWER BASE (Notion style)
+========================= */
+dialog.drawer {
+  position: relative;
+  width: 720px; /* Notion-like: más compacto */
+  height: 100%;
+  background: #ffffff;
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  transform: translateX(100%);
+  animation: slideIn 0.25s ease-out forwards;
+  border-left: 2px solid var(--neutral-400);
+
+}
+
+/* variante más pequeña */
+.drawer.drawer--sm {
+  width: 560px;
+}
+
+/* =========================
+   ANIMACIÓN SUAVE NOTION
+========================= */
+@keyframes slideIn {
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   HEADER (limpio tipo Notion)
+========================= */
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 20px 20px 12px 20px;
+  border-bottom: 1px solid var(--neutral-400);
+}
+
+/* título agrupado */
+.drawer-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* botón cerrar estilo Notion */
+.drawer-header button {
+
+  cursor: pointer;
+  color: rgba(55, 53, 47, 0.6);
+  padding: 6px 8px;
+}
+
+.drawer-header button:hover {
+  background: rgba(55, 53, 47, 0.08);
+}
+
+/* =========================
+   BODY (MUCHO AIRE)
+========================= */
+.drawer-body {
+  padding: 20px;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* clave estilo Notion */
+}
+
+/* =========================
+   SECCIONES INTERNAS
+========================= */
+.drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* títulos estilo Notion */
+.drawer-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(55, 53, 47, 0.65);
+  margin: 0;
+}
+
+/* =========================
+   CARGOS (chips estilo Notion)
+========================= */
+.cargos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* chip base Notion */
+.cargo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: all 0.15s ease;
+}
+
+/* hover suave Notion */
+.cargo-chip:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* botón dentro del chip */
+.cargo-chip button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  font-size: 12px;
+  padding: 2px 4px;
+
+  color: inherit;
+  opacity: 0.6;
+}
+
+.cargo-chip button:hover {
+  opacity: 1;
+}
+
+/* =========================
+   DIVIDER NOTION
+========================= */
+hr {
+  height: 1px;
+  background: var(--neutral-400);
+  margin: 8px 0;
+}
+
+.drawer-overlay--transparent {
+  pointer-events: none;
+}
+
+
+.drawer,
+.drawer-backdrop {
+  pointer-events: auto;
+}

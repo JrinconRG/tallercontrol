@@ -35,7 +35,7 @@
   color: var(--neutral-950);
   background: var(--text-blanco);
   border: 0.5px solid var(--neutral-600);
-  border-radius: 20px;
+  border-radius: var(--radius-md);
   padding: 4px 10px;
   white-space: nowrap;
 }
@@ -67,12 +67,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 20px;
   font-weight: 500;
   color: #185fa5;
   background: #e6f1fb;
   border: 0.5px solid #b5d4f4;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: 5px 12px;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -87,6 +87,6 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: 20px;
   color: var(--color-text-tertiary);
 }

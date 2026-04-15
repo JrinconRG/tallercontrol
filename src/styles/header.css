@@ -1,6 +1,5 @@
 .header {
   background-color: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
   padding: 0 24px;
   display: flex;
   align-items: center;

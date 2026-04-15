@@ -15,6 +15,8 @@ import Tarifas from "./pages/Gerente/Tarifas/Tarifas";
 
 //Gerente routes
 import Empleados from "./pages/Gerente/Empleados/Empleados";
+import GenerarNomina from "./pages/Gerente/Nomina/GenerarNomina";
+import HistorialGerente from "./pages/Gerente/HistorialGerente/HistorialGerente";
 
 function App() {
   return (
@@ -52,6 +54,22 @@ function App() {
             </RequireRole>
           }
         />
+        <Route
+          path="gerente/nomina/fecha"
+          element={
+            <RequireRole allowedRoles={["gerente"]}>
+              <GenerarNomina />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="gerente/historial"
+          element={
+            <RequireRole allowedRoles={["gerente"]}>
+              <HistorialGerente />
+            </RequireRole>
+          }
+        />
 
         <Route
           path="/trabajador/inicio"
@@ -61,6 +79,7 @@ function App() {
             </RequireRole>
           }
         />
+
         <Route
           path="/trabajador/historial"
           element={

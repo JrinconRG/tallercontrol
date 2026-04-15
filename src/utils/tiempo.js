@@ -5,8 +5,9 @@ export function calcularDuracion(fechaInicio) {
     const fechaStr = fechaInicio.includes('Z') ? fechaInicio : fechaInicio + 'Z';
     const inicio = new Date(fechaStr);
     const ahora = new Date();
+    const fechita = inicio.getTime()
 
-    if (isNaN(inicio.getTime())) return 'Fecha inválida';
+    if (Number.isNaN(fechita)) return 'Fecha inválida';
 
     const diffMs = ahora - inicio;
     if (diffMs < 0) return '0 min';

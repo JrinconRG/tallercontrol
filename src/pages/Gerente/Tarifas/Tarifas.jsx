@@ -135,9 +135,9 @@ export default function Tarifas() {
 
   return (
     <div className="page-content-tarifas">
-      <div className="page-header-tarifas">
-        <h1>Tarifas</h1>
-        <p>Precios por referencia y cargo</p>
+      <div className="header-page">
+        <h1 className="page-tittle">Tarifas</h1>
+        <p className="page-mini-info">Precios por referencia y cargo</p>
       </div>
 
       <Card className="card-tarifas" style={{ backgroundColor: "#ffffff" }}>
@@ -160,7 +160,7 @@ export default function Tarifas() {
               label: crearTarifasLoading ? "Guardando..." : "Guardar",
               onClick: handleGuardar,
               disabled: crearTarifasLoading || cambiosPendientes === 0,
-              className: "btn-guardar",
+              className: "btn-secondary",
             },
           ]}
         />

@@ -14,8 +14,8 @@ export function useCrearEmpleado() {
             await crearEmpleado(nombre, apellidos, numeroDocumento, celular);
             return true ;
         } catch (error) {
-            setError(error.message);
-            throw error;
+            setError(error.response?.data?.message || error.message); 
+            throw error
         } finally {
             setLoading(false);
         }
