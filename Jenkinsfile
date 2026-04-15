@@ -12,18 +12,29 @@ pipeline {
     stages {
 
         stage('Install dependencies') {
+            agent {
+                docker {
+                    image 'node:20'
+                }
+            }
             steps {
                 sh 'npm install'
             }
         }
 
         stage('Run Tests with Coverage') {
+            agent {
+                docker {
+                    image 'node:20'
+                }
+            }
             steps {
                 sh 'npm run test -- --coverage'
             }
         }
 
         stage('SonarQube Analysis') {
+            agent any
             steps {
                 script {
                     def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
@@ -44,6 +55,7 @@ pipeline {
         }
 
         stage('Quality Gate') {
+            agent any
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -52,14 +64,14 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent any
             steps {
-                sh """
-                docker build -t ${IMAGE_NAME} .
-                """
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
         stage('Deploy Container') {
+            agent any
             steps {
                 sh """
                 docker rm -f ${CONTAINER_NAME} || true

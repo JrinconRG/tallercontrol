@@ -1,7 +1,0 @@
-organization=jrinconrg
-projectKey=JrinconRG_tallercontrol
-serverUrl=https://sonarcloud.io
-serverVersion=8.0.0.84949
-dashboardUrl=https://sonarcloud.io/dashboard?id=JrinconRG_tallercontrol
-ceTaskId=AZ1vWsDQNvjplroHWMLo
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZ1vWsDQNvjplroHWMLo

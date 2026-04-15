@@ -36,3 +36,8 @@ coverage.xml
 lcov-report/
 
 scannerwork/
+.scannerwork/
+scannerwork/
+coverage/
+node_modules/
+dist/
