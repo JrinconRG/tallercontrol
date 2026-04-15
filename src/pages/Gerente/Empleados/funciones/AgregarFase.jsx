@@ -175,7 +175,7 @@ export default function AgregarFase({
 }
 
 AgregarFase.propTypes = {
-  trabajadorId: PropTypes.string,
+  trabajadorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   cargosAsignados: PropTypes.array,
   onSuccess: PropTypes.func,
 };

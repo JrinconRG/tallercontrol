@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEliminarCargoTrabajador } from "../../../../hooks/useCargoTrabajador";
 import "./EliminarFase.css";
 import PropTypes from "prop-types";
+
 export default function EliminarFase({
   cargo,
   trabajadorId,
@@ -92,3 +93,10 @@ export default function EliminarFase({
     </div>
   );
 }
+
+EliminarFase.propTypes = {
+  cargo: PropTypes.object,
+  trabajadorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  colors: PropTypes.object,
+  onSuccess: PropTypes.func,
+};

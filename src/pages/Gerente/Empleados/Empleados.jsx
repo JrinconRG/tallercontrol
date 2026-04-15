@@ -10,6 +10,29 @@ import EliminarFase from "./funciones/EliminarFase";
 import { useToast } from "../../../hooks/useToast";
 import Toast from "../../../components/Toast/Toast";
 
+const agregarCargos = (prev, seleccionados) => {
+  const yaAsignadosIds = new Set(prev.cargos.map((c) => c.id));
+
+  const nuevos = seleccionados
+    .filter((nuevo) => !yaAsignadosIds.has(nuevo.c_id))
+    .map((c) => ({
+      id: c.c_id,
+      nombre: c.c_nombre,
+    }));
+
+  return {
+    ...prev,
+    cargos: [...prev.cargos, ...nuevos],
+  };
+};
+
+const actualizarCargos = (prev, cargoEliminado) => {
+  return {
+    ...prev,
+    cargos: prev.cargos.filter((c) => c.id !== cargoEliminado.id),
+  };
+};
+
 const stringToPastelColor = (str) => {
   let hash = 0;
 
@@ -211,12 +234,9 @@ export default function Empleados() {
                         trabajadorId={empleadoDetalle.t_id}
                         colors={colors}
                         onSuccess={(cargoEliminado) => {
-                          setEmpleadoDetalle((prev) => ({
-                            ...prev,
-                            cargos: prev.cargos.filter(
-                              (c) => c.id !== cargoEliminado.id,
-                            ),
-                          }));
+                          setEmpleadoDetalle((prev) =>
+                            actualizarCargos(prev, cargoEliminado),
+                          );
                           showToast({
                             message: `Fase "${cargoEliminado.nombre}" eliminada`,
                           });
@@ -248,21 +268,9 @@ export default function Empleados() {
                       });
                     }
 
-                    setEmpleadoDetalle((prev) => ({
-                      ...prev,
-                      cargos: [
-                        ...prev.cargos,
-                        ...seleccionados
-                          .filter(
-                            (nuevo) =>
-                              !prev.cargos.some((c) => c.id === nuevo.c_id),
-                          )
-                          .map((c) => ({
-                            id: c.c_id,
-                            nombre: c.c_nombre,
-                          })),
-                      ],
-                    }));
+                    setEmpleadoDetalle((prev) =>
+                      agregarCargos(prev, seleccionados),
+                    );
 
                     refetchEmpleados();
                   }}
