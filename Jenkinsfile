@@ -7,7 +7,6 @@ pipeline {
         IMAGE_NAME         = 'sigec'
         CONTAINER_NAME     = 'sigec'
         PORT               = '80'
-        NODE_OPTIONS       = '--max-old-space-size=2048'
     }
 
     stages {
