@@ -26,7 +26,7 @@ pipeline {
                 VITE_SUPABASE_ANON_KEY = credentials('SUPABASE_ANON_KEY')
             }
             steps {
-                sh 'npm run test -- --run --coverage --no-threads --single-thread'       }
+                sh 'npm run test -- --run --coverage'      }
         }
 
         stage('SonarQube Analysis') {
