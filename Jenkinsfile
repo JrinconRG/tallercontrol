@@ -7,38 +7,38 @@ pipeline {
         IMAGE_NAME = 'sigec'
         CONTAINER_NAME = 'sigec'
         PORT = '80'
+        // Limita la memoria de Node.js durante los tests
+        NODE_OPTIONS = '--max-old-space-size=1024'
     }
 
     stages {
-
-        stage('Install dependencies') {
-            agent {
-                docker {
-                    image 'node:20'
-                }
-            }
+        stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                // Usamos el plugin de NodeJS (configurado en Global Tool Configuration como 'node20')
+                nodejs('node20') {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Run Tests with Coverage') {
-            agent { docker { image 'node:20' } }
             environment {
                 VITE_SUPABASE_URL      = credentials('SUPABASE_URL')
                 VITE_SUPABASE_ANON_KEY = credentials('SUPABASE_ANON_KEY')
             }
             steps {
-                sh 'npm run test -- --coverage'
+                nodejs('node20') {
+                    // --maxWorkers=2 evita que use todos los núcleos y congele la RAM
+                    sh 'npm run test -- --coverage --watchAll=false --maxWorkers=2'
+                }
             }
         }
 
         stage('SonarQube Analysis') {
-            agent any
             steps {
                 script {
                     def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-
+                    
                     withSonarQubeEnv('SonarQube') {
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
@@ -47,7 +47,9 @@ pipeline {
                         -Dsonar.sources=src \
                         -Dsonar.tests=src \
                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                        -Dsonar.sourceEncoding=UTF-8
+                        -Dsonar.sourceEncoding=UTF-8 \
+                        -Dsonar.ce.javaOpts=-Xmx512m \
+                        -Dsonar.search.javaOpts=-Xmx512m
                         """
                     }
                 }
@@ -55,7 +57,6 @@ pipeline {
         }
 
         stage('Quality Gate') {
-            agent any
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -63,17 +64,10 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            agent any
-            steps {
-                sh "docker build -t ${IMAGE_NAME} ."
-            }
-        }
-
-        stage('Deploy Container') {
-            agent any
+        stage('Build & Deploy') {
             steps {
                 sh """
+                docker build -t ${IMAGE_NAME} .
                 docker rm -f ${CONTAINER_NAME} || true
                 docker run -d --name ${CONTAINER_NAME} -p ${PORT}:80 ${IMAGE_NAME}
                 """
@@ -83,7 +77,9 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'coverage/**,coverage.xml', fingerprint: true
+            archiveArtifacts artifacts: 'coverage/**', fingerprint: true
+            // Limpia el espacio de trabajo para no dejar basura
+            cleanWs()
         }
     }
 }
