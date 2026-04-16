@@ -53,10 +53,9 @@ pipeline {
                         -Dsonar.tests=src/test \
                         -Dsonar.test.inclusions=src/test/** \
                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                        -Dsonar.testExecutionReportPaths=test-results.xml \
+                        -Dsonar.junit.reportPaths=test-results.xml \
                         -Dsonar.sourceEncoding=UTF-8 \
                         -Dsonar.nodejs.executable=/usr/bin/node \
-                        -Dsonar.javascript.node.maxspace=2048
                         """
                     }
                 }
