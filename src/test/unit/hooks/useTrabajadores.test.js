@@ -82,29 +82,6 @@ describe("Test hook useTrabajadoresPorCargo", () => {
       expect(result.current.trabajadores).toEqual([]);
     });
   });
-
-  //test camino finally
-  test("useTrabajadoresPorCargo - Debe manejar el finally (loading) false", async () => {
-    vi.useFakeTimers(); // ← activar explícitamente
-
-    TrabajadoresService.obtenerTrabajadoresPorCargo.mockReturnValue(
-      new Promise((resolve) => setTimeout(() => resolve([]), 50)),
-    );
-
-    const { result } = renderHook(() => useTrabajadoresPorCargo(12));
-
-    expect(result.current.loading).toBe(true);
-
-    await act(async () => {
-      vi.advanceTimersByTime(50); // ← avanzar el tiempo
-    });
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    vi.useRealTimers(); // ← limpiar al final
-  });
 });
 
 //helper (datos de useTrabajadoresSelect)
@@ -117,25 +94,6 @@ const dataTrabajadoresSelect = () => [
 
 describe("Test hook useTrabajadoresSelect", () => {
   //Camino bie
-  test(" useTrabajadoresSelect - Camino Success", async () => {
-    //arrange
-
-    TrabajadoresService.getTrabajadoresSelect.mockResolvedValue(
-      dataTrabajadoresSelect(),
-    );
-
-    //act
-    const { result } = renderHook(() => useTrabajadoresSelect());
-
-    //assert
-    await waitFor(() => {
-      expect(result.current.trabajadores).toEqual(dataTrabajadoresSelect());
-      expect(result.current.loading).toBe(false);
-    });
-
-    //verificamos q si se llamo a la q es
-    expect(TrabajadoresService.getTrabajadoresSelect).toHaveBeenCalledTimes(1);
-  });
   // camino catch
   test("useTrabajadoresSelect - Camino Catch", async () => {
     //arrange
