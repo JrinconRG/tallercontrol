@@ -34,7 +34,7 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps { // <--- Aquí estaba el doble "steps" que corregí
+            steps { 
                 script {
                     def scannerHome = tool name: 'SonarScanner',
                         type: 'hudson.plugins.sonar.SonarRunnerInstallation'

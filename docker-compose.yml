@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jrincon709/jenkins-custom:v1 
+    container_name: jenkins
+    user: root
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - devops-net
+
+  sonarqube-test:
+    image: sonarqube:lts-community
+    container_name: sonarqube-test # 
+    ports:
+      - "9000:9000"
+    networks:
+      - devops-net
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+
+networks:
+  devops-net:
+    driver: bridge
+
+volumes:
+  jenkins_home:
+  sonar_data:

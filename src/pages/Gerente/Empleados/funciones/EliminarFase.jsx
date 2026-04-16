@@ -22,7 +22,6 @@ export default function EliminarFase({
       onSuccess(cargo);
     } catch (err) {
       console.error("Error al eliminar fase:", err);
-      onError?.(err, cargo);
     } finally {
       setConfirmando(false);
     }
