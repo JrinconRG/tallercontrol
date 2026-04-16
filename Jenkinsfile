@@ -11,7 +11,6 @@ pipeline {
     }
 
     stages {
-
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
@@ -35,7 +34,7 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
+            steps { // <--- Aquí estaba el doble "steps" que corregí
                 script {
                     def scannerHome = tool name: 'SonarScanner',
                         type: 'hudson.plugins.sonar.SonarRunnerInstallation'
@@ -52,8 +51,8 @@ pipeline {
                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
                         -Dsonar.testExecutionReportPaths=test-results.xml \
                         -Dsonar.sourceEncoding=UTF-8 \
-                        -Dsonar.ce.javaOpts=-Xmx512m \
-                        -Dsonar.search.javaOpts=-Xmx512m
+                        -Dsonar.nodejs.executable=/usr/bin/node \
+                        -Dsonar.javascript.node.maxspace=2048
                         """
                     }
                 }
