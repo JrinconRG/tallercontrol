@@ -85,18 +85,25 @@ describe("Test hook useTrabajadoresPorCargo", () => {
 
   //test camino finally
   test("useTrabajadoresPorCargo - Debe manejar el finally (loading) false", async () => {
-    //arrange
+    vi.useFakeTimers(); // ← activar explícitamente
+
     TrabajadoresService.obtenerTrabajadoresPorCargo.mockReturnValue(
       new Promise((resolve) => setTimeout(() => resolve([]), 50)),
     );
-    // Act
+
     const { result } = renderHook(() => useTrabajadoresPorCargo(12));
-    //deberia estar cargargando assert
+
     expect(result.current.loading).toBe(true);
-    //espera y se false
+
+    await act(async () => {
+      vi.advanceTimersByTime(50); // ← avanzar el tiempo
+    });
+
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
+
+    vi.useRealTimers(); // ← limpiar al final
   });
 });
 

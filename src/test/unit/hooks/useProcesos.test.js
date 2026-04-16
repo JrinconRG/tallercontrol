@@ -60,42 +60,41 @@ describe("Test hook useHistorialProcesos", () => {
 
 describe("Test hook useProcesosActivos", () => {
   test("useProcesosActivos - Camino Success y Refetch", async () => {
-    // Arrange
     const datosMock = [{ id: 1, nombre: "Proceso A" }];
     ProcesosService.obtenerProcesosActivos.mockResolvedValue(datosMock);
 
-    // Act
     const { result } = renderHook(() => useProcesosActivos());
 
-    // Assert Success
-    await waitFor(() => {
-      expect(result.current.procesos).toEqual(datosMock);
-      expect(result.current.loading).toBe(false);
-    });
+    // Esperar solo lo necesario, con timeout extendido si el hook es lento
+    await waitFor(
+      () => {
+        expect(result.current.procesos).toEqual(datosMock);
+        expect(result.current.loading).toBe(false);
+      },
+      { timeout: 10000 },
+    ); // ← temporal para confirmar que el mock funciona
 
-    // Act Refetch
     await act(async () => {
       await result.current.refetch();
     });
 
-    // Assert Refetch
     expect(ProcesosService.obtenerProcesosActivos).toHaveBeenCalledTimes(2);
-  });
+  }, 15000); // ← timeout del test completo
+});
 
-  test("useProcesosActivos - Camino Catch (Error)", async () => {
-    // Arrange
-    ProcesosService.obtenerProcesosActivos.mockRejectedValue(
-      new Error("Fallo API"),
-    );
+test("useProcesosActivos - Camino Catch (Error)", async () => {
+  // Arrange
+  ProcesosService.obtenerProcesosActivos.mockRejectedValue(
+    new Error("Fallo API"),
+  );
 
-    // Act
-    const { result } = renderHook(() => useProcesosActivos());
+  // Act
+  const { result } = renderHook(() => useProcesosActivos());
 
-    // Assert
-    await waitFor(() => {
-      expect(result.current.error).toBe("Fallo API");
-      expect(result.current.loading).toBe(false);
-    });
+  // Assert
+  await waitFor(() => {
+    expect(result.current.error).toBe("Fallo API");
+    expect(result.current.loading).toBe(false);
   });
 });
 

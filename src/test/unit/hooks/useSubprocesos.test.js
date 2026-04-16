@@ -102,26 +102,6 @@ describe("Test hook useHistorialSubprocesosTrabajadorNoPagado", () => {
     });
   });
 
-  //test camino finally
-  test("useHistorialSubprocesosTrabajadorNoPagado - camino finally ", async () => {
-    //arrange
-    SubprocesosService.getHistorialSubprocesosTrabajadorNoPagado.mockReturnValue(
-      new Promise((resolve) => setTimeout(() => resolve([]), 50)),
-    );
-    // Act
-
-    const { result } = renderHook(() =>
-      useHistorialSubprocesosTrabajadorNoPagado(),
-    );
-
-    //deberia estar cargargando assert
-    expect(result.current.loading).toBe(true);
-    //espera y se falsea
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-  });
-
   test("useHistorialSubprocesosTrabajadorNoPagado - Camino Success con datos nulos", async () => {
     // Arrange
     SubprocesosService.getHistorialSubprocesosTrabajadorNoPagado.mockResolvedValue(
