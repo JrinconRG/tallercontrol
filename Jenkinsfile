@@ -14,8 +14,6 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                // Usamos el plugin de NodeJS (configurado en Global Tool Configuration como 'node20')
-                nodejs('node20') {
                     sh 'npm install'
                 }
             }
