@@ -74,7 +74,6 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: 'coverage/**', fingerprint: true
-            // Limpia el espacio de trabajo para no dejar basura
             cleanWs()
         }
     }
