@@ -82,6 +82,19 @@ describe("Test hook useTrabajadoresPorCargo", () => {
       expect(result.current.trabajadores).toEqual([]);
     });
   });
+
+  test("useTrabajadoresPorCargo - Debe manejar el finally (loading) false", async () => {
+    // Sin setTimeout, sin fake timers — mockResolvedValue resuelve inmediatamente
+    TrabajadoresService.obtenerTrabajadoresPorCargo.mockResolvedValue([]);
+
+    const { result } = renderHook(() => useTrabajadoresPorCargo(12));
+
+    expect(result.current.loading).toBe(true);
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+  });
 });
 
 //helper (datos de useTrabajadoresSelect)

@@ -2,21 +2,19 @@ pipeline {
     agent any
 
     environment {
-        SONAR_PROJECT_KEY = 'JrinconRG_tallercontrol'
+        SONAR_PROJECT_KEY  = 'JrinconRG_tallercontrol'
         SONAR_PROJECT_NAME = 'tallercontrol'
-        IMAGE_NAME = 'sigec'
-        CONTAINER_NAME = 'sigec'
-        PORT = '80'
-        // Limita la memoria de Node.js durante los tests
-        NODE_OPTIONS = '--max-old-space-size=1024'
+        IMAGE_NAME         = 'sigec'
+        CONTAINER_NAME     = 'sigec'
+        PORT               = '80'
+        NODE_OPTIONS       = '--max-old-space-size=2048'
     }
 
     stages {
+
         stage('Install Dependencies') {
             steps {
-                // Usamos el plugin de NodeJS (configurado en Global Tool Configuration como 'node20')
-                    sh 'npm install'
-                
+                sh 'npm install'
             }
         }
 
@@ -26,22 +24,33 @@ pipeline {
                 VITE_SUPABASE_ANON_KEY = credentials('SUPABASE_ANON_KEY')
             }
             steps {
-                sh 'npm run test -- --run --coverage'      }
+                sh 'npm run test -- --run --coverage'
+            }
+            post {
+                always {
+                    junit testResults: 'test-results.xml',
+                          allowEmptyResults: true
+                }
+            }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                    
+                    def scannerHome = tool name: 'SonarScanner',
+                        type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+
                     withSonarQubeEnv('SonarQube') {
                         sh """
                         ${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                         -Dsonar.projectName="${SONAR_PROJECT_NAME}" \
                         -Dsonar.sources=src \
-                        -Dsonar.tests=src \
+                        -Dsonar.exclusions=src/test/**,coverage/** \
+                        -Dsonar.tests=src/test \
+                        -Dsonar.test.inclusions=src/test/** \
                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                        -Dsonar.testExecutionReportPaths=test-results.xml \
                         -Dsonar.sourceEncoding=UTF-8 \
                         -Dsonar.ce.javaOpts=-Xmx512m \
                         -Dsonar.search.javaOpts=-Xmx512m
@@ -72,8 +81,17 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'coverage/**', fingerprint: true
             cleanWs()
+        }
+        success {
+            archiveArtifacts artifacts: 'coverage/**', fingerprint: true
+            echo 'Pipeline completado exitosamente'
+        }
+        failure {
+            echo ' Pipeline falló'
+            archiveArtifacts artifacts: 'coverage/**',
+                             allowEmptyArchive: true,
+                             fingerprint: true
         }
     }
 }
