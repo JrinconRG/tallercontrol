@@ -3,6 +3,15 @@ import { vi } from "vitest";
 import CrearProceso from "../../../pages/Trabajador/InicioTrabajador/funciones/CrearProceso";
 import * as procesosService from "../../../services/procesos";
 
+vi.mock("../../../lib/supabase", () => ({
+  supabase: {
+    from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+  },
+}));
+
 vi.mock("../../../services/cofres", () => ({
   obtenerReferenciasCofre: vi.fn(() =>
     Promise.resolve([{ rc_id: 1, rc_nombre: "Imperial", rc_codigo: "104" }]),

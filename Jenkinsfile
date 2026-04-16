@@ -23,10 +23,10 @@ pipeline {
         }
 
         stage('Run Tests with Coverage') {
-            agent {
-                docker {
-                    image 'node:20'
-                }
+            agent { docker { image 'node:20' } }
+            environment {
+                VITE_SUPABASE_URL      = credentials('SUPABASE_URL')
+                VITE_SUPABASE_ANON_KEY = credentials('SUPABASE_ANON_KEY')
             }
             steps {
                 sh 'npm run test -- --coverage'
