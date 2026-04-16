@@ -12,7 +12,10 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                // Usamos la herramienta configurada en Jenkins Tools
+                nodejs('node20') {
+                    sh 'npm install'
+                }
             }
         }
 
@@ -22,12 +25,14 @@ pipeline {
                 VITE_SUPABASE_ANON_KEY = credentials('SUPABASE_ANON_KEY')
             }
             steps {
-                sh 'npm run test -- --run --coverage'
+                nodejs('node20') {
+                    // Forzamos la creación del reporte XML y la cobertura
+                    sh 'npm run test -- --run --coverage --reporter=junit --outputFile=test-results.xml'
+                }
             }
             post {
                 always {
-                    junit testResults: 'test-results.xml',
-                          allowEmptyResults: true
+                    junit testResults: 'test-results.xml', allowEmptyResults: true
                 }
             }
         }
@@ -35,7 +40,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps { 
                 script {
-                    def scannerHome = tool name: 'SonarScanner',
+                    def scannerHome = tool name: 'SonarScanner', 
                         type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 
                     withSonarQubeEnv('SonarQube') {
@@ -86,10 +91,7 @@ pipeline {
             echo 'Pipeline completado exitosamente'
         }
         failure {
-            echo ' Pipeline falló'
-            archiveArtifacts artifacts: 'coverage/**',
-                             allowEmptyArchive: true,
-                             fingerprint: true
+            echo 'Pipeline falló'
         }
     }
 }
