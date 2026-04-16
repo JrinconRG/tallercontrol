@@ -26,9 +26,7 @@ pipeline {
                 VITE_SUPABASE_ANON_KEY = credentials('SUPABASE_ANON_KEY')
             }
             steps {
-                    // --maxWorkers=2 evita que use todos los núcleos y congele la RAM
-                    sh 'npm run test -- --coverage --watchAll=false --maxWorkers=2'
-                
+                sh 'npm run test -- --coverage --run --maxWorkers=2'                
             }
         }
 
