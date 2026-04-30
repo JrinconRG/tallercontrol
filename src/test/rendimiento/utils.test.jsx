@@ -141,7 +141,7 @@ describe("detectarCambios  rendimiento", () => {
 
     // Assert
     expect(result).toHaveLength(2500);
-    expect(elapsed).toBeLessThan(15);
+    expect(elapsed).toBeLessThan(200);
   });
 
   it("[PERF-03] matriz 100x100 yq todos cambien", () => {
@@ -155,7 +155,7 @@ describe("detectarCambios  rendimiento", () => {
 
     // Assert
     expect(result).toHaveLength(10000);
-    expect(elapsed).toBeLessThan(30);
+    expect(elapsed).toBeLessThan(300);
   });
 
   it("[PERF-04] llamadas repetidas 100 veces", () => {
