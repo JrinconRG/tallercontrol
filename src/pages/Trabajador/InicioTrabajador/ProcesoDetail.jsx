@@ -24,10 +24,10 @@ export default function ProcesoDetail({
   onFinalizarFase,
 }) {
   const hayFaseActiva = !!subprocesoActual;
-  const siguienteFase = fase?.siguiente_fase_orden;
-  const siguienteNombre = fase?.siguiente_cargo_nombre;
+  const siguienteFase = fase?.siguienteFaseOrden;
+  const siguienteNombre = fase?.siguienteCargoNombre;
   const estadoClase =
-    proceso.pro_estado?.toLowerCase() === "activo"
+    proceso.estado?.toLowerCase() === "activo"
       ? "badge-activo"
       : "badge-default";
 
@@ -81,20 +81,18 @@ export default function ProcesoDetail({
       {/* HEADER */}
       <div className="proceso-detail-header">
         <div className="content-tittle-detail ">
-          <h2 className="tittle-detail-process">
-            Cofre {proceso.pro_codigo_cofre}
-          </h2>
+          <h2 className="tittle-detail-process">Cofre {proceso.codigoCofre}</h2>
         </div>
         <div className="proceso-detail-badge">
           <p>
-            {proceso.rc_nombre} - {proceso.rc_codigo}{" "}
+            {proceso.referenciaNombre} - {proceso.referenciaCodigoNombre}{" "}
           </p>
-          <span className={`badge ${estadoClase}`}>{proceso.pro_estado}</span>
+          <span className={`badge ${estadoClase}`}>{proceso.estado}</span>
         </div>
 
         <div className="info-header">
           <Icon name="Calendar" size={18} />
-          <span>Inicio: {formatearFecha(fase?.pro_fecha_inicio)}</span>
+          <span>Inicio: {formatearFecha(fase?.fechaInicio)}</span>
         </div>
       </div>
 
@@ -109,8 +107,8 @@ export default function ProcesoDetail({
           <div className="estado-texto">
             <span className="estado-etiqueta">{renderEtiquetaLabel()}</span>
             <span className="estado-valor">
-              {subprocesoActual?.c_nombre ||
-                fase?.siguiente_cargo_nombre ||
+              {subprocesoActual?.cargoNombre ||
+                fase?.siguienteCargoNombre ||
                 "Sin asignar"}
             </span>
           </div>
@@ -119,15 +117,14 @@ export default function ProcesoDetail({
         <div className="info-line">
           <Icon name="User" size={20} />
           <span className="info-proceso">
-            {subprocesoActual?.t_nombre || "Sin asignar"}
+            {subprocesoActual?.trabajadorNombreCompleto || "Sin asignar"}
           </span>
         </div>
 
         <div className="info-line">
           <Icon name="Clock" size={18} />
           <span className="info-proceso">
-            {calcularDuracion(subprocesoActual?.sub_fecha_inicio) ||
-              "Sin iniciar"}
+            {calcularDuracion(subprocesoActual?.fechaInicio) || "Sin iniciar"}
           </span>
         </div>
       </div>
@@ -140,39 +137,32 @@ export default function ProcesoDetail({
     </div>
   );
 }
+
 ProcesoDetail.propTypes = {
   proceso: PropTypes.shape({
-    pro_estado: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    codigoCofre: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
       .isRequired,
-
-    pro_codigo_cofre: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
-
-    rc_nombre: PropTypes.string,
-
-    rc_codigo: PropTypes.string,
+    estado: PropTypes.string,
+    referenciaNombre: PropTypes.string,
+    referenciaCodigoNombre: PropTypes.string,
   }),
   colorTitulo: PropTypes.string,
-
   fase: PropTypes.shape({
-    siguiente_fase_orden: PropTypes.oneOfType([
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    fechaInicio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    siguienteFaseOrden: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-    ]).isRequired,
-
-    pro_fecha_inicio: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
-
-    siguiente_cargo_nombre: PropTypes.string.isRequired,
+    ]),
+    siguienteCargoNombre: PropTypes.string,
   }),
   subprocesoActual: PropTypes.shape({
-    c_nombre: PropTypes.string.isRequired,
-    sub_fecha_inicio: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      .isRequired,
-
-    t_nombre: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    fechaInicio: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    cargoNombre: PropTypes.string,
+    trabajadorNombreCompleto: PropTypes.string,
   }),
-  //funciones
   calcularDuracion: PropTypes.func.isRequired,
   onIniciarFase: PropTypes.func.isRequired,
   onFinalizarFase: PropTypes.func.isRequired,

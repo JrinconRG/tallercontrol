@@ -1,6 +1,7 @@
 import { detectarCambios } from "../../../utils/construirMatrizTarifas";
-import { useObtenerTarifas, useCrearTarifas } from "../../../hooks/useTarifas";
-import { useTrabajadoresSelect } from "../../../hooks/useTrabajadores";
+import { useObtenerTarifas } from "../../../features/tarifas/application/hooks/useObtenerTarifas";
+import { useGuardarTarifas } from "../../../features/tarifas/application/hooks/useGuardarTarifas";
+import { useTrabajadoresSelect } from "../../../features/Trabajadores/application/hooks/useTrabajadoresSelect";
 import Table from "../../../components/Table/Table";
 import TableHeader from "../../../components/Table/TableHeader";
 import Card from "../../../components/card/Card";
@@ -13,29 +14,36 @@ export default function Tarifas() {
   const [matrizEditable, setMatrizEditable] = useState({});
   const [matrizOriginal, setMatrizOriginal] = useState({});
   const [message, setMessage] = useState("");
+  useEffect(() => {
+    if (!message) return;
+
+    const timer = setTimeout(() => setMessage(""), 5000);
+
+    return () => clearTimeout(timer);
+  }, [message]);
+
+  useEffect(() => {
+    setMessage("");
+  }, [trabajadorId]);
 
   // hook Obtener tarifas y trabajadores
   const {
     cargos,
     referencias,
-    precios, // ya viene estructurado como { cofreId: { cargoId: valor } }
+    precios,
     loading: tarifasLoading,
     error: tarifasError,
   } = useObtenerTarifas(trabajadorId);
 
   //hook para crear tarifas
-  const {
-    loading: crearTarifasLoading,
-    error: crearTarifasError,
-    crearPrecio,
-  } = useCrearTarifas();
+  const guardarTarifasMutation = useGuardarTarifas(trabajadorId);
 
   // hook para obtener trabajadores para el select
-  const {
-    trabajadores: trabajadoresSelect,
-    loading: trabajadoresLoading,
-    error: trabajadoresError,
-  } = useTrabajadoresSelect();
+  const { trabajadoresSelect, loading: trabajadoresLoading } =
+    useTrabajadoresSelect();
+
+  console.log("trabajadoresSelect:", trabajadoresSelect);
+
   const cambiosPendientes = detectarCambios(
     matrizOriginal,
     matrizEditable,
@@ -99,8 +107,7 @@ export default function Tarifas() {
   }
 
   // 🔹 Guardar cambios
-  async function handleGuardar() {
-    setMessage("");
+  function handleGuardar() {
     const cambios = detectarCambios(matrizOriginal, matrizEditable);
 
     if (cambios.length === 0) {
@@ -108,29 +115,20 @@ export default function Tarifas() {
       return;
     }
 
-    try {
-      await Promise.all(
-        cambios.map((c) =>
-          crearPrecio(c.trabajadorCargoId, c.cofreId, c.valor),
-        ),
-      );
-
-      setMessage("Tarifas actualizadas correctamente");
-
-      // Actualizamos original despues de guardar
-
-      setMatrizOriginal(structuredClone(matrizEditable));
-    } catch (error) {
-      console.error(error);
-      setMessage(error.message);
-      setTimeout(() => setMessage(""), 10000); // se borra en 3s
-    }
+    guardarTarifasMutation.mutate(cambios, {
+      onSuccess: () => {
+        setMessage("Tarifas actualizadas correctamente");
+        setMatrizOriginal(structuredClone(matrizEditable));
+      },
+      onError: (error) => {
+        setMessage(error.message);
+      },
+    });
   }
-
-  if (tarifasLoading || trabajadoresLoading || crearTarifasLoading)
+  if (tarifasLoading || trabajadoresLoading)
     return <p>Cargando tarifas y trabajadores...</p>;
 
-  if (trabajadoresError || tarifasError || crearTarifasError)
+  if (tarifasError || guardarTarifasMutation.error)
     return <p>Error cargando tarifas y trabajadores...</p>;
 
   return (
@@ -148,18 +146,18 @@ export default function Tarifas() {
               value: trabajadorId,
               onChange: setTrabajadorId,
               placeholder: "Seleccionar trabajador...",
-              options: trabajadoresSelect.map((t) => ({
-                value: t.t_id,
-                label: t.trabajador_nombre_completo,
-              })),
+              options: trabajadoresSelect,
             },
           ]}
           actions={[
             {
               name: "guardar",
-              label: crearTarifasLoading ? "Guardando..." : "Guardar",
+              label: guardarTarifasMutation.isPending
+                ? "Guardando..."
+                : "Guardar",
               onClick: handleGuardar,
-              disabled: crearTarifasLoading || cambiosPendientes === 0,
+              disabled:
+                guardarTarifasMutation.isPending || cambiosPendientes === 0,
               className: "btn-secondary",
             },
           ]}

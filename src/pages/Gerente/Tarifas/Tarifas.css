@@ -1,7 +1,23 @@
 /* Tarifas.css */
 
+.mensaje {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
+  padding: 6px 10px;
+  border-radius: 6px;
 
+  background: var(--success-50);
+  color: var(--success-700);
+  border: 1px solid var(--success-200);
+
+  font-size: 1.4rem;
+  font-weight: 500;
+
+  margin-bottom: 8px;
+  max-width: 30%;
+}
 .page-header-tarifas {
   margin-bottom: 24px;
 }
@@ -40,17 +56,7 @@
 }
 
 /* Mensaje de feedback */
-.mensaje {
-  padding: 10px 16px;
-  border-radius: var(--radius-sm);
-  background: var(--success-50);
-  color: var(--success-700);
-  border: 1px solid var(--success-200);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-
+ 
 /* Inputs de precio dentro de la tabla */
 .input-precio-wrapper {
   display: inline-flex;

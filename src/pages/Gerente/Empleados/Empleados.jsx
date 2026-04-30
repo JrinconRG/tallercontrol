@@ -1,4 +1,4 @@
-import { useEmpleadosConCargos } from "../../../hooks/useTrabajadores";
+import { useInformacionEmpleados } from "../../../features/Trabajadores/application/hooks/useInformacionEmpleados";
 import Card from "../../../components/card/Card";
 import Table from "../../../components/Table/Table";
 import TableHeader from "../../../components/Table/TableHeader";
@@ -9,29 +9,6 @@ import AgregarFase from "./funciones/AgregarFase";
 import EliminarFase from "./funciones/EliminarFase";
 import { useToast } from "../../../hooks/useToast";
 import Toast from "../../../components/Toast/Toast";
-
-const agregarCargos = (prev, seleccionados) => {
-  const yaAsignadosIds = new Set(prev.cargos.map((c) => c.id));
-
-  const nuevos = seleccionados
-    .filter((nuevo) => !yaAsignadosIds.has(nuevo.c_id))
-    .map((c) => ({
-      id: c.c_id,
-      nombre: c.c_nombre,
-    }));
-
-  return {
-    ...prev,
-    cargos: [...prev.cargos, ...nuevos],
-  };
-};
-
-const actualizarCargos = (prev, cargoEliminado) => {
-  return {
-    ...prev,
-    cargos: prev.cargos.filter((c) => c.id !== cargoEliminado.id),
-  };
-};
 
 const stringToPastelColor = (str) => {
   let hash = 0;
@@ -52,55 +29,33 @@ export default function Empleados() {
   const [search, setSearch] = useState("");
   const [estado, setEstado] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [empleadoDetalle, setEmpleadoDetalle] = useState(null);
+  const [empleadoDetalleId, setEmpleadoDetalleId] = useState(null);
   const { toasts, showToast } = useToast();
 
+  const { empleados, loading, error } = useInformacionEmpleados();
+  console.log("Empleados obtenidos:", empleados);
+
   useEffect(() => {
+    if (!empleadoDetalleId) return;
+
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        cerrarDrawer();
-      }
+      if (e.key === "Escape") setEmpleadoDetalleId(null);
     };
-
-    if (empleadoDetalle) {
-      console.log(empleadoDetalle);
-
-      globalThis.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      globalThis.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [empleadoDetalle]);
-  const cerrarDrawer = () => setEmpleadoDetalle(null);
-
-  //hook para obtener empleados activos con cargos
-  const {
-    empleados,
-    loading: loadingEmpleados,
-    refetch: refetchEmpleados,
-  } = useEmpleadosConCargos();
-
-  const loading = loadingEmpleados;
-
-  // Función para manejar la apertura del modal de registro
-  function handleRegister() {
-    setShowModal(true);
-  }
-
-  // Función para manejar el cierre del modal de registro
-  function handleCloseModal() {
-    setShowModal(false);
-  }
-
-  // Función para manejar el éxito del registro y refrescar la lista de empleados
-  function handleSuccess() {
-    setShowModal(false);
-
-    refetchEmpleados();
-  }
+    globalThis.addEventListener("keydown", handleKeyDown);
+    return () => globalThis.removeEventListener("keydown", handleKeyDown);
+  }, [empleadoDetalleId]);
 
   if (loading) return <p>Cargando empleados...</p>;
+  if (error) return <p>Error cargando empleados</p>;
+
+  const empleadoDetalle =
+    empleados.find((e) => e.id === empleadoDetalleId) ?? null;
+
+  const empleadosFiltrados = empleados.filter((e) => {
+    return e.nombre?.toLowerCase().includes(search.toLowerCase());
+  });
+
+  // Función para manejar el cierre del modal de registro
 
   return (
     <div className="page-content-Empleados">
@@ -124,7 +79,7 @@ export default function Empleados() {
           actions={[
             {
               label: "+ Registrar empleado",
-              onClick: handleRegister,
+              onClick: () => setShowModal(true),
               variant: "secondary",
             },
           ]}
@@ -133,17 +88,17 @@ export default function Empleados() {
         <Table
           columns={[
             {
-              key: "nombre_completo",
+              key: "nombre",
               label: "Nombre del Trabajador",
               className: "col-main",
             },
             {
-              key: "t_numero_de_documento",
+              key: "documento",
               label: "Cédula",
               className: "col-sh",
             },
             {
-              key: "t_celular",
+              key: "celular",
               label: "Celular",
               className: "col-sh",
             },
@@ -174,22 +129,15 @@ export default function Empleados() {
               ),
             },
           ]}
-          data={empleados}
-          rowKey="t_id"
-          onRowClick={(row, index) => {
-            const dataFresh = empleados.find((e) => e.t_id === row.t_id);
-
-            setEmpleadoDetalle({
-              ...dataFresh,
-              index,
-            });
-          }}
+          data={empleadosFiltrados}
+          rowKey="id"
+          onRowClick={(row) => setEmpleadoDetalleId(row.id)}
         />
       </Card>
       {empleadoDetalle && (
         <div className="drawer-overlay drawer-overlay--transparent">
           <dialog
-            key={empleadoDetalle.t_id}
+            key={empleadoDetalle.id}
             className="drawer drawer--sm"
             open
             aria-modal="true"
@@ -197,16 +145,16 @@ export default function Empleados() {
             <div className="drawer-header">
               <div className="drawer-tittle">
                 <h2 className="tittle-detalle-empleado-drawer">
-                  {empleadoDetalle.nombre_completo}
+                  {empleadoDetalle.nombre}
                 </h2>
                 <span className="span-tittle-empleado">
-                  Cedula: {empleadoDetalle.t_numero_de_documento}
+                  Cedula: {empleadoDetalle.documento}
                 </span>
               </div>
 
               <button
                 className="btn btn-terciary"
-                onClick={cerrarDrawer}
+                onClick={() => setEmpleadoDetalleId(null)}
                 aria-label="Cerrar detalle"
               >
                 X
@@ -231,49 +179,18 @@ export default function Empleados() {
                       <EliminarFase
                         key={cargo.id}
                         cargo={cargo}
-                        trabajadorId={empleadoDetalle.t_id}
+                        trabajadorId={empleadoDetalle.id}
                         colors={colors}
-                        onSuccess={(cargoEliminado) => {
-                          setEmpleadoDetalle((prev) =>
-                            actualizarCargos(prev, cargoEliminado),
-                          );
-                          showToast({
-                            message: `Fase "${cargoEliminado.nombre}" eliminada`,
-                          });
-
-                          refetchEmpleados();
-                        }}
-                        onError={(err, cargo) => {
-                          showToast({
-                            message:
-                              err?.response?.data?.message ||
-                              `Error eliminando ${cargo.nombre}`,
-                          });
-                        }}
+                        onToast={showToast}
                       />
                     );
                   })}
                 </div>
 
                 <AgregarFase
-                  trabajadorId={empleadoDetalle.t_id}
+                  trabajadorId={empleadoDetalle.id}
                   cargosAsignados={empleadoDetalle.cargos ?? []}
-                  onSuccess={({ seleccionados, trabajadorId }) => {
-                    const nombre = empleados.find(
-                      (e) => e.t_id === trabajadorId,
-                    )?.nombre_completo;
-                    for (const cargo of seleccionados) {
-                      showToast({
-                        message: `Fase "${cargo.c_nombre}" agregada correctamente para ${nombre} `,
-                      });
-                    }
-
-                    setEmpleadoDetalle((prev) =>
-                      agregarCargos(prev, seleccionados),
-                    );
-
-                    refetchEmpleados();
-                  }}
+                  onToast={showToast}
                 />
 
                 <hr />
@@ -289,7 +206,7 @@ export default function Empleados() {
                   </h3>
                   <div className="info-grid">
                     <span>Celular:</span>
-                    <span>{empleadoDetalle.t_celular}</span>
+                    <span>{empleadoDetalle.celular}</span>
                     <span>Fases Activas:</span>
                     <span>{empleadoDetalle.cargos.length}</span>
                   </div>
@@ -301,13 +218,10 @@ export default function Empleados() {
       )}
 
       {showModal && (
-        <>
-          {console.log("Renderizando modal")}
-          <RegistrarEmpleados
-            onClose={handleCloseModal}
-            onSuccess={handleSuccess}
-          />
-        </>
+        <RegistrarEmpleados
+          onToast={showToast}
+          onClose={() => setShowModal(false)}
+        />
       )}
     </div>
   );

@@ -37,14 +37,14 @@ describe("Test hook useToast", () => {
     expect(result.current.toasts[0].type).toBe("success");
   });
 
-  test("useToast - showToast respeta el type y duration cuando se pasan explícitamente", () => {
+  test("useToast - showToast respeta el type y duration", () => {
     // Arrange
     const { result } = renderHook(() => useToast());
 
     // Act
     act(() => {
       result.current.showToast({
-        message: "Algo salió mal",
+        message: "salio mal",
         type: "error",
         duration: 5000,
       });
@@ -77,7 +77,7 @@ describe("Test hook useToast", () => {
     const { result } = renderHook(() => useToast());
 
     act(() => {
-      result.current.showToast({ message: "Todavía aquí", duration: 3000 });
+      result.current.showToast({ message: "nada  q elimina", duration: 3000 });
     });
 
     // Act
@@ -89,7 +89,7 @@ describe("Test hook useToast", () => {
     expect(result.current.toasts).toHaveLength(1);
   });
 
-  test("useToast - varios showToast apilan los toasts en orden de inserción", () => {
+  test("useToast - se apilan en orden de llegada", () => {
     // Arrange
     const { result } = renderHook(() => useToast());
 
@@ -109,13 +109,9 @@ describe("Test hook useToast", () => {
     ]);
   });
 
-  // ── Solo se elimina el toast correcto ──────────────────────
-
-  test("useToast - solo se elimina el toast cuyo timer venció, no los demás", () => {
+  test("useToast - solo se elimina el toast cuyo tiempo acabo", () => {
     // Arrange
-    vi.spyOn(Date, "now")
-      .mockReturnValueOnce(1000) // id del toast "Corto"
-      .mockReturnValueOnce(2000); // id del toast "Largo"
+    vi.spyOn(Date, "now").mockReturnValueOnce(1000).mockReturnValueOnce(2000);
 
     const { result } = renderHook(() => useToast());
 
@@ -134,9 +130,7 @@ describe("Test hook useToast", () => {
     expect(result.current.toasts[0].message).toBe("Largo");
   });
 
-  // ── runAllTimers elimina todos ─────────────────────────────
-
-  test("useToast - después de que vencen todos los timers la lista queda vacía", () => {
+  test("useToast - lista vacia cuando se acabo el tiempo", () => {
     // Arrange
     const { result } = renderHook(() => useToast());
 
@@ -155,8 +149,6 @@ describe("Test hook useToast", () => {
     expect(result.current.toasts).toEqual([]);
   });
 
-  // ── Duration 0 ms ──────────────────────────────────────────
-
   test("useToast - duration 0 descarta el toast de forma inmediata", () => {
     // Arrange
     const { result } = renderHook(() => useToast());
@@ -166,7 +158,6 @@ describe("Test hook useToast", () => {
     });
 
     // Act
-    // Avanzamos 0 ms: suficiente para que un setTimeout(fn, 0) dispare
     act(() => {
       vi.advanceTimersByTime(0);
     });
@@ -174,8 +165,6 @@ describe("Test hook useToast", () => {
     // Assert
     expect(result.current.toasts).toEqual([]);
   });
-
-  // ── showToast es una referencia estable (useCallback) ──────
 
   test("useToast - showToast mantiene la misma referencia entre re-renders", () => {
     // Arrange
@@ -186,7 +175,6 @@ describe("Test hook useToast", () => {
     rerender();
 
     // Assert
-    // useCallback garantiza que la función no se recrea innecesariamente
     expect(result.current.showToast).toBe(refAntes);
   });
 });

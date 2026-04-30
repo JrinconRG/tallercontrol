@@ -1,71 +1,67 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Modal from "../../../../components/modal/Modal";
-import { obtenerReferenciasCofre } from "../../../../services/cofres";
-import { crearProceso } from "../../../../services/procesos";
+import { useObtenerReferenciasCofres } from "../../../../features/cofres/application/hook/useObtenerReferenciasCofres";
+import { useCrearProceso } from "../../../../features/procesos/application/hooks/useCrearProceso";
 import PropTypes from "prop-types";
 
 export default function CrearProceso({ onClose, onSuccess }) {
-  const [referencias, setReferencias] = useState([]);
   const [referenciaId, setReferenciaId] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
+  const [validacionError, setValidacionError] = useState("");
   // limpiar error cuando el usuario selecciono
+  const { referencias, loading: loadingRefs } = useObtenerReferenciasCofres();
+
+  const { mutate: ejecutarCrearProceso, isPending: isCreating } =
+    useCrearProceso();
+
   const handleSelectChange = (e) => {
     setReferenciaId(e.target.value);
-    if (e.target.value) setError("");
+    if (e.target.value) setValidacionError("");
   };
-
-  useEffect(() => {
-    async function cargarReferencias() {
-      try {
-        setLoading(true);
-        const data = await obtenerReferenciasCofre();
-        setReferencias(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    cargarReferencias();
-  }, []);
 
   async function handleConfirmar() {
     if (!referenciaId) {
-      setError("Por favor, selecciona una referencia de cofre para continuar.");
-      return; // Detiene la ejecución
-    }
-    try {
-      setLoading(true);
-      const cofre = await crearProceso(referenciaId);
-      const nombreReferencia = referencias.find(
-        (ref) => ref.rc_id == referenciaId,
+      setValidacionError(
+        "Por favor, selecciona una referencia de cofre para continuar.",
       );
-
-      onSuccess({
-        tipo: "creado",
-        codigo: cofre.codigo,
-        nombre: nombreReferencia.rc_nombre,
-      });
-      onClose();
-    } catch (error) {
-      console.error("Error al crear el proceso:", error);
-      setError("Hubo un fallo en el servidor. Intenta de nuevo.");
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    if (!navigator.onLine) {
+      setValidacionError("No hay conexión a internet.");
+      return;
+    }
+
+    ejecutarCrearProceso(referenciaId, {
+      onSuccess: (nuevoProceso) => {
+        const refSeleccionada = referencias.find(
+          (ref) => ref.id == referenciaId,
+        );
+
+        onSuccess({
+          tipo: "creado",
+          codigo: nuevoProceso.codigo,
+          nombre: refSeleccionada
+            ? refSeleccionada.nombre
+            : "Nombre desconocido",
+        });
+        onClose();
+      },
+      onError: () => {
+        setValidacionError("Hubo un fallo en el servidor. Intenta de nuevo.");
+      },
+    });
   }
 
   return (
     <Modal
       isOpen
       title="Crear proceso"
-      confirmText="Crear Proceso"
+      confirmText={isCreating ? "Creando..." : "Crear Proceso"}
       onConfirm={handleConfirmar}
       onClose={onClose}
+      disableConfirm={isCreating || loadingRefs}
     >
-      {loading ? (
+      {loadingRefs ? (
         <p>Cargando referencias...</p>
       ) : (
         <>
@@ -74,20 +70,20 @@ export default function CrearProceso({ onClose, onSuccess }) {
             id="referencia-select"
             value={referenciaId}
             onChange={handleSelectChange}
-            className={error ? "input-error" : ""}
-            style={{ borderColor: error ? "red" : "" }}
+            className={validacionError ? "input-error" : ""}
+            style={{ borderColor: validacionError ? "red" : "" }}
           >
             <option value="">Seleccione una referencia</option>
             {referencias.map((ref) => (
-              <option key={ref.rc_id} value={ref.rc_id}>
-                {ref.rc_nombre}({ref.rc_codigo})
+              <option key={ref.id} value={ref.id}>
+                {ref.nombre}({ref.codigo})
               </option>
             ))}
           </select>
 
-          {error && (
+          {validacionError && (
             <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
-              {error}
+              {validacionError}
             </p>
           )}
         </>

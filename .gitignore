@@ -41,3 +41,29 @@ scannerwork/
 coverage/
 node_modules/
 dist/
+
+.gradle
+
+bin
+
+Reports
+
+Libs
+
+output
+
+!output/.gitkeep
+build
+
+.classpath
+
+.project
+
+.cache
+
+
+# E2E / Katalan / pruebas externas
+sigec-e2e/
+
+# Nuevas capas de testing
+

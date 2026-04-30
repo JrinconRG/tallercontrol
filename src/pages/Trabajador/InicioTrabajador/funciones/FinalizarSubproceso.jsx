@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "../../../../components/modal/Modal.jsx";
 import { subirEvidencia } from "../../../../services/storage.js";
-import { useFinalizarSubproceso } from "../../../../hooks/useSubprocesos.js";
+import { useFinalizarSubProceso } from "../../../../features/subProcesos/application/hooks/useFinalizarSubProceso.js";
 import { Icon } from "../../../../components/ui/Icon.jsx";
 import PropTypes from "prop-types";
 
@@ -12,6 +12,7 @@ export default function FinalizarSubproceso({
 }) {
   const [file, setFile] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  console.log("Subproceso recibido en modal:", subproceso); // Debug: Verificar datos del subproceso
 
   // limpiar error cuando el usuario selecciono
   const handleSelectChange = (e) => {
@@ -20,36 +21,42 @@ export default function FinalizarSubproceso({
   };
 
   // llamar hook para finalizar subproceso
-  const { finalizarSubproceso, loading } = useFinalizarSubproceso();
+  const { mutateAsync: finalizarSubprocesoMutate, isPending: isFinalizing } =
+    useFinalizarSubProceso();
 
   async function handleConfirmar() {
     if (!file) {
       setErrorMsg("Por favor, selecciona una foto de evidencia.");
       return;
     }
-    setErrorMsg(null);
+
     try {
+      setErrorMsg("");
+
       //SUBIR IMAGEN
 
       const evidenciaPath = `cofre_${subproceso.subproceso.rc_nombre}/proceso_${subproceso.subproceso.id_nombre_proceso}/subproceso_${subproceso.subproceso.nombre_fase}_ID_${subproceso.subproceso.sub_id_subproceso}.jpg`;
-      console.log("path:", evidenciaPath);
+
       await subirEvidencia(file, evidenciaPath);
-      //FINALIZAR SUBPROCESO
-      const result = await finalizarSubproceso(
-        evidenciaPath,
-        subproceso.subproceso.sub_id_subproceso,
-      );
-      if (result.success) {
-        await onSuccess({
-          tipo: subproceso.subproceso.esUltimaFase ? "finalizado" : "fase",
-          codigo: subproceso.subproceso.id_nombre_proceso,
-          nombre: subproceso.subproceso.rc_nombre,
-          fase: subproceso.subproceso.nombre_fase,
-        });
-        onClose();
-      }
+      const dataParaBackend = {
+        p_foto_path: evidenciaPath,
+        p_sub_id_subproceso: subproceso.subproceso.id,
+      };
+      await finalizarSubprocesoMutate(dataParaBackend);
+
+      await onSuccess({
+        tipo: subproceso.subproceso.esUltimaFase ? "finalizado" : "fase",
+        codigo: subproceso.subproceso.id_nombre_proceso,
+        nombre: subproceso.subproceso.rc_nombre,
+        fase: subproceso.subproceso.nombre_fase,
+      });
+      onClose();
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
+      setErrorMsg(
+        "Hubo un error al procesar la solicitud. Intenta de nuevo.",
+        error,
+      );
     }
   }
 
@@ -60,7 +67,7 @@ export default function FinalizarSubproceso({
       confirmText="Finalizar"
       onConfirm={handleConfirmar}
       onClose={onClose}
-      loading={loading}
+      loading={isFinalizing}
     >
       <p>
         <strong>Fase:</strong> {subproceso.subproceso.nombre_fase}

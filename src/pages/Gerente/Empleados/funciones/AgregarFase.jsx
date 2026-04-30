@@ -1,88 +1,77 @@
 import { useState, useEffect, useRef } from "react";
-import { useCrearCargoTrabajador } from "../../../../hooks/useCargoTrabajador";
-import { obtenerCargos } from "../../../../services/cargos";
+import { useAsignarCargo } from "../../../../features/Trabajadores/application/hooks/useAsignarCargo";
+import { useCargos } from "../../../../features/cargos/application/hooks/useCargos";
 import PropTypes from "prop-types";
-
 import "./AgregarFase.css";
 
 export default function AgregarFase({
   trabajadorId,
   cargosAsignados,
-  onSuccess,
+  onToast,
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [cargos, setCargos] = useState([]);
-  const [loadingCargos, setLoadingCargos] = useState(false);
   const [seleccionados, setSeleccionados] = useState([]);
-
   const popoverRef = useRef(null);
 
-  const {
-    crearCargoTrabajadorHook,
-    loading: loadingCrear,
-    error,
-  } = useCrearCargoTrabajador();
-
-  // 🔹 Cargar cargos
-  useEffect(() => {
-    async function cargarCargos() {
-      try {
-        setLoadingCargos(true);
-        const data = await obtenerCargos();
-        setCargos(data);
-      } catch (err) {
-        console.error("Error al cargar cargos:", err);
-      } finally {
-        setLoadingCargos(false);
-      }
-    }
-    cargarCargos();
-  }, []);
+  //  Cargar cargos
+  const { cargos, loading: loadingCargos } = useCargos();
+  const asignarCargoMutation = useAsignarCargo();
 
   // 🔹 Cerrar al hacer click afuera
   useEffect(() => {
-    function handleClickOutside(e) {
+    if (!open) return;
+
+    const handleClickOutside = (e) => {
       if (popoverRef.current && !popoverRef.current.contains(e.target)) {
-        setOpen(false);
-        setSearch("");
-        setSeleccionados([]);
+        cerrarPopover();
       }
-    }
-    if (open) document.addEventListener("mousedown", handleClickOutside);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  // 🔹 Filtrar
+  const cerrarPopover = () => {
+    setOpen(false);
+    setSearch("");
+    setSeleccionados([]);
+  };
+
+  // Filtrar
   const cargosFiltrados = cargos.filter((c) =>
-    (c.c_nombre || "").toLowerCase().includes((search || "").toLowerCase()),
+    (c.nombre || "").toLowerCase().includes((search || "").toLowerCase()),
   );
 
-  // 🔹 Toggle selección
+  //  Toggle selección
   const toggleSeleccion = (cargo) => {
     setSeleccionados((prev) => {
-      const existe = prev.find((c) => c.c_id === cargo.c_id);
-
-      if (existe) {
-        return prev.filter((c) => c.c_id !== cargo.c_id);
-      } else {
-        return [...prev, cargo];
-      }
+      const existe = prev.find((c) => c.id === cargo.id);
+      return existe ? prev.filter((c) => c.id !== cargo.id) : [...prev, cargo];
     });
   };
 
   // 🔹 Confirmar asignación
   async function handleAsignar() {
-    for (const cargo of seleccionados) {
-      await crearCargoTrabajadorHook(cargo.c_id, trabajadorId);
-    }
-    await onSuccess({
-      seleccionados: seleccionados ?? [],
-      trabajadorId: trabajadorId,
-    });
-
-    setSeleccionados([]);
-    setOpen(false);
+    await Promise.all(
+      seleccionados.map(
+        (cargo) =>
+          console.log(
+            "Asignando cargo",
+            cargo.id,
+            "a trabajador",
+            trabajadorId,
+          ) ||
+          asignarCargoMutation.mutateAsync(
+            { cargoId: cargo.id, trabajadorId: trabajadorId },
+            {
+              onSuccess: () => {
+                onToast({ message: `Fase "${cargo}" asignada` });
+              },
+            },
+          ),
+      ),
+    );
+    cerrarPopover();
   }
 
   return (
@@ -91,7 +80,7 @@ export default function AgregarFase({
         className="btn btn-terciary"
         style={{ fontSize: "20px" }}
         onClick={() => setOpen((v) => !v)}
-        disabled={loadingCrear}
+        disabled={asignarCargoMutation.isPending}
       >
         + Agregar fase
       </button>
@@ -106,7 +95,11 @@ export default function AgregarFase({
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          {error && <p className="popover-error">{error}</p>}
+          {asignarCargoMutation.isError && (
+            <p className="popover-error">
+              {asignarCargoMutation.error?.message}
+            </p>
+          )}
 
           <ul className="popover-list">
             {loadingCargos && (
@@ -115,17 +108,17 @@ export default function AgregarFase({
 
             {!loadingCargos &&
               cargosFiltrados.map((cargo) => {
-                const yaAsignado = cargosAsignados.some(
-                  (c) => c.id === cargo.c_id,
+                const yaAsignado = cargosAsignados.some((c) =>
+                  c.esIgualA(cargo),
                 );
 
-                const seleccionado = seleccionados.some(
-                  (c) => c.c_id === cargo.c_id,
+                const seleccionado = seleccionados.some((c) =>
+                  c.esIgualA(cargo),
                 );
 
                 return (
                   <button
-                    key={cargo.c_id}
+                    key={cargo.id}
                     className={`popover-item 
                       ${yaAsignado ? "popover-item--disabled" : ""} 
                       ${seleccionado ? "popover-item--selected" : ""}
@@ -133,7 +126,7 @@ export default function AgregarFase({
                     onClick={() => !yaAsignado && toggleSeleccion(cargo)}
                   >
                     <div className="item-content">
-                      <span className="item-agregrar">{cargo.c_nombre}</span>
+                      <span className="item-agregrar">{cargo.nombre}</span>
 
                       {yaAsignado && (
                         <span className="popover-item-badge">ya asignado</span>
@@ -162,8 +155,12 @@ export default function AgregarFase({
                   Cancelar
                 </button>
 
-                <button className="btn btn-primary" onClick={handleAsignar}>
-                  Asignar
+                <button
+                  className="btn btn-primary"
+                  onClick={handleAsignar}
+                  disabled={asignarCargoMutation.isPending}
+                >
+                  {asignarCargoMutation.isPending ? "Asignando..." : "Asignar"}
                 </button>
               </div>
             </div>
@@ -177,5 +174,5 @@ export default function AgregarFase({
 AgregarFase.propTypes = {
   trabajadorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   cargosAsignados: PropTypes.array,
-  onSuccess: PropTypes.func,
+  onToast: PropTypes.func,
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useHistorialProcesos } from "../../../hooks/useProcesos";
+import { useObtenerHistorialProcesos } from "../../../features/procesos/application/hooks/useObtenerHistorialProcesos";
 import Table from "../../../components/Table/Table";
 import TableHeader from "../../../components/Table/TableHeader";
 import Card from "../../../components/card/Card";
@@ -31,7 +31,8 @@ export default function HistorialGerente() {
     };
   }, [procesoDetalle]);
 
-  const { historial, loading, error } = useHistorialProcesos();
+  const { historial, loading, error } = useObtenerHistorialProcesos();
+  console.log("historial", historial);
 
   if (loading) return <p>Cargando historial..</p>;
   if (error) return <p>Error al cargar historial..</p>;
@@ -61,43 +62,42 @@ export default function HistorialGerente() {
 
         <Table
           columns={[
-            { key: "pro_codigo_cofre", label: "Código" },
-            { key: "rc_nombre", label: "Nombre del Cofre" },
+            { key: "codigoCofre", label: "Código" },
+            { key: "referenciaNombre", label: "Nombre del Cofre" },
             {
-              key: "pro_fecha_inicio",
+              key: "fechaInicio",
               label: "Inicio",
-              render: (row) =>
-                new Date(row.pro_fecha_inicio).toLocaleDateString(),
+              render: (row) => new Date(row.fechaInicio).toLocaleDateString(),
             },
             {
-              key: "pro_fecha_fin",
+              key: "fechaFin",
               label: "Fin",
               render: (row) =>
-                row.pro_fecha_fin
-                  ? new Date(row.pro_fecha_fin).toLocaleDateString()
+                row.fechaFin
+                  ? new Date(row.fechaFin).toLocaleDateString()
                   : "-",
             },
             {
-              key: "total_acumulado",
+              key: "totalAcumulado",
               label: "Valor Total",
-              render: (row) => `$${row.total_acumulado?.toLocaleString()}`,
+              render: (row) => `$${row.totalAcumulado?.toLocaleString()}`,
             },
             {
-              key: "pro_estado",
+              key: "estado",
               label: "Estado",
               render: (row) => (
                 <span className="badge-finalizado">
-                  {row.pro_estado.toUpperCase()}
+                  {row.estado?.toUpperCase()}
                 </span>
               ),
             },
           ]}
           data={historial}
-          rowKey="pro_id_proceso"
+          rowKey="id"
           onRowClick={(row) =>
             setProcesoDetalle({
               ...row,
-              subprocesos: row.detalle_subprocesos || [],
+              subprocesos: row.detalleSubprocesos || [],
             })
           }
         />
@@ -112,7 +112,7 @@ export default function HistorialGerente() {
           />
           <dialog className="drawer" open aria-modal="true">
             <div className="drawer-header">
-              <h3>{procesoDetalle.pro_codigo_cofre}</h3>
+              <h3>{procesoDetalle.codigoCofre}</h3>
               <button
                 className="btn btn-primary"
                 onClick={cerrarDrawer}
@@ -125,18 +125,17 @@ export default function HistorialGerente() {
             <div className="drawer-body">
               <Table
                 columns={[
-                  { key: "fase", label: "Fase" },
-                  { key: "trabajador", label: "Trabajador" },
+                  { key: "cargoNombre", label: "Fase" },
+                  { key: "trabajadorNombreCompleto", label: "Trabajador" },
                   {
-                    key: "fecha_inicio",
+                    key: "fechaInicio",
                     label: "Inicio",
-                    render: (row) =>
-                      new Date(row.fecha_inicio).toLocaleString(),
+                    render: (row) => new Date(row.fechaInicio).toLocaleString(),
                   },
                   {
-                    key: "fecha_fin",
+                    key: "fechaFin",
                     label: "Fin",
-                    render: (row) => new Date(row.fecha_fin).toLocaleString(),
+                    render: (row) => new Date(row.fechaFin).toLocaleString(),
                   },
                   {
                     key: "valor",
@@ -144,15 +143,15 @@ export default function HistorialGerente() {
                     render: (row) => `$${Number(row.valor).toLocaleString()}`,
                   },
                   {
-                    key: "foto",
+                    key: "fotosEvidencia",
                     label: "Evidencia",
                     render: (row) => (
                       <button
                         className="btn btn-primary"
                         onClick={() =>
                           setImagenSeleccionada({
-                            path: row.foto,
-                            fase: row.fase,
+                            path: row.fotosEvidencia,
+                            fase: row.cargoNombre,
                           })
                         }
                       >
@@ -161,8 +160,8 @@ export default function HistorialGerente() {
                     ),
                   },
                 ]}
-                data={procesoDetalle.subprocesos}
-                rowKey="sub_id"
+                data={procesoDetalle.detalleSubprocesos}
+                rowKey="id"
               />
             </div>
           </dialog>

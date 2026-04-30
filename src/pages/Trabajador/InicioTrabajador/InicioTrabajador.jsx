@@ -1,10 +1,11 @@
 import { useEffect, useState, useReducer } from "react";
-import {
-  useProcesosActivos,
-  useFaseActualProcesos,
-} from "../../../hooks/useProcesos";
+
+import { useObtenerFaseActualProcesos } from "../../../features/procesos/application/hooks/useObtenerFaseActualProcesos";
+import { useProcesosActivos } from "../../../features/procesos/application/hooks/useProcesosActivos";
 import { calcularDuracion } from "../../../utils/tiempo";
-import { useSubprocesoActual } from "../../../hooks/useSubprocesos";
+
+import { useObtenerInfoSubprocesoActual } from "../../../features/subProcesos/application/hooks/useObtenerInformacionSubprocesoActual";
+
 import { Icon } from "../../../components/ui/Icon";
 
 import Card from "../../../components/card/Card";
@@ -15,7 +16,6 @@ import ProcesoDetail from "./ProcesoDetail";
 
 import "./InicioTrabajador.css";
 
-// FUERA DEL COMPONENTE
 const MENSAJES_EXITO = {
   creado: ({ codigo, nombre }) => (
     <>
@@ -44,6 +44,12 @@ const MENSAJES_EXITO = {
   ),
 };
 
+const iconos = {
+  creado: "CheckCircle",
+  finalizado: "PackageCheck",
+  fase: "RefreshCcw",
+};
+
 export default function InicioTrabajador() {
   const [modalCrearProceso, setModalCrearProceso] = useState(false);
   const [modalCrearSubproceso, setModalCrearSubproceso] = useState(false);
@@ -54,15 +60,6 @@ export default function InicioTrabajador() {
   const [messageConfirmacion, setMessageConfirmacion] = useState(null);
   const [visible, setVisible] = useState(false);
 
-  //funcioon abrir modal finalizar subproceso
-  function abrirModalFinalizar(subproceso) {
-    setSubprocesoSeleccionado({
-      subproceso,
-    });
-
-    setModalFinalizar(true);
-  }
-
   //hook para obtener procesos activos
   const {
     procesos,
@@ -70,25 +67,28 @@ export default function InicioTrabajador() {
     refetch: refetchProcesos,
   } = useProcesosActivos();
 
+  console.log("Procesos activos:", procesos); // Agrega este log para verificar los datos de procesos
+
   //hook para obtener fases actuales
   const {
-    fases,
+    faseActualProcesos,
     loading: loadingFases,
     refetch: refetchFases,
-  } = useFaseActualProcesos();
+  } = useObtenerFaseActualProcesos();
+
+  console.log("Fases actuales de procesos:", faseActualProcesos); // Agrega este log para verificar los datos de fases actualess
 
   //hook para obtener información de subproceso actual
   const {
-    data: subprocesosActivos,
+    informacionSubProcesoActual,
     loading: loadingSubprocesos,
     refetch: refetchSubprocesos,
-  } = useSubprocesoActual();
+  } = useObtenerInfoSubprocesoActual();
 
-  const iconos = {
-    creado: "CheckCircle",
-    finalizado: "PackageCheck",
-    fase: "RefreshCcw",
-  };
+  console.log(
+    "Información del subproceso actual:",
+    informacionSubProcesoActual,
+  ); // Agrega este log para verificar los datos de subproceso actual
 
   //Actualizar duraacion cada minuto
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -100,9 +100,27 @@ export default function InicioTrabajador() {
     return () => clearInterval(interval);
   }, []);
 
+  //helpers
+  function getSubprocesoDeProcesso(proceso) {
+    return (
+      informacionSubProcesoActual?.find(
+        (sub) => sub.idProceso === proceso.id,
+      ) ?? null
+    );
+  }
+
   function abrirModalIniciarFase(proceso, fase) {
     setContextoFase({ proceso, fase });
     setModalCrearSubproceso(true);
+  }
+
+  //funcioon abrir modal finalizar subproceso
+  function abrirModalFinalizar(subproceso) {
+    setSubprocesoSeleccionado({
+      subproceso,
+    });
+
+    setModalFinalizar(true);
   }
 
   async function handleSuccess(resultado = null) {
@@ -131,47 +149,39 @@ export default function InicioTrabajador() {
     setTimeout(() => setMessageConfirmacion(null), 25500);
   }
 
-  const loading = loadingProcesos || loadingFases || loadingSubprocesos;
-
-  if (loading) return <p>Cargando procesos…</p>;
-
   // dividir por secciones
   const procesosPorIniciar = [];
   const procesosEnCurso = [];
 
-  procesos.forEach((p) => {
-    const fase = fases.find((f) => f.pro_id_proceso === p.pro_id_proceso);
+  if (!loadingProcesos && !loadingFases && !loadingSubprocesos) {
+    procesos.forEach((p) => {
+      const fase = faseActualProcesos.find((f) => f.id === p.id);
+      const subprocesoActual = getSubprocesoDeProcesso(p); // ya usa el find corregido
 
-    const subprocesoActual = subprocesosActivos.find(
-      (sub) => sub.sub_proceso_id === p.pro_id_proceso,
-    );
-
-    if (!fase || (fase.fases_completadas === 0 && !subprocesoActual)) {
-      procesosPorIniciar.push(p);
-    } else {
-      procesosEnCurso.push(p);
-    }
-  });
+      if (!fase || (fase.fasesCompletadas === 0 && !subprocesoActual)) {
+        procesosPorIniciar.push(p);
+      } else {
+        procesosEnCurso.push(p);
+      }
+    });
+  }
 
   function renderProcesos(lista) {
     return lista.map((p) => {
-      const fase = fases.find((f) => f.pro_id_proceso === p.pro_id_proceso);
+      const fase = faseActualProcesos.find((f) => f.id === p.id);
+      const subprocesoActual = getSubprocesoDeProcesso(p);
 
-      const fasesCompletadas = fase?.fases_completadas || 0;
-      const totalFases = fase?.total_fases || 1;
-
-      const subprocesoActual = subprocesosActivos.find(
-        (sub) => sub.sub_proceso_id === p.pro_id_proceso,
-      );
+      const fasesCompletadas = fase?.fasesCompletadas ?? 0;
+      const totalFases = fase?.totalFases ?? 1;
 
       const estado = () => {
         if (subprocesoActual) return "enProceso";
-        if (!fase || fase.fases_completadas === 0) return "porIniciar";
+        if (!fase || fase.fasesCompletadas === 0) return "porIniciar";
         return "siguientFase";
       };
 
       return (
-        <Card key={p.pro_id_proceso} className={"card-proceso"}>
+        <Card key={p.id} className={"card-proceso"}>
           <ProcesoDetail
             proceso={p}
             colorTitulo={estado()}
@@ -186,11 +196,11 @@ export default function InicioTrabajador() {
 
               abrirModalFinalizar({
                 ...data,
-                pro_id_proceso: p.pro_id_proceso,
-                rc_nombre: p.rc_nombre,
-                rc_codigo: p.rc_codigo,
-                id_nombre_proceso: p.pro_codigo_cofre,
-                nombre_fase: fase?.siguiente_cargo_nombre,
+                pro_id_proceso: p.id,
+                rc_nombre: p.referenciaNombre,
+                rc_codigo: p.referenciaCodigoNombre,
+                id_nombre_proceso: p.codigoCofre,
+                nombre_fase: fase?.siguienteCargoNombre,
                 esUltimaFase,
               });
             }}
@@ -199,6 +209,8 @@ export default function InicioTrabajador() {
       );
     });
   }
+  const loading = loadingProcesos || loadingFases || loadingSubprocesos;
+  if (loading) return <p>Cargando procesos…</p>;
 
   return (
     <div className="page-content-trabajador">

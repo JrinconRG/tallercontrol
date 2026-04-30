@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistorialSubprocesosTrabajadorNoPagado } from "../../../hooks/useSubprocesos";
+import { useObtenerHistorialSubprocesosPendientes } from "../../../features/subProcesos/application/hooks/useObtenerHistorialSubprocesosPendientes";
 import Table from "../../../components/Table/Table";
 import TableHeader from "../../../components/Table/TableHeader";
 import Card from "../../../components/card/Card";
@@ -16,13 +16,14 @@ export default function Historial() {
   });
 
   // uso de hook personalizado para obtener el historial de subprocesos
-  const { historialSubProcesos, loading, error } =
-    useHistorialSubprocesosTrabajadorNoPagado();
+
+  const { historialSubprocesosPendientes, loading, error } =
+    useObtenerHistorialSubprocesosPendientes();
 
   if (loading) return <p>Cargando historial..</p>;
-
-  if (error) return <p>Error al cargar historial..</p>;
-  console.log(historialSubProcesos);
+  if (error) return <p>Error al cargar: {error.message}</p>;
+  if (historialSubprocesosPendientes.length === 0)
+    return <p>No hay registros pendientes.</p>;
 
   return (
     <div className="page-content-historial">
@@ -45,63 +46,62 @@ export default function Historial() {
         ></TableHeader>
 
         <Table
-          data={historialSubProcesos}
-          rowKey="sub_id_subproceso"
+          data={historialSubprocesosPendientes}
+          rowKey="id"
           columns={[
             {
-              key: "pro_codigo_cofre",
+              key: "codigoCofre",
               label: "Código",
             },
             {
-              key: "referencia_nombre",
+              key: "referenciaNombre",
               label: "Nombre del Cofre",
             },
             {
-              key: "duracion_reloj",
+              key: "duracion",
               label: "Duracion",
             },
             {
-              key: "sub_fecha_inicio",
+              key: "fechaInicio",
               label: "Inicio",
-              render: (row) =>
-                new Date(row.sub_fecha_inicio).toLocaleDateString(),
+              render: (row) => new Date(row.fechaInicio).toLocaleDateString(),
             },
             {
-              key: "sub_fecha_fin",
+              key: "fechaFin",
               label: "Fin",
               render: (row) =>
-                row.sub_fecha_fin
-                  ? new Date(row.sub_fecha_fin).toLocaleDateString()
+                row.fechaFin
+                  ? new Date(row.fechaFin).toLocaleDateString()
                   : "-",
             },
             {
-              key: "trabajador_nombre",
+              key: "trabajadoNombreCompleto",
               label: "Nombre ",
             },
             {
-              key: "cargo_nombre",
+              key: "cargoNombre",
               label: "Trabajo realizado ",
             },
             {
-              key: "valor_pagar",
+              key: "valor",
               label: "Valor Total",
-              render: (row) => `$${row.valor_pagar?.toLocaleString()}`,
+              render: (row) => `$${row.valor?.toLocaleString()}`,
             },
 
             {
-              key: "sub_fotos_evidencia",
+              key: "fotosEvidencia",
               label: "Evidencia",
               render: (row) => {
                 // Verificar si hay fotos
                 const tieneFotos =
-                  row.sub_fotos_evidencia && row.sub_fotos_evidencia.length > 0;
+                  row.fotosEvidencia && row.fotosEvidencia.length > 0;
                 return tieneFotos ? (
                   <button
                     className="btn btn-primary"
                     onClick={() =>
                       setImagenSeleccionada({
-                        path: row.sub_fotos_evidencia,
-                        fase: row.cargo_nombre,
+                        path: row.fotosEvidencia,
+                        fase: row.cargoNombre,
                       })
                     }
                   >

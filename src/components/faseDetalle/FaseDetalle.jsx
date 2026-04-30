@@ -16,17 +16,18 @@ function Chip({ iconName, label, value, estado }) {
 }
 
 export default function FaseDetalle({ fase, onVerFotos }) {
+  console.log("Renderizando FaseDetalle con fase:", fase);
   if (!fase) return null;
   const estado = normalize(fase.estado ?? "pendiente");
 
-  const tieneFotos = Array.isArray(fase.foto)
-    ? fase.foto.length > 0
-    : !!fase.foto;
+  const tieneFotos = Array.isArray(fase.fotosEvidencia)
+    ? fase.fotosEvidencia.length > 0
+    : !!fase.fotosEvidencia;
 
   let cantFotos = 0;
-  if (Array.isArray(fase.foto)) {
-    cantFotos = fase.foto.length;
-  } else if (fase.foto) {
+  if (Array.isArray(fase.fotosEvidencia)) {
+    cantFotos = fase.fotosEvidencia.length;
+  } else if (fase.fotosEvidencia) {
     cantFotos = 1;
   }
   const renderEstado = (() => {
@@ -39,17 +40,17 @@ export default function FaseDetalle({ fase, onVerFotos }) {
     <div className={`fd-panel fd-panel--${estado}`}>
       <div className="fd-chips">
         <Chip estado={estado} label={renderEstado} />
-        {fase.trabajador ? (
-          <Chip iconName="User" label={fase.trabajador} />
+        {fase.trabajadorNombreCompleto ? (
+          <Chip iconName="User" label={fase.trabajadorNombreCompleto} />
         ) : (
           <Chip iconName="UserX" label="Sin asignar" />
         )}
 
-        {estado === "en_proceso" && fase.fecha_inicio && (
+        {estado === "en_proceso" && fase.fechaInicio && (
           <Chip
             iconName="Timer"
             label="Transcurridos"
-            value={calcularTranscurrido(fase.fecha_inicio)}
+            value={calcularTranscurrido(fase.fechaInicio)}
           />
         )}
 
@@ -61,19 +62,19 @@ export default function FaseDetalle({ fase, onVerFotos }) {
           />
         )}
 
-        {fase.fecha_inicio && (
+        {fase.fechaInicio && (
           <Chip
             iconName="CalendarDays"
             label="Inicio"
-            value={formatearFecha(fase.fecha_inicio)}
+            value={formatearFecha(fase.fechaInicio)}
           />
         )}
 
-        {estado === "finalizado" && fase.fecha_fin && (
+        {estado === "finalizado" && fase.fechaFin && (
           <Chip
             iconName="CalendarCheck"
             label="Fin"
-            value={formatearFecha(fase.fecha_fin)}
+            value={formatearFecha(fase.fechaFin)}
           />
         )}
 
@@ -135,12 +136,12 @@ FaseDetalle.propTypes = {
   fase: PropTypes.shape({
     fase: PropTypes.string,
     estado: PropTypes.string,
-    trabajador: PropTypes.string,
+    trabajadorNombreCompleto: PropTypes.string,
     duracion: PropTypes.number,
-    fecha_inicio: PropTypes.string,
-    fecha_fin: PropTypes.string,
+    fechaInicio: PropTypes.string,
+    fechaFin: PropTypes.string,
     valor: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    foto: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+    fotosEvidencia: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   }),
   onVerFotos: PropTypes.func,
 };

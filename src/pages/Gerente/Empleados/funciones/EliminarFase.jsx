@@ -1,33 +1,31 @@
 import { useState } from "react";
-import { useEliminarCargoTrabajador } from "../../../../hooks/useCargoTrabajador";
+import { useDesignarCargos } from "../../../../features/Trabajadores/application/hooks/useDesignarCargo";
 import "./EliminarFase.css";
 import PropTypes from "prop-types";
 
-export default function EliminarFase({
-  cargo,
-  trabajadorId,
-  colors,
-  onSuccess,
-}) {
+export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
   const [confirmando, setConfirmando] = useState(false);
-  const { eliminarCargoTrabajadorHook, loading } = useEliminarCargoTrabajador();
+  const designarCargoMutation = useDesignarCargos();
 
   async function handleEliminar() {
-    if (!cargo.id) {
-      console.warn("Cargo inválido:", cargo);
-      return;
-    }
-    try {
-      await eliminarCargoTrabajadorHook(cargo.id, trabajadorId);
-      onSuccess(cargo);
-    } catch (err) {
-      console.error("Error al eliminar fase:", err);
-    } finally {
-      setConfirmando(false);
-    }
+    designarCargoMutation.mutate(
+      { cargoId: cargo.id, trabajadorId: trabajadorId },
+      {
+        onSuccess: () => {
+          onToast({ message: `Fase "${cargo.nombre}" eliminada` });
+          setConfirmando(false);
+        },
+        onError: (error) => {
+          onToast({
+            message: error.message || `Error eliminando ${cargo.nombre}`,
+          });
+        },
+      },
+    );
+    setConfirmando(false);
   }
 
-  // Modo confirmación — reemplaza el chip normal
+  // Modo confirmacion
   if (confirmando) {
     return (
       <div
@@ -44,16 +42,16 @@ export default function EliminarFase({
         <button
           className="chip-confirm-btn chip-confirm-btn--yes"
           onClick={handleEliminar}
-          disabled={loading}
+          disabled={designarCargoMutation.isPending}
           aria-label="Confirmar eliminación"
         >
-          {loading ? "..." : "Sí"}
+          {designarCargoMutation.isPending ? "..." : "Sí"}
         </button>
 
         <button
           className="chip-confirm-btn chip-confirm-btn--no"
           onClick={() => setConfirmando(false)}
-          disabled={loading}
+          disabled={designarCargoMutation.isPending}
           aria-label="Cancelar"
         >
           No
@@ -97,5 +95,5 @@ EliminarFase.propTypes = {
   cargo: PropTypes.object,
   trabajadorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   colors: PropTypes.object,
-  onSuccess: PropTypes.func,
+  onToast: PropTypes.func,
 };

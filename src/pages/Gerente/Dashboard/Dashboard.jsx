@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { useDetalleProcesos } from "../../../hooks/useProcesos";
+import { useGetDetallesProcesoGerente } from "../../../features/procesos/application/hooks/useObtenerDetallesProcesoGerente";
 import Stepper from "../../../components/Stepper/Stepper";
 import Card from "../../../components/card/Card";
 import FaseDetalle from "../../../components/faseDetalle/FaseDetalle";
@@ -13,7 +13,9 @@ export default function Dashboard() {
   const [modalFotos, setModalFotos] = useState(null);
 
   //hook para traer los procesos activos
-  const { procesosDetalle, loading, error } = useDetalleProcesos();
+  const { detallesProcesoGerente, loading, error } =
+    useGetDetallesProcesoGerente();
+  console.log("detallesProcesoGerente", detallesProcesoGerente);
 
   if (loading) return <p>Cargando detalle...</p>;
   if (error) return <p>Error cargando datos</p>;
@@ -26,31 +28,33 @@ export default function Dashboard() {
       </div>
 
       <div className="page-content-dashboard-grid">
-        {procesosDetalle.map((proceso) => (
+        {detallesProcesoGerente.map((proceso) => (
           <Card
-            key={proceso.pro_id_proceso}
-            title={proceso.pro_codigo_cofre}
-            description={proceso.rc_nombre}
+            key={proceso.id}
+            title={proceso.codigoCofre}
+            description={proceso.referenciaNombre}
           >
             <Stepper
-              fases={proceso.fases}
-              selectedId={faseDetalle[proceso.pro_id_proceso]?.sub_id}
+              fases={proceso.detalleSubprocesos}
+              selectedId={faseDetalle[proceso.id]?.id}
               onSelectFase={(fase) => {
                 setFaseDetalle((prev) => ({
                   ...prev,
-                  [proceso.pro_id_proceso]:
-                    prev[proceso.pro_id_proceso]?.sub_id === fase.sub_id
-                      ? null
-                      : fase,
+                  [proceso.id]: prev[proceso.id]?.id === fase.id ? null : fase,
                 }));
               }}
             />
-            <FaseDetalle
-              fase={faseDetalle[proceso.pro_id_proceso]}
-              onVerFotos={(fase) =>
-                setModalFotos({ path: fase.foto, fase: fase.fase })
-              }
-            />
+            {faseDetalle[proceso.id] && (
+              <FaseDetalle
+                fase={faseDetalle[proceso.id]}
+                onVerFotos={(fase) =>
+                  setModalFotos({
+                    path: fase.fotosEvidencia,
+                    fase: fase.cargoNombre,
+                  })
+                }
+              />
+            )}
           </Card>
         ))}
       </div>
