@@ -38,7 +38,6 @@ describe("Test Caja Blanca - Crear Subproceso", () => {
       errorMessage: null,
     });
 
-    // Mock de la mutación
     useCrearSubproceso.mockReturnValue({
       mutate: mockMutate,
       isPending: false,
@@ -69,7 +68,6 @@ describe("Test Caja Blanca - Crear Subproceso", () => {
     fireEvent.click(screen.getByRole("button", { name: /Iniciar fase/i }));
 
     // Assert
-    // En el test CP-1.1, cambia el expect por este:
     await waitFor(() => {
       expect(onSuccessSpy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -84,7 +82,7 @@ describe("Test Caja Blanca - Crear Subproceso", () => {
     });
   });
 
-  // CP-1.2: validar  campo obligatorio
+  // CP-1.2
   test("CP-1.2: No debe llamar a la API si no se selecciona trabajador", async () => {
     render(
       <CrearSubproceso

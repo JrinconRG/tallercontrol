@@ -16,7 +16,7 @@ vi.mock(
   }),
 );
 
-// Datos simulando Objetos de Dominio (asumiendo que tienen el método esIgualA)
+// Datos simulando Objetos de Dominio (asumiendo que tienen el mutate esIgualA)
 const mockCargos = [
   { id: 1, nombre: "Tapizador", esIgualA: (c) => c.id === 1 },
   { id: 2, nombre: "Pulidor", esIgualA: (c) => c.id === 2 },
@@ -57,7 +57,7 @@ describe("Regresion: Componente AgregarFase", () => {
     // ACT
     fireEvent.click(screen.getByRole("button", { name: /\+ Agregar fase/i }));
 
-    // ASSERT (Fluent)
+    // ASSERT
     const searchInput = screen.getByPlaceholderText(/Buscar fase/i);
     expect(searchInput).toBeInTheDocument();
     expect(screen.getByText("Tapizador")).toBeInTheDocument();
@@ -96,7 +96,7 @@ describe("Regresion: Componente AgregarFase", () => {
     });
   });
 
-  test("CP-1.3: No debe permitir seleccionar un cargo que ya está asignado", async () => {
+  test("CP-1.3: No debe permitir seleccionar un cargo que ya esta asignado", async () => {
     // ARRANGE
     // Pasamos el cargo 1 como ya asignado
     const cargosAsignados = [mockCargos[0]];
@@ -115,7 +115,7 @@ describe("Regresion: Componente AgregarFase", () => {
     const badge = screen.getByText(/ya asignado/i);
     expect(badge).toBeInTheDocument();
 
-    // Intentar clickear no debería agregar al contador
+    // Intentar clickear n
     fireEvent.click(screen.getByText("Tapizador"));
     expect(screen.queryByText(/1 seleccionadas/i)).not.toBeInTheDocument();
   });

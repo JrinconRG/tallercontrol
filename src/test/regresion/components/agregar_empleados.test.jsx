@@ -3,7 +3,6 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import RegistrarEmpleados from "../../../pages/Gerente/Empleados/funciones/RegistrarEmpleados";
 import { useCrearTrabajador } from "../../../features/Trabajadores/application/hooks/useCrearEmpleado";
 
-// ─── ESTRATEGIA DE MOCK (FIRST: Isolated) ──────────────────────────────────────
 vi.mock(
   "../../../features/Trabajadores/application/hooks/useCrearEmpleado",
   () => ({
@@ -49,7 +48,7 @@ describe("Regresión: Componente RegistrarEmpleados", () => {
     llenarFormularioValido();
     fireEvent.click(screen.getByRole("button", { name: /Registrar/i }));
 
-    // ASSERT (Fluent-like assertions)
+    // ASSERT
     expect(mockMutate).toHaveBeenCalledTimes(1);
     expect(mockMutate).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -96,7 +95,6 @@ describe("Regresión: Componente RegistrarEmpleados", () => {
 
   test("CP-1.4: Debe manejar el éxito de la mutación llamando a onToast y onClose", async () => {
     // ARRANGE
-    // Simulamos que el onSuccess de la mutación se ejecuta
     mockMutate.mockImplementation((data, options) => {
       options.onSuccess();
     });

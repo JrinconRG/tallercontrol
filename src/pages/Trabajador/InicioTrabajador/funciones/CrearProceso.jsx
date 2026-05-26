@@ -54,6 +54,7 @@ export default function CrearProceso({ onClose, onSuccess }) {
 
   return (
     <Modal
+      data-cy="modal-crear-proceso"
       isOpen
       title="Crear proceso"
       confirmText={isCreating ? "Creando..." : "Crear Proceso"}

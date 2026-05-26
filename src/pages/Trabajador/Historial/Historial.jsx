@@ -75,8 +75,8 @@ export default function Historial() {
                   : "-",
             },
             {
-              key: "trabajadoNombreCompleto",
-              label: "Nombre ",
+              key: "trabajadorNombreCompleto",
+              label: "Nombre",
             },
             {
               key: "cargoNombre",

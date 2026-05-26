@@ -88,7 +88,7 @@ describe("authStore  login", () => {
     expect(result.current.isAuthenticated).toBe(false);
   });
 
-  it("[SEC-03] error de supabase Auth  no persiste sesión parcial", async () => {
+  it("[SEC-03] error de supabase Auth  no persiste sesion parcial", async () => {
     // Arrange — RPC ok pero Auth falla
     supabase.rpc.mockResolvedValue({ data: [VALID_USER_ROW], error: null });
     supabase.auth.signInWithPassword.mockResolvedValue({
@@ -209,13 +209,13 @@ describe("authStore  login", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-describe("authStore › logout", () => {
+describe("authStore - logout", () => {
   beforeEach(() => {
     resetStore();
     vi.clearAllMocks();
   });
 
-  it("[SEC-06] logout → limpia todo el estado sensible", async () => {
+  it("[SEC-06] logout  limpia todo el estado sensible", async () => {
     // Arrange — simular sesión activa
     useAuthStore.setState({
       user: {

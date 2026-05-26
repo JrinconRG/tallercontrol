@@ -181,7 +181,11 @@ export default function InicioTrabajador() {
       };
 
       return (
-        <Card key={p.id} className={"card-proceso"}>
+        <Card
+          key={p.id}
+          data-cy={`card-proceso-${p.id}`}
+          className={"card-proceso"}
+        >
           <ProcesoDetail
             proceso={p}
             colorTitulo={estado()}
@@ -222,6 +226,7 @@ export default function InicioTrabajador() {
         <div className="trabajador-header-actions">
           <button
             className="btn btn-primary"
+            data-cy="btn-crear-proceso"
             onClick={() => setModalCrearProceso(true)}
           >
             Crear Proceso

@@ -307,7 +307,7 @@ describe("Proceso entity › métodos de negocio", () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-describe("mappers › rendimiento", () => {
+describe("mappers - rendimiento", () => {
   it("[PERF-01] dashboardMapper con 500 procesos (10 fases c/u) → < 50ms", () => {
     // Arrange
     const fases = Array.from({ length: 10 }, (_, i) => ({

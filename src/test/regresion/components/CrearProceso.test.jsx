@@ -16,7 +16,6 @@ describe("Test Caja Blanca - Crear Proceso", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Configuración por defecto de los hooks
     useObtenerReferenciasCofres.mockReturnValue({
       referencias: [{ id: 1, nombre: "Imperial", codigo: "104" }],
       loading: false,
@@ -30,13 +29,15 @@ describe("Test Caja Blanca - Crear Proceso", () => {
 
   // Test 1: CP-1.1 Camino exitoso
   test("Cp-1.1 Debe crear el proceso exitosamente", async () => {
+    //arrange
     const onSuccess = vi.fn();
     const onClose = vi.fn();
 
-    // Simulamos que la mutación llama al callback onSuccess que pasaste en el componente
     mockEjecutarCrearProceso.mockImplementation((id, options) => {
       options.onSuccess({ codigo: "PROC-001" });
     });
+
+    //act
 
     render(<CrearProceso onClose={onClose} onSuccess={onSuccess} />);
 
@@ -45,8 +46,9 @@ describe("Test Caja Blanca - Crear Proceso", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Crear Proceso/i }));
 
+    //assert
+
     await waitFor(() => {
-      // Verificamos que se llamó a onSuccess con el formato que espera tu componente
       expect(onSuccess).toHaveBeenCalledWith(
         expect.objectContaining({
           tipo: "creado",

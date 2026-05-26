@@ -291,7 +291,7 @@ describe("calcularDuracion › rendimiento", () => {
     expect(elapsed).toBeLessThan(500);
   });
 
-  it("[PERF-06] llamada con fecha válida → < 1ms individual", () => {
+  it("[PERF-06] llamada con fecha valida < 1ms individual", () => {
     // Arrange
     vi.setSystemTime(new Date("2024-06-15T12:00:00Z"));
 

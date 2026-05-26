@@ -18,7 +18,7 @@ vi.mock("../../../utils/construirMatrizTarifas", () => ({
 
 const mockTrabajadores = [{ value: "W-1", label: "Juan García" }];
 
-describe("Regresión: Página de Tarifas", () => {
+describe("Regresion:  Tarifas", () => {
   const mockMutate = vi.fn();
 
   beforeEach(() => {
