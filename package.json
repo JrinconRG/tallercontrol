@@ -7,6 +7,11 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
+    "test:ia": "dotenv -- vitest run src/test/ia",
+    "test:deepeval": "dotenv -- vitest run src/test/deepEval --fileParallelism=false",
+    "cypress:e2e": "powershell -NoProfile -Command \"Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue; $env:CYPRESS_SKIP_VERIFY='true'; cypress run --browser electron\"",
+    "cypress:component": "powershell -NoProfile -Command \"Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue; $env:CYPRESS_SKIP_VERIFY='true'; cypress run --component --browser electron\"",
+    "cypress:open": "powershell -NoProfile -Command \"Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue; $env:CYPRESS_SKIP_VERIFY='true'; cypress open\"",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -28,6 +33,7 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
+    "@browserbasehq/stagehand": "^3.4.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -35,6 +41,9 @@
     "@vitejs/plugin-react": "^4.0.0",
     "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.9",
+    "cypress": "^14.5.4",
+    "deepeval": "^0.1.29",
+    "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.0.0",
     "eslint-plugin-react": "^7.37.0",
@@ -42,7 +51,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "jsdom": "^25.0.1",
     "vite": "5.4.0",
-    "vitest": "^2.1.9"
+    "vitest": "^2.1.9",
+    "zod": "^4.4.3"
   }
-  
 }

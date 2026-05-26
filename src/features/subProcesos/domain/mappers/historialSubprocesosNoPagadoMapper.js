@@ -1,6 +1,7 @@
 import { SubProceso } from "../entities/SubProceso";
 
 export const historialSubprocesosNoPagadoMapper = (row) => {
+  console.log("Nombre:" + row.trabajador_nombre);
   const parsearFotos = (dato) => {
     if (!dato) return [];
     if (typeof dato === "object") return dato;
@@ -21,7 +22,7 @@ export const historialSubprocesosNoPagadoMapper = (row) => {
     id: row.sub_id_subproceso,
     idProceso: row.sub_proceso_id,
     trabajadorId: row.trabajador_id,
-    trabajadoNombreCompleto: row.trabajador_nombre,
+    trabajadorNombreCompleto: row.trabajador_nombre,
     trabajadorDocumento: row.t_numero_de_documento,
     codigoCofre: row.pro_codigo_cofre,
     referenciaId: row.referencia_codigo,
