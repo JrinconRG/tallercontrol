@@ -1,0 +1,15 @@
+
+.body-page-clientes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.col-acciones {
+  width: 60px;
+  text-align: right;
+}
+
+.body-page-clientes .btn-primary {
+  align-self: flex-start; /* O width: fit-content; */
+}
