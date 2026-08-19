@@ -1,6 +1,8 @@
 import { Icon } from "../ui/Icon";
 import "./FaseDetalle.css";
 import PropTypes from "prop-types";
+import { formatearMinutosA_DHMS } from "../../utils/timeFormatter";
+import { calcularTiempoTranscurrido } from "../../utils/calcularTranscurrido";
 
 const normalize = (e = "") => e.toLowerCase();
 
@@ -50,7 +52,7 @@ export default function FaseDetalle({ fase, onVerFotos }) {
           <Chip
             iconName="Timer"
             label="Transcurridos"
-            value={calcularTranscurrido(fase.fechaInicio)}
+            value={calcularTiempoTranscurrido(fase.fechaInicio)}
           />
         )}
 
@@ -58,7 +60,7 @@ export default function FaseDetalle({ fase, onVerFotos }) {
           <Chip
             iconName="Clock"
             label="Duración"
-            value={formatearMinutos(fase.duracion)}
+            value={formatearMinutosA_DHMS(fase.duracion)}
           />
         )}
 
@@ -86,7 +88,6 @@ export default function FaseDetalle({ fase, onVerFotos }) {
           />
         )}
       </div>
-      {/* Botón de fotos — solo si está finalizado y hay fotos */}
       {estado === "finalizado" && tieneFotos && (
         <button
           type="button"
@@ -98,7 +99,6 @@ export default function FaseDetalle({ fase, onVerFotos }) {
         </button>
       )}
 
-      {/* Aviso si está en proceso — fotos disponibles al terminar */}
       {estado === "en_proceso" && (
         <p className="fd-hint">
           <Icon name="Info" size={20} />

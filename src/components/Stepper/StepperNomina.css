@@ -1,0 +1,178 @@
+:root {
+  /* Define aquí los tamaños que quieras para las pelotas de nómina */
+  --sfn-btn-size:     55px;  /* Tamaño normal */
+  --sfn-btn-size-sel: 70px;  /* Tamaño seleccionada (más grande) */
+}
+
+/* ── Contenedor ── */
+.sfn-stepper {
+  position: relative;          /* contexto para la línea absoluta */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0 0.25rem;
+}
+
+/* ── Línea continua de fondo (Ajustada sin extremos salientes) ── */
+.sfn-track {
+  position: absolute;
+  /* Centrada exactamente usando la altura fija del wrapper */
+  top: calc(var(--sfn-btn-size-sel) / 2 + 0.5rem); 
+  /* Modificado para que muera justo en el centro del primer y último paso */
+  left: calc(100% / 3 / 2);
+  right: calc(100% / 3 / 2);
+  height: 2px;
+  display: flex;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sfn-track-segment {
+  flex: 1;
+  height: 2px;
+  background: var(--sf-line-default);
+  transition: background 0.4s ease;
+}
+
+.sfn-track-segment--done   { background: var(--sf-done-color); }
+.sfn-track-segment--active { background: var(--sf-active-border); }
+
+/* ── Paso ── */
+.sfn-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;           /* sobre la línea */
+}
+
+/* ── Contenedor Wrapper del Botón (Mantiene el texto alineado) ── */
+.sfn-btn-wrapper {
+  height: var(--sfn-btn-size-sel); /* Forzamos a que mida lo mismo que la pelota más grande */
+  display: flex;
+  align-items: center;             /* Centra la pelota verticalmente dentro de este espacio */
+  justify-content: center;
+}
+
+/* ── Botón círculo ── */
+.sfn-btn {
+  width: var(--sfn-btn-size);
+  height: var(--sfn-btn-size);
+  border-radius: 50%;
+  font-size: 20px;
+  border: 2px solid var(--sf-pending-border);
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sf-pending-color);
+  transition: width 0.2s ease, height 0.2s ease,
+              background 0.2s ease, border-color 0.2s ease,
+              transform 0.2s cubic-bezier(.34,1.56,.64,1);
+  outline: none;
+}
+
+.sfn-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.3);
+}
+
+/* hover genérico */
+.sfn-btn:hover:not(:disabled) { transform: scale(1.1); }
+
+/* finalizado */
+.sfn-btn--finalizado {
+  border-color: var(--sf-done-color);
+  background:   var(--sf-done-bg);
+  color:        var(--sf-done-color);
+}
+.sfn-btn--finalizado.sfn-btn--selected {
+  width: var(--sfn-btn-size-sel);
+  height: var(--sfn-btn-size-sel);
+  background:   var(--sf-done-bg-sel);
+  border-color: var(--sf-done-border-sel);
+}
+
+/* en_proceso */
+.sfn-btn--en_proceso {
+  border-color: var(--sf-active-border);
+  background:   var(--sf-active-bg);
+  color:        var(--sf-active-border);
+}
+.sfn-btn--en_proceso.sfn-btn--selected {
+  width: var(--sfn-btn-size-sel);
+  height: var(--sfn-btn-size-sel);
+  background:   var(--sf-active-bg-sel);
+  border-color: var(--sf-active-border-sel);
+}
+
+/* pendiente */
+.sfn-btn--pendiente {
+  border-color: var(--sf-pending-border);
+  background:   #fff;
+  color:        var(--sf-pending-color);
+}
+.sfn-btn--pendiente.sfn-btn--selected {
+  width: var(--sfn-btn-size-sel);
+  height: var(--sfn-btn-size-sel);
+  border-color: var(--sf-active-border);
+  background:   var(--sf-active-bg);
+  color:        var(--sf-active-border);
+}
+
+/* Deshabilitado (Para pasos futuros o el actual) */
+.sfn-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* ── Meta (texto) ── */
+.sfn-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 10px;
+  padding: 0 4px;
+  gap: 2px;
+}
+
+.sfn-num {
+  font-size: 15px;
+  font-weight: 500;
+  color: #888780;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sfn-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c2c2a;
+  line-height: 1.3;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  :root {
+    --sfn-btn-size:     36px;
+    --sfn-btn-size-sel: 42px;
+  }
+  .sfn-track {
+    top: calc(var(--sfn-btn-size-sel) / 2 + 0.5rem);
+    left: calc(100% / 3 / 2);
+    right: calc(100% / 3 / 2);
+  }
+  .sfn-name { font-size: 11px; }
+  .sfn-num  { font-size: 9px; }
+}
+
+
+
+.sfn-btn--finalizado {
+  background-color: var(--success-400);
+  color: white;
+  border-color: var(--success-500);
+  cursor: pointer;
+}

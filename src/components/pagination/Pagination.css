@@ -1,0 +1,104 @@
+/* Contenedor principal de la paginación */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--filter-border, #e5e7eb);
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Sección izquierda: Selector de límite */
+.pagination-limit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.pagination-limit select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--filter-border, #d1d5db);
+  background-color: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Sección derecha: Contenedor de la navegación */
+.pagination-navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+/* Contenedor intermedio exclusivo para los números */
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Estilo base para cada número e indicador de página */
+.pagination-number-btn {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563; /* Color oscuro grisáceo para los inactivos */
+  border-radius: 50%; /* Los hace perfectamente redondos */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Efecto Hover sobre los números inactivos */
+.pagination-number-btn:hover:not(.active) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Burbuja activa idéntica a tu imagen */
+.pagination-number-btn.active {
+  background-color: #0080c6; /* Azul vibrante */
+  color: #ffffff;            /* Texto blanco */
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 128, 198, 0.2);
+}
+
+/* Estilo para las flechas de navegación (< y >) */
+.pagination-arrow {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #4b5563;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-arrow:hover:not(:disabled) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+/* Estado deshabilitado cuando no hay más páginas */
+.pagination-arrow:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}

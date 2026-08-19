@@ -1,0 +1,79 @@
+.notion-cell-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+}
+
+.notion-action-floating {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.custom-table tbody tr:hover .notion-action-floating {
+  opacity: 1;
+}
+
+.btn-notion-delete {
+  background: transparent;
+  border: none;
+  color: var(--text-danger, #a32d2d);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+
+.delete-popover-portal {
+  background: #ffffff;
+  border: 1px solid var(--neutral-300, #d3d1c7);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 12px;
+  width: 220px;
+}
+
+.delete-popover-message {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.delete-item-highlight {
+  color: var(--text-primary);
+}
+
+.delete-popover-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn-popover {
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-popover-secondary {
+  background: transparent;
+  border: 1px solid var(--neutral-300, #d3d1c7);
+  color: var(--text-primary);
+}
+
+.btn-popover-secondary:hover {
+  background: var(--neutral-100, #f1efe8);
+}
+
+.btn-popover-danger {
+  background: #a32d2d;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-popover-danger:hover {
+  background: #791f1f;
+}

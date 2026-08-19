@@ -1,5 +1,6 @@
-import "./Stepper.css";
+import "./StepperNomina.css";
 import PropTypes from "prop-types";
+import { Icon } from "../ui/Icon";
 
 const PASOS = [
   { numero: 1, label: "Selección de fecha" },
@@ -15,8 +16,8 @@ function getEstado(pasoActual, numero) {
 
 export default function StepperNomina({ pasoActual = 1, onSelectPaso }) {
   return (
-    <div className="sf-stepper">
-      <div className="sf-track" aria-hidden="true">
+    <div className="sfn-stepper">
+      <div className="sfn-track" aria-hidden="true">
         {PASOS.slice(0, -1).map((paso, i) => {
           const segmentoDone = pasoActual > i + 1;
           const segmentoActive = pasoActual === i + 1;
@@ -24,9 +25,9 @@ export default function StepperNomina({ pasoActual = 1, onSelectPaso }) {
             <div
               key={paso.numero}
               className={[
-                "sf-track-segment",
-                segmentoDone ? "sf-track-segment--done" : "",
-                segmentoActive ? "sf-track-segment--active" : "",
+                "sfn-track-segment",
+                segmentoDone ? "sfn-track-segment--done" : "",
+                segmentoActive ? "sfn-track-segment--active" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
@@ -39,33 +40,40 @@ export default function StepperNomina({ pasoActual = 1, onSelectPaso }) {
       {PASOS.map((paso) => {
         const esActivo = pasoActual === paso.numero;
 
-        // Solo puede navegar a pasos anteriores o el actual
-        const esClickeable = paso.numero <= pasoActual;
+        // REGLA: Solo es clickeable si es un paso anterior al actual (no el actual, no los futuros)
+        const esClickeable = paso.numero < pasoActual;
 
         const estado = getEstado(pasoActual, paso.numero);
 
         return (
-          <div key={paso.numero} className="sf-step">
-            <button
-              type="button"
-              className={[
-                "sf-btn",
-                `sf-btn--${estado}`,
-                esActivo ? "sf-btn--selected" : "",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onClick={() => esClickeable && onSelectPaso?.(paso.numero)}
-              disabled={!esClickeable}
-              aria-label={paso.label}
-              aria-current={esActivo ? "step" : undefined}
-            >
-              {paso.numero}
-            </button>
+          <div key={paso.numero} className="sfn-step">
+            {/* Contenedor wrapper para el botón. Esto evita que el botón grande empuje el texto hacia abajo */}
+            <div className="sfn-btn-wrapper">
+              <button
+                type="button"
+                className={[
+                  "sfn-btn",
+                  `sfn-btn--${estado}`,
+                  esActivo ? "sfn-btn--selected" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                onClick={() => esClickeable && onSelectPaso?.(paso.numero)}
+                disabled={!esClickeable}
+                aria-label={paso.label}
+                aria-current={esActivo ? "step" : undefined}
+              >
+                {estado === "finalizado" ? (
+                  <Icon name="Check" size="20" color="currentColor" />
+                ) : (
+                  paso.numero
+                )}
+              </button>
+            </div>
 
-            <div className="sf-meta">
-              <span className="sf-num">Paso {paso.numero}</span>
-              <span className="sf-name">{paso.label}</span>
+            <div className="sfn-meta">
+              <span className="sfn-num">Paso {paso.numero}</span>
+              <span className="sfn-name">{paso.label}</span>
             </div>
           </div>
         );

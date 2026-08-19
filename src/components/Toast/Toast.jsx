@@ -44,5 +44,5 @@ export default function Toast({ toasts }) {
 }
 
 Toast.propTypes = {
-  toasts: PropTypes.object,
+  toasts: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 };

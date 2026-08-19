@@ -1,34 +1,27 @@
 import "./Stepper.css";
 import PropTypes from "prop-types";
-import { Icon } from "../../components/ui/Icon"; // ajusta la ruta
+import { Icon } from "../../components/ui/Icon";
 
 const ESTADO_LABEL = {
   finalizado: "Completado",
-  EN_PROCESO: "En progreso",
   en_proceso: "En progreso",
   pendiente: "Pendiente",
-  PENDIENTE: "Pendiente",
-  FINALIZADO: "Completado",
 };
-
-const normalize = (e = "") => e.toLowerCase();
 
 export default function Stepper({ fases = [], selectedId, onSelectFase }) {
   const sorted = [...fases].sort(
-    (a, b) =>
-      (a.orden ?? a.c_orden_proceso ?? 0) - (b.orden ?? b.c_orden_proceso ?? 0),
+    (a, b) => (a.ordenProceso ?? 0) - (b.ordenProceso ?? 0),
   );
 
   return (
     <div className="sf-stepper">
       <div className="sf-track" aria-hidden="true">
         {sorted.map((fase, i) => {
-          const id = fase.sub_id ?? fase.c_id ?? `segment-${i}`;
           if (i === sorted.length - 1) return null;
-          const estado = normalize(fase.estado ?? "pendiente");
+          const estado = fase.estado ?? "pendiente";
           return (
             <div
-              key={`${id}`}
+              key={fase.id ?? `segment-${i}`}
               className={[
                 "sf-track-segment",
                 estado === "finalizado" ? "sf-track-segment--done" : "",
@@ -42,11 +35,9 @@ export default function Stepper({ fases = [], selectedId, onSelectFase }) {
       </div>
 
       {sorted.map((fase, i) => {
-        const id = fase.sub_id ?? fase.c_id ?? `fase-${i}`;
-        const nombre = fase.fase ?? fase.c_nombre;
-        const orden = fase.orden ?? fase.c_orden_proceso;
-        const estado = normalize(fase.estado ?? "pendiente");
-        const isSelected = selectedId === id;
+        const id = fase.id ?? `fase-${i}`;
+        const estado = fase.estado ?? "pendiente";
+        const isSelected = String(selectedId) === String(id);
 
         return (
           <div key={id} className="sf-step">
@@ -60,7 +51,7 @@ export default function Stepper({ fases = [], selectedId, onSelectFase }) {
                 .filter(Boolean)
                 .join(" ")}
               onClick={() => onSelectFase?.(fase)}
-              aria-label={`${nombre} - ${ESTADO_LABEL[estado] ?? estado}`}
+              aria-label={`${fase.cargoNombre} - ${ESTADO_LABEL[estado] ?? estado}`}
               aria-pressed={isSelected}
             >
               {estado === "finalizado" && (
@@ -71,8 +62,8 @@ export default function Stepper({ fases = [], selectedId, onSelectFase }) {
             </button>
 
             <div className="sf-meta">
-              <span className="sf-num">Fase {orden}</span>
-              <span className="sf-name">{nombre}</span>
+              <span className="sf-num">Fase {fase.ordenProceso}</span>
+              <span className="sf-name">{fase.cargoNombre}</span>
               <span className={`sf-status sf-status--${estado}`}>
                 {ESTADO_LABEL[estado] ?? estado}
               </span>
@@ -83,23 +74,14 @@ export default function Stepper({ fases = [], selectedId, onSelectFase }) {
     </div>
   );
 }
+
 Stepper.propTypes = {
   fases: PropTypes.arrayOf(
     PropTypes.shape({
-      sub_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      c_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      fase: PropTypes.string,
-      c_nombre: PropTypes.string,
-      orden: PropTypes.number,
-      c_orden_proceso: PropTypes.number,
-      estado: PropTypes.oneOf([
-        "finalizado",
-        "FINALIZADO",
-        "en_proceso",
-        "EN_PROCESO",
-        "pendiente",
-        "PENDIENTE",
-      ]),
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      cargoNombre: PropTypes.string,
+      ordenProceso: PropTypes.number,
+      estado: PropTypes.oneOf(["finalizado", "en_proceso", "pendiente"]),
     }),
   ),
   selectedId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
