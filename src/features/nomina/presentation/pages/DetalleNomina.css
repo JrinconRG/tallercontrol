@@ -1,0 +1,206 @@
+/* ==========================================================================
+   1. ELEMENTOS DE TEXTO E INFORMACIÓN SUPERIOR
+   ========================================================================== */
+.page-detalle-nomina-subtittle {
+    font-size: 25px;
+    margin-bottom: 10px;
+    color: var(--neutral-800);
+}
+
+.page-detalle-nomina-info {
+    font-size: 20px;
+    color: var(--neutral-600);
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   2. ESTRUCTURA BASE DE LA TABLA (Cajas y Bordes)
+   ========================================================================== */
+.custom-table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0;         
+    table-layout: fixed; /* Alineación exacta entre tablas distribuidas */
+    min-width: 1000px;  
+}
+
+/* Encabezados (th) */
+.custom-table thead tr th {
+    padding: 16px 22px;
+    text-align: left;
+    font-size: 16px; 
+    font-weight: 700;
+    color: var(--neutral-800);
+    background-color: var(--neutral-100); 
+    border-top: 1px solid var(--neutral-400);
+    border-bottom: 1px solid var(--neutral-400);
+    border-right: 1px solid var(--neutral-400);
+    white-space: nowrap;
+}
+.custom-table thead tr th:first-child { 
+    border-left: 1px solid var(--neutral-400);
+}
+
+/* Celdas del Cuerpo (td) - Sin color base forzado para permitir herencia fluida */
+.custom-table tbody tr td {
+    padding: 14px 22px;
+    color: var(--neutral-700);
+    font-size: 15px;
+    border-bottom: 1px solid var(--neutral-400);
+    border-right: 1px solid var(--neutral-400); 
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.custom-table tbody tr td:first-child { 
+    border-left: 1px solid var(--neutral-400); 
+}
+
+/* ==========================================================================
+   3. INTERACCIONES DINÁMICAS (Hover, Active y Selección)
+   ========================================================================== */
+
+/* Fila interactiva base */
+.custom-table tbody tr {
+    cursor: pointer;
+    background-color: transparent; /* Permite que el fondo lo maneje el tr */
+    transition: background-color 0.15s ease;
+}
+
+/* Hover: Cambia el fondo de la fila entera de forma natural */
+.custom-table tbody tr:hover {
+    background-color: rgba(55, 53, 47, 0.04); 
+}
+
+/* Active: Feedback rápido al cliquear */
+.custom-table tbody tr:active {
+    background-color: var(--neutral-50);
+}
+
+/* SELECCIONADO: Pintamos la fila completa con el tono crema Notion */
+.custom-table tbody tr.row-selected {
+    background-color: var(--info--50);
+}
+
+/* Cambio de color de texto en fila seleccionada para mejorar contraste */
+.custom-table tbody tr.row-selected td {
+    color: var(--neutral-900);
+}
+
+
+/* ==========================================================================
+   4. CONTROL ESTRICTO DE COLUMNAS Y COLORES ESPECIALES
+   ========================================================================== */
+.col-sh { width: 180px !important; }
+.col-main { width: 250px !important; }
+.col-num { color: var(--neutral-700); }
+
+/* Las columnas de estados usan variables sutiles translúcidas para que no maten el hover */
+.col-bonificacion {
+    background-color: rgba(230, 249, 241, 0.85) !important; 
+    width: 180px !important;  
+}
+
+.col-deduccion {
+    background-color: rgba(254, 226, 230, 0.85) !important; 
+    width: 180px !important;  
+}
+
+/* Modificación de las columnas especiales si la fila está seleccionada para mantener consistencia */
+.custom-table tbody tr.row-selected td.col-bonificacion {
+    background-color: #d1f2e4 !important; 
+}
+.custom-table tbody tr.row-selected td.col-deduccion {
+    background-color: #fca5a5 !important;
+}
+
+/* ==========================================================================
+   5. COMPONENTES INTERNOS DE LAS CELDAS (Inputs e Iconos)
+   ========================================================================== */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; 
+    width: 100%;
+}
+
+.currency-prefix {
+    color: var(--neutral-700); 
+    font-size: 15px;
+}
+
+.nomina-input-ajuste {
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    width: 100%;
+    max-width: 190px;
+    outline: none;
+    color: var(--neutral-700); 
+}
+.nomina-input-ajuste::placeholder {
+    color: var(--neutral-400);
+    opacity: 1;
+    text-align: center;
+}
+
+/* Limpieza de inputs nativos numéricos */
+.nomina-input-ajuste::-webkit-outer-spin-button,
+.nomina-input-ajuste::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.nomina-input-ajuste { -moz-appearance: textfield; }
+input.nomina-input-ajuste.nomina-input-bonificacion,
+input.nomina-input-ajuste.nomina-input-deduccion { padding-left: 0; }
+
+/* ==========================================================================
+   6. TABLA DE TOTALES INDEPENDIENTE (FOOTER SEPARADO)
+   ========================================================================== */
+.contenedor-totales-independiente {
+    margin-top: 24px; 
+    width: 100%;
+}
+
+.tabla-totales-separada {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.tabla-totales-separada tbody tr td {
+    font-size: 16px;
+    color: var(--neutral-900) !important;
+    border-top: 1px solid var(--neutral-400) !important;
+    border-bottom: 1px solid var(--neutral-400) !important;
+    border-right: 1px solid var(--neutral-400) !important;
+    padding: 16px 22px !important;
+    background-color: #ffffff; /* La tabla de totales sí conserva un fondo limpio independiente */
+}
+
+.tabla-totales-separada tbody tr td:nth-child(2) {
+    border-left: 1px solid var(--neutral-400) !important;
+}
+
+.tabla-totales-separada tbody tr .celda-oculta {
+    border: none !important;
+    background: transparent !important;
+    width: 180px !important;
+}
+
+.table-footer-label { color: var(--neutral-500) !important; font-weight: 700; }
+td.col-main.table-footer-label { background: var(--neutral-100); }
+
+/* ==========================================================================
+   7. CONTENEDOR DE SCROLL RESPONSIVE (LAYOUT)
+   ========================================================================== */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch; 
+    padding-bottom: 10px; 
+}
+
+.table-responsive-wrapper::-webkit-scrollbar { height: 8px; }
+.table-responsive-wrapper::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 4px; }
+.table-responsive-wrapper::-webkit-scrollbar-thumb { background: var(--neutral-400); border-radius: 4px; }
+.table-responsive-wrapper::-webkit-scrollbar-thumb:hover { background: var(--neutral-500); }

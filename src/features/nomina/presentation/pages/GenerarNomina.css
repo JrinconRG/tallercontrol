@@ -1,0 +1,122 @@
+
+.page-nomina-stepper {
+  max-width: 600px;     
+  width: 100%;        
+  margin: 0 auto;     
+}
+
+.page-conten-nomina {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* Esto crea un espacio automático abajo de cada bloque hijo */
+}
+
+.page-nomina-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;          /* Espacio entre el calendario y la tarjeta de abajo */
+  max-width: 1000px;     /* Ancho máximo para que no ocupe toda la pantalla */
+  width: 100%;
+  margin: 0 auto;       /* Centra todo este bloque */
+}
+
+.page-nomina-calendario {
+  width: 100%;
+  margin: 0 auto;       /* Centra el calendario dentro de su sección */
+}
+
+.page-nomina-calendario-body {
+  display: flex;
+  justify-content: center; /* Centra el calendario horizontalmente */
+  align-items: center;     /* Centra el calendario verticalmente (por si acaso) */
+  width: 100%;             /* Asegura que ocupe todo el ancho disponible de la Card */
+  margin-top: 1.5rem;      /* Agrega un espacio elegante entre el texto y el calendario */
+}
+
+
+.page-nomina-footer {
+  display: flex;
+  justify-content: center; /* Centra el botón horizontalmente */
+  margin-top: 1rem;
+}
+
+/* GenerarNomina.css */
+.nomina-btn-continuar {
+  padding: 0.9rem 3rem;
+  font-size: 1.2rem;
+}
+
+.page-nomina-calendario-contenedor{
+    padding: 1rem; /* Agrega un poco de espacio alrededor del calendario */
+}
+
+.page-nomina-info-contenedor {
+  padding: 1rem; /* Le da una separación elegante respecto a los bordes de la Card */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;     /* Separa el título del bloque de items de abajo */
+}
+
+.page-nomina-info-general {
+  display: flex;
+  flex-direction: row;       /* Los alinea uno al lado del otro */
+  align-items: center;
+  justify-content: space-between; /* Distribuye el espacio uniformemente */
+  width: 100%;
+}
+
+.page-nomina-info-item {
+  flex: 1;                   /* Hace que todos midan lo mismo */
+  display: flex;
+  flex-direction: column;    /* Mantiene el label arriba y el valor abajo */
+  align-items: center;       /* Centra el contenido internamente */
+  text-align: center;
+  padding: 0 1rem;           /* Espacio interno para que no peguen a las líneas */
+}
+
+.page-nomina-info-item:not(:last-child) {
+  border-right: 2px solid var(--neutral-400); /* Línea gris clara */
+}
+
+.page-nomina-info-label {
+  display: flex;
+  align-items: center;       /* Centra verticalmente el ícono con el texto */
+  gap: 0.5rem;               /* Separa el ícono del texto por los lados */
+  font-size: 18px;
+  color: var(--neutral-600);
+  margin: 0 0 0.5rem 0;     
+  font-weight: 500; /* Margen inferior para separarlo de la cifra */
+}
+
+
+.page-nomina-info-value {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-black);
+  margin: 0;
+}
+
+
+.nomina-alerta-pendientes {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+  padding: 0.8rem 1rem;
+  background-color: var(--warning-soft, #fff8e1);
+  border-left: 4px solid var(--warning, #f59e0b);
+  border-radius: 6px;
+}
+
+.nomina-alerta-titulo {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--neutral-800);
+  margin: 0 0 0.2rem 0;
+}
+
+.nomina-alerta-detalle {
+  font-size: 1rem;
+  color: var(--neutral-600);
+  margin: 0;
+}
