@@ -105,16 +105,11 @@ export default function HistorialGerente() {
 
       {procesoDetalle && (
         <div className="drawer-overlay">
-          <button
-            className="drawer-backdrop"
-            onClick={cerrarDrawer}
-            aria-label="Cerrar"
-          />
           <dialog className="drawer" open aria-modal="true">
             <div className="drawer-header">
               <h3>{procesoDetalle.codigoCofre}</h3>
               <button
-                className="btn btn-primary"
+                className="btn  btn-terciary"
                 onClick={cerrarDrawer}
                 aria-label="Cerrar detalle"
               >

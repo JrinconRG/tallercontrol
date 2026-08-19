@@ -3,12 +3,14 @@ import Card from "../../../components/card/Card";
 import Table from "../../../components/Table/Table";
 import TableHeader from "../../../components/Table/TableHeader";
 import "./Empleados.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import RegistrarEmpleados from "./funciones/RegistrarEmpleados";
 import AgregarFase from "./funciones/AgregarFase";
 import EliminarFase from "./funciones/EliminarFase";
 import { useToast } from "../../../hooks/useToast";
 import Toast from "../../../components/Toast/Toast";
+import Pagination from "../../../components/pagination/Pagination";
+import { usePagination } from "../../../hooks/usePagination";
 
 const stringToPastelColor = (str) => {
   let hash = 0;
@@ -31,9 +33,7 @@ export default function Empleados() {
   const [showModal, setShowModal] = useState(false);
   const [empleadoDetalleId, setEmpleadoDetalleId] = useState(null);
   const { toasts, showToast } = useToast();
-
   const { empleados, loading, error } = useInformacionEmpleados();
-  console.log("Empleados obtenidos:", empleados);
 
   useEffect(() => {
     if (!empleadoDetalleId) return;
@@ -45,17 +45,43 @@ export default function Empleados() {
     return () => globalThis.removeEventListener("keydown", handleKeyDown);
   }, [empleadoDetalleId]);
 
+  const empleadosFiltrados = useMemo(() => {
+    return empleados.filter((e) => {
+      const matchSearch = e.nombre
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
+
+      const matchEstado = estado
+        ? e.cargos?.some((c) => c.nombre?.trim() === estado.trim())
+        : true;
+
+      return matchSearch && matchEstado;
+    });
+  }, [empleados, search, estado]);
+
+  const opcionesFase = useMemo(() => {
+    const fases = empleados.map((e) => e.cargos?.map((c) => c.nombre?.trim()));
+    const unicas = [...new Set(fases.flat())].filter(Boolean);
+    return [
+      { value: "", label: "Todas las fases" },
+      ...unicas.map((fase) => ({ value: fase, label: fase })),
+    ];
+  }, [empleados]);
+
+  const {
+    page,
+    limit,
+    paginatedData: datosPaginados,
+    setPage,
+    setLimit,
+    resetPage,
+  } = usePagination(empleadosFiltrados, 10);
+
   if (loading) return <p>Cargando empleados...</p>;
   if (error) return <p>Error cargando empleados</p>;
 
   const empleadoDetalle =
     empleados.find((e) => e.id === empleadoDetalleId) ?? null;
-
-  const empleadosFiltrados = empleados.filter((e) => {
-    return e.nombre?.toLowerCase().includes(search.toLowerCase());
-  });
-
-  // Función para manejar el cierre del modal de registro
 
   return (
     <div className="page-content-Empleados">
@@ -67,13 +93,19 @@ export default function Empleados() {
       <Card className="card-empleados" style={{ backgroundColor: "#ffffff" }}>
         <TableHeader
           searchValue={search}
-          onSearchChange={setSearch}
+          onSearchChange={(value) => {
+            setSearch(value);
+            resetPage();
+          }}
           filters={[
             {
               name: "estado",
               value: estado,
-              onChange: setEstado,
-              options: [],
+              onChange: (value) => {
+                setEstado(value);
+                resetPage();
+              },
+              options: opcionesFase,
             },
           ]}
           actions={[
@@ -129,9 +161,18 @@ export default function Empleados() {
               ),
             },
           ]}
-          data={empleadosFiltrados}
+          data={datosPaginados}
           rowKey="id"
           onRowClick={(row) => setEmpleadoDetalleId(row.id)}
+          selectedId={empleadoDetalleId}
+        />
+
+        <Pagination
+          totalItems={empleadosFiltrados.length}
+          limit={limit}
+          page={page}
+          onPageChange={setPage}
+          onLimitChange={setLimit}
         />
       </Card>
       {empleadoDetalle && (

@@ -4,5 +4,6 @@
   display: grid;        /* 👈 esto le falta — sin esto gap no existe */
   grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
   gap: 1rem;            /* ahora sí funciona */
+  padding-bottom: 20px;
 }
 
