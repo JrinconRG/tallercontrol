@@ -80,3 +80,16 @@ export async function obtenerDetallesProcesosGerente() {
 
   return data;
 }
+
+export async function obtenerProcesosSinAsignar() {
+  const { data, error } = await supabase
+    .from("vw_procesos_terminados_sin_asignar")
+    .select(
+      "id, codigo_cofre , fecha_inicio, fecha_fin,referencia_nombre, empresa_id",
+    );
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}

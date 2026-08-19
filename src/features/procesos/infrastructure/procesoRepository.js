@@ -5,8 +5,10 @@ import {
   validarSiguienteFase, //listo
   obtenerFaseActualProcesos,
   obtenerDetallesProcesosGerente,
+  obtenerProcesosSinAsignar,
 } from "../services/procesosService";
 
+import { procesoSinAsignarMapper } from "../domain/mappers/procesoSinAsignarMapper";
 import { procesoMapper } from "../domain/mappers/procesoMapper";
 import { historialProcesosMapper } from "../domain/mappers/historialMapper";
 import { dashboardMapper } from "../domain/mappers/dashboardMapper";
@@ -39,5 +41,10 @@ export const ProcesoRepository = {
   async getFaseActual() {
     const data = await obtenerFaseActualProcesos();
     return (data || []).map(faseActualMapper);
+  },
+
+  async getProcesosSinAsignar() {
+    const data = await obtenerProcesosSinAsignar();
+    return (data || []).map(procesoSinAsignarMapper);
   },
 };

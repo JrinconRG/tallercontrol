@@ -42,4 +42,33 @@ export class Proceso {
   estaFinalizado() {
     return this.estado === "finalizado";
   }
+
+  obtenerEstadoDetallado() {
+    const todasFinalizadas = this.detalleSubprocesos.every((sub) =>
+      sub.estaFinalizado(),
+    );
+    if (todasFinalizadas) {
+      return "Completado";
+    }
+
+    const faseEnCurso = this.detalleSubprocesos.find(
+      (sub) => sub.estado === "en_proceso",
+    );
+    if (faseEnCurso) {
+      return `En ${faseEnCurso.cargoNombre}`;
+    }
+
+    const primeraPendiente = this.detalleSubprocesos.find(
+      (sub) => sub.estado === "pendiente",
+    );
+
+    if (primeraPendiente) {
+      if (primeraPendiente.ordenProceso === 1) {
+        return "Sin Iniciar";
+      }
+      return `Espera: ${primeraPendiente.cargoNombre}`;
+    }
+
+    return "Desconocido";
+  }
 }

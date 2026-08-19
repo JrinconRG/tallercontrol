@@ -1,0 +1,52 @@
+.procesos-terminados-contador {
+  font-size: 13px;
+  color: var(--neutral-600);
+  margin: 0.5rem 0;
+}
+
+.procesos-terminados-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--neutral-500);
+  font-size: 14px;
+}
+
+
+.procesos-terminados-barra {
+  position: sticky;
+  bottom: 1rem;
+  margin-top: 1rem;
+  padding: 14px 16px;
+  background-color: var(--brand-50);
+  border: 1px solid var(--brand-200);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+
+.procesos-terminados-contador-seleccion {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brand-700);
+}
+
+
+.procesos-terminados-select-cliente {
+  margin-left: auto;
+  min-width: 220px;
+  height: 38px;
+  padding: 8px 12px;
+  border: 1px solid var(--neutral-400);
+  border-radius: var(--radius-sm);
+  background-color: var(--neutral-50);
+}
+
+.page-content-procesos-terminados,
+.page-procesos-terminados-body,
+.page-procesos-terminados-card,
+.card-body {
+  min-width: 0;
+}
