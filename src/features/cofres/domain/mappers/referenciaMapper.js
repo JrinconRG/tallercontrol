@@ -6,5 +6,6 @@ export const referenciaMapper = (raw) => {
     codigo: raw.rc_codigo,
     nombre: raw.rc_nombre,
     descripcion: raw.rc_descripcion,
+    activo: raw.rc_activo,
   });
 };
