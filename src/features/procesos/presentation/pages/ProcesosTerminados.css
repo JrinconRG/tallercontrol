@@ -1,5 +1,46 @@
+/* Layout y Contenedores */
+.page-content-procesos-terminados,
+.page-procesos-terminados-body,
+.page-procesos-terminados-card,
+.card-body {
+  min-width: 0;
+}
+
+/* Sistema de Pestañas (Tabs) */
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--neutral-400, #e5e7eb);
+}
+
+.tab-button {
+  background: transparent;
+  border: none;
+  padding: 0.8rem 0.25rem;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--neutral-600);
+  cursor: pointer;
+  position: relative;
+  bottom: -1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+  color: var(--brand-600);
+}
+
+.tab-button.active {
+  color: var(--brand-600);
+  font-weight: 600;
+  border-bottom: 3px solid var(--brand-600);
+}
+
+/* Elementos de la Tabla y Estado */
 .procesos-terminados-contador {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--neutral-600);
   margin: 0.5rem 0;
 }
@@ -11,7 +52,7 @@
   font-size: 14px;
 }
 
-
+/* Barra Flotante de Asignación */
 .procesos-terminados-barra {
   position: sticky;
   bottom: 1rem;
@@ -26,13 +67,11 @@
   flex-wrap: wrap;
 }
 
-
 .procesos-terminados-contador-seleccion {
   font-size: 14px;
   font-weight: 500;
   color: var(--brand-700);
 }
-
 
 .procesos-terminados-select-cliente {
   margin-left: auto;
@@ -44,9 +83,113 @@
   background-color: var(--neutral-50);
 }
 
-.page-content-procesos-terminados,
-.page-procesos-terminados-body,
-.page-procesos-terminados-card,
-.card-body {
-  min-width: 0;
+
+/* Badges en celda */
+.badge-cofre {
+  background-color: var(--neutral-100, #f3f4f6);
+  color: var(--neutral-700, #374151);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  border: 1px solid var(--neutral-200, #e5e7eb);
+}
+
+.badge-cofre-more {
+  background-color: var(--brand-50, #eff6ff);
+  color: var(--brand-700, #1d4ed8);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.btn-ver-detalle {
+  background: none;
+  border: none;
+  color: var(--brand-600, #2563eb);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0 4px;
+}
+
+.btn-ver-detalle:hover {
+  color: var(--brand-800, #1e40af);
+}
+
+/* Modal Overlay & Card */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: var(--radius-md, 8px);
+  width: 90%;
+  max-width: 520px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--neutral-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--neutral-500);
+}
+
+.modal-body-cofres {
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+.cofres-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.cofre-card-item {
+  background-color: var(--neutral-50, #f9fafb);
+  border: 1px solid var(--neutral-200, #e5e7eb);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm, 6px);
+  display: flex;
+  flex-direction: column;
+}
+
+.cofre-codigo {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--neutral-800);
+}
+
+.cofre-ref {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
 }

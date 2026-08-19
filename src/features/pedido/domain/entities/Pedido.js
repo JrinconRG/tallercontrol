@@ -7,6 +7,10 @@ export class Pedido {
     estado,
     creadoPor,
     empresaId,
+    clienteNombre,
+    clienteCelular,
+    creadoPorNombre,
+    cofres,
   }) {
     this.id = id;
     this.clienteId = clienteId;
@@ -15,5 +19,9 @@ export class Pedido {
     this.estado = estado;
     this.creadoPor = creadoPor;
     this.empresaId = empresaId;
+    this.clienteNombre = clienteNombre;
+    this.clienteCelular = clienteCelular;
+    this.creadoPorNombre = creadoPorNombre;
+    this.cofres = cofres;
   }
 }
