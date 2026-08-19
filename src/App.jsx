@@ -1,6 +1,6 @@
 import "./styles/variables.css";
 import "./styles/layout.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 //Layouts
 import PublicLayout from "./components/layout/PublicLayout";
 import PrivateLayout from "./components/layout/PrivateLayout";
@@ -14,9 +14,15 @@ import NoAutorizado from "./pages/NoAutorizado";
 import Tarifas from "./pages/Gerente/Tarifas/Tarifas";
 
 //Gerente routes
+import ProcesosTerminados from "./features/procesos/presentation/pages/ProcesosTerminados";
 import Empleados from "./pages/Gerente/Empleados/Empleados";
-import GenerarNomina from "./pages/Gerente/Nomina/GenerarNomina";
+import GenerarNomina from "./features/nomina/presentation/pages/GenerarNomina";
 import HistorialGerente from "./pages/Gerente/HistorialGerente/HistorialGerente";
+import DetalleNomina from "./features/nomina/presentation/pages/DetalleNomina";
+import ExportarNomina from "./features/nomina/presentation/pages/ExportarNomina";
+import ReferenciasCofre from "./features/cofres/presentation/pages/ReferenciasCofre";
+import Clientes from "./features/clientes/presentation/pages/Clientes";
+import HistorialNomina from "./features/nomina/presentation/pages/HistorialNomina";
 
 function App() {
   return (
@@ -33,6 +39,14 @@ function App() {
           element={
             <RequireRole allowedRoles={["gerente"]}>
               <Dashboard />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/gerente/procesos/terminados"
+          element={
+            <RequireRole allowedRoles={["gerente"]}>
+              <ProcesosTerminados />
             </RequireRole>
           }
         />
@@ -54,14 +68,66 @@ function App() {
             </RequireRole>
           }
         />
-        <Route
-          path="gerente/nomina/fecha"
-          element={
-            <RequireRole allowedRoles={["gerente"]}>
-              <GenerarNomina />
-            </RequireRole>
-          }
-        />
+
+        <Route path="/gerente/configuracion">
+          <Route index element={<Navigate to="referencias" replace />} />
+
+          <Route
+            path="referencias"
+            element={
+              <RequireRole allowedRoles={["gerente"]}>
+                <ReferenciasCofre />
+              </RequireRole>
+            }
+          />
+
+          <Route
+            path="clientes"
+            element={
+              <RequireRole allowedRoles={["gerente"]}>
+                <Clientes />
+              </RequireRole>
+            }
+          />
+        </Route>
+
+        {/* Rutas de nómina agrupadas */}
+        <Route path="gerente/nomina">
+          <Route index element={<Navigate to="fecha" replace />} />
+          <Route
+            path="fecha"
+            element={
+              <RequireRole allowedRoles={["gerente"]}>
+                <GenerarNomina />
+              </RequireRole>
+            }
+          />
+
+          <Route
+            path="historial"
+            element={
+              <RequireRole allowedRoles={["gerente"]}>
+                <HistorialNomina />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="detalle"
+            element={
+              <RequireRole allowedRoles={["gerente"]}>
+                <DetalleNomina />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="exportar"
+            element={
+              <RequireRole allowedRoles={["gerente"]}>
+                <ExportarNomina />
+              </RequireRole>
+            }
+          />
+        </Route>
         <Route
           path="gerente/historial"
           element={

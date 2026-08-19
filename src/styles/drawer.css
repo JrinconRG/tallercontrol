@@ -95,9 +95,6 @@ dialog.drawer {
   gap: 20px; /* clave estilo Notion */
 }
 
-/* =========================
-   SECCIONES INTERNAS
-========================= */
 .drawer-section {
   display: flex;
   flex-direction: column;

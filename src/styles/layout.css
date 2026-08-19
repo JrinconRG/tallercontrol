@@ -1,6 +1,6 @@
 .app-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 260px minmax(0, 1fr);
   grid-template-rows: 70px 1fr;
   height: 100vh;
   background-color: var(--bg-page);
@@ -17,8 +17,8 @@
 .main-content {
   padding: 24px;
   overflow-y: auto;
+  min-width: 0;
 }
-
 .header-page{
   gap: 12px;
   margin-bottom: 20px;

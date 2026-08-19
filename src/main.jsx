@@ -5,6 +5,7 @@ import "./styles/buttons.css";
 import "./styles/forms.css";
 import "react-day-picker/style.css";
 import "./styles/drawer.css";
+import "./styles/filters.css";
 import React from "react";
 
 import ReactDOM from "react-dom/client";
