@@ -206,7 +206,7 @@ export default function Empleados() {
                 <h3
                   style={{
                     color: "var(--neutral-600)",
-                    fontSize: "22px",
+                    fontSize: "var(--font-title)",
                     fontWeight: "600",
                   }}
                 >
@@ -239,7 +239,7 @@ export default function Empleados() {
                   <h3
                     style={{
                       color: "var(--neutral-600)",
-                      fontSize: "22px",
+                      fontSize: "var(--font-title)",
                       fontWeight: "600",
                     }}
                   >

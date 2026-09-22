@@ -19,7 +19,7 @@
 }
 
 .popover-fases input {
-  font-size: 17px;
+  font-size: var(--font-subtitle);
 }
 
 /* 🔹 Search */
@@ -28,7 +28,7 @@
   padding: 14px 10px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--neutral-500);
-  font-size: 14px;
+  font-size: var(--font-small);
 }
 
 /* 🔹 Lista */
@@ -52,14 +52,14 @@
   align-items: center;
   padding: 8px 10px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: var(--font-small);
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
 
 .item-agregrar{
-  font-size: 20px;
+  font-size: var(--font-title);
 }
 .popover-item:hover {
   background: var(--neutral-100, rgba(0, 0, 0, 0.04));
@@ -84,7 +84,7 @@
 
 /* 🔹 Check animado */
 .item-check {
-  font-size: 20px;
+  font-size: var(--font-title);
   color: var(--primary-600);
   opacity: 0;
   transition: opacity 0.15s ease;
@@ -96,7 +96,7 @@
 
 /* 🔹 Badge */
 .popover-item-badge {
-  font-size:  18px;
+  font-size: var(--font-subtitle);
   color: var(--neutral-900);
   background: var(--neutral-300);
   padding: 4px 8px;
@@ -106,14 +106,14 @@
 /* 🔹 Estados */
 .popover-item-muted {
   padding: 8px 10px;
-  font-size: 20px;
+  font-size: var(--font-title);
   color: var(--neutral-500);
 }
 
 /* 🔹 Error */
 .popover-error {
   color: red;
-  font-size: 15px;
+  font-size: var(--font-body);
     padding: 0 4px;
 
 }
@@ -131,7 +131,7 @@
 }
 
 .multi-bar span {
-  font-size: 13px;
+  font-size: var(--font-small);
   color: var(--neutral-500);
 }
 

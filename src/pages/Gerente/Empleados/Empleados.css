@@ -36,11 +36,11 @@
 }
 
 .tittle-detalle-empleado-drawer{
-    font-size: 30px;
+    font-size: var(--font-heading);
 }
 
 .span-tittle-empleado{
-    font-size: 20px;
+    font-size: var(--font-title);
 }
 
 .info-grid {
@@ -52,13 +52,13 @@
 .info-grid span:nth-child(odd) {
   color: var(--neutral-800);
   font-weight: 500;
-      font-size: 20px;
+      font-size: var(--font-title);
 
 }
 
 .info-grid span:nth-child(even) {
   text-align: right;
-      font-size: 20px;
+      font-size: var(--font-title);
 
   font-weight: 600;
 }

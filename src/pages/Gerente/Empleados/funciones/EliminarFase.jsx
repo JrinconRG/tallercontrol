@@ -37,7 +37,7 @@ export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
           gap: "6px",
         }}
       >
-        <span style={{ fontSize: "12px" }}>¿Eliminar {cargo.nombre}?</span>
+        <span style={{ fontSize: "var(--font-small)" }}>¿Eliminar {cargo.nombre}?</span>
 
         <button
           className="chip-confirm-btn chip-confirm-btn--yes"
@@ -79,7 +79,7 @@ export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
           cursor: "pointer",
           padding: "0 4px",
           fontWeight: "bold",
-          fontSize: "14px",
+          fontSize: "var(--font-small)",
           opacity: 0.7,
         }}
         onClick={() => setConfirmando(true)}

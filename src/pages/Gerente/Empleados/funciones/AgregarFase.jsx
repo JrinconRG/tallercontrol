@@ -78,7 +78,7 @@ export default function AgregarFase({
     <div className="agregar-fase-container" ref={popoverRef}>
       <button
         className="btn btn-terciary"
-        style={{ fontSize: "20px" }}
+        style={{ fontSize: "var(--font-title)" }}
         onClick={() => setOpen((v) => !v)}
         disabled={asignarCargoMutation.isPending}
       >
