@@ -36,7 +36,7 @@
 
   .modal-header h3 {
     margin: 0;
-    font-size: 25px;
+    font-size: var(--font-title);
     font-weight: 600;
     color: var(--brand-700);
   }
@@ -45,7 +45,7 @@
   .modal-close {
     background: none;
     border: none;
-    font-size: 1rem;
+    font-size: var(--font-body);
     cursor: pointer;
     color: var(--text-primary);
     transition: color 0.2s ease;
@@ -53,7 +53,7 @@
 
   .modal-body {
     padding: 24px;
-    font-size: 30px;
+    font-size: var(--font-heading);
     font-weight: 400px;
     display: flex;
     gap: 20px;
@@ -94,7 +94,7 @@
     width: 100%;
     /* Ocupar todo el ancho disponible */
     padding: 12px 16px;
-    font-size: 18px;
+    font-size: var(--font-subtitle);
     /* Texto legible */
     font-family: inherit;
     color: var(--text-primary);
@@ -125,14 +125,14 @@
 
   .modal-body p {
     margin: 0;
-    font-size: 25px;
+    font-size: var(--font-title);
     color: var(--text-primary);
   }
 
 
   .modal-body label {
     font-weight: 600;
-    font-size: 25px;
+    font-size: var(--font-title);
     margin-bottom: -4px;
     /* Acerca la etiqueta al input un poco */
   }
@@ -206,7 +206,7 @@
   }
 
   .file-name-hint {
-    font-size: 14px !important;
+    font-size: var(--font-small) !important;
     /* Texto pequeño para el nombre del archivo */
     color: var(--neutral-500);
     margin-top: 5px !important;

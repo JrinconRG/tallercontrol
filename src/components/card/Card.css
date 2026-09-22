@@ -14,7 +14,7 @@
 ========================= */
 
 .card-title-text {
-    font-size: 20px;
+    font-size: var(--font-title);
     font-weight: 600;
     color: var(--brand-700);
 }

@@ -103,7 +103,7 @@ dialog.drawer {
 
 /* títulos estilo Notion */
 .drawer-section h3 {
-  font-size: 14px;
+  font-size: var(--font-small);
   font-weight: 600;
   color: rgba(55, 53, 47, 0.65);
   margin: 0;
@@ -127,7 +127,7 @@ dialog.drawer {
   padding: 4px 10px;
   border-radius: 999px;
 
-  font-size: 12px;
+  font-size: var(--font-small);
   font-weight: 500;
 
   white-space: nowrap;
@@ -148,7 +148,7 @@ dialog.drawer {
   border: none;
   cursor: pointer;
 
-  font-size: 12px;
+  font-size: var(--font-small);
   padding: 2px 4px;
 
   color: inherit;

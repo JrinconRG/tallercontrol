@@ -1,7 +1,7 @@
 .app-layout {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  grid-template-rows: 70px 1fr;
+  grid-template-columns: 16.25rem minmax(0, 1fr);
+  grid-template-rows: 4.375rem 1fr;
   height: 100vh;
   background-color: var(--bg-page);
 }
@@ -15,7 +15,7 @@
 }
 
 .main-content {
-  padding: 24px;
+  padding: 1.5rem;
   overflow-y: auto;
   min-width: 0;
 }
@@ -26,7 +26,7 @@
 }
 
 .page-tittle  {
-  font-size: 2.5rem;
+  font-size: var(--font-display);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 2px 0;
@@ -34,5 +34,24 @@
 }
 
 .page-mini-info{
-  font-size:1.2rem;
+  font-size: var(--font-subtitle);
+}
+
+/* At larger text scales, preserve readable navigation and prevent clipping. */
+html[data-text-scale="150"] .app-layout,
+html[data-text-scale="200"] .app-layout {
+  grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+}
+
+@media (max-width: 56rem) {
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .sidebar { grid-row: auto; }
+  .header { grid-column: auto; }
+  .main-content { overflow-y: visible; }
 }

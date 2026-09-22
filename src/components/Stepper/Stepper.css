@@ -124,7 +124,7 @@
 }
 
 .sf-num {
-  font-size: 15px;
+  font-size: var(--font-body);
   font-weight: 500;
   color: #888780;
   text-transform: uppercase;
@@ -132,14 +132,14 @@
 }
 
 .sf-name {
-  font-size: 18px;
+  font-size: var(--font-subtitle);
   font-weight: 600;
   color: #2c2c2a;
   line-height: 1.3;
 }
 
 .sf-status {
-  font-size: 15px;
+  font-size: var(--font-body);
   font-weight: 500;
 }
 
@@ -158,6 +158,6 @@
     left: calc(var(--sf-btn-size) / 2);
     right: calc(var(--sf-btn-size) / 2);
   }
-  .sf-name { font-size: 11px; }
-  .sf-num  { font-size: 9px;  }
+  .sf-name { font-size: var(--font-small); }
+  .sf-num  { font-size: var(--font-small); }
 }

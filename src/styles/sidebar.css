@@ -8,9 +8,9 @@
 }
 
 .sidebar-logo {
-  font-family: var(--font-title);
+  font-family: var(--font-family-title);
   font-weight: 700;
-  font-size: 25px;
+  font-size: var(--font-title);
   text-align: center;
 
 }
@@ -29,7 +29,7 @@
   cursor: pointer;
   transition: background 0.2s;
   text-decoration: none;
-  font-size: 25px;
+  font-size: var(--font-body);
   font-weight: 400;
 
 }
@@ -112,7 +112,7 @@
   border-radius: 5px;
   color: var(--neutral-800);
   text-decoration: none;
-  font-size: 24px;
+  font-size: var(--font-body);
   font-weight: 400;
   transition: background 0.2s;
 }

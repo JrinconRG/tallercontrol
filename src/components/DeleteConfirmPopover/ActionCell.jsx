@@ -42,7 +42,7 @@ export default function ActionCell({
           aria-label={`Eliminar ${row.nombre ?? row[displayField]}`}
           onClick={handleClickDelete}
         >
-          <Icon name="Trash" size="10" /> Eliminar
+          <Icon name="Trash" size={10} /> Eliminar
         </button>
 
         <DeleteConfirmPopover

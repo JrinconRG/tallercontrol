@@ -27,7 +27,7 @@
 }
 
 .filter-label {
-  font-size: 0.75rem;
+  font-size: var(--font-caption);
   font-weight: 600;
   color: var(--neutral-600);
   text-transform: uppercase;
@@ -43,7 +43,7 @@
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: var(--font-small);
   color: #374151;
   cursor: pointer;
   transition: background 0.15s ease;
@@ -55,7 +55,7 @@
 
 .filters-summary {
   margin-top: 0.75rem;
-  font-size: 0.85rem;
+  font-size: var(--font-small);
   color: var(--neutral-600);
 }
 
@@ -64,7 +64,7 @@
   text-align: center;
   padding: 2.5rem 1rem;
   color: #9ca3af;
-  font-size: 0.95rem;
+  font-size: var(--font-body);
 }
 
 .filter-field .search-group,

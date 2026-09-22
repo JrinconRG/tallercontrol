@@ -60,8 +60,8 @@
 .login-form h2 {
     text-align: center;
     color: var(--text-primary);
-    font-family: var(--font-title);
-    font-size: 24px;
+    font-family: var(--font-family-title);
+    font-size: var(--font-title);
     font-weight: 600;
 }
 
@@ -89,7 +89,7 @@
 }
 
 .login-texto-imputs {
-    font-size: 1.2rem;
+    font-size: var(--font-subtitle);
     color: var(--text-secondary);
     margin-top: 15px;
 

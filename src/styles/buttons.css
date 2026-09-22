@@ -7,7 +7,7 @@
   padding: 10px 20px;
   border-radius: var(--radius-sm);
   font-family: var(--font-base);
-  font-size: 1rem;        /* relativo al contexto, no hardcodeado */
+  font-size: var(--font-body);
   font-weight: 600;
   line-height: 1.4;
   cursor: pointer;

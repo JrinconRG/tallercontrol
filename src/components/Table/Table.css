@@ -26,7 +26,7 @@
 .custom-table thead tr th {
     padding: 16px 22px;
     text-align: left;
-    font-size: 22px;
+    font-size: var(--font-title);
     font-weight: 700;
     border-bottom: 2px solid var(--neutral-400);
     white-space: nowrap;
@@ -36,7 +36,7 @@
 .custom-table tbody tr td {
     padding: 14px 22px;
     color: var(--neutral-700);
-    font-size: 20px;
+    font-size: var(--font-title);
     border-bottom: 1px solid var(--neutral-400);
     vertical-align: middle;
 }
@@ -108,7 +108,7 @@
 /* Fechas */
 .col-date {
     width: 160px;
-    font-size: 20px !important;
+    font-size: var(--font-title) !important;
 }
 
 /* Valores Numéricos / Moneda */
@@ -138,7 +138,7 @@
 .cargo-chip {
     padding: 4px 14px;
     border-radius: var(--radius-md);
-    font-size: 20px; 
+    font-size: var(--font-title); 
     font-weight: 500;
     display: inline-flex;
     align-items: center;

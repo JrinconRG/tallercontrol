@@ -61,7 +61,7 @@
   width: var(--sfn-btn-size);
   height: var(--sfn-btn-size);
   border-radius: 50%;
-  font-size: 20px;
+  font-size: var(--font-title);
   border: 2px solid var(--sf-pending-border);
   background: #fff;
   cursor: pointer;
@@ -139,7 +139,7 @@
 }
 
 .sfn-num {
-  font-size: 15px;
+  font-size: var(--font-body);
   font-weight: 500;
   color: #888780;
   text-transform: uppercase;
@@ -147,7 +147,7 @@
 }
 
 .sfn-name {
-  font-size: 18px;
+  font-size: var(--font-subtitle);
   font-weight: 600;
   color: #2c2c2a;
   line-height: 1.3;
@@ -164,8 +164,8 @@
     left: calc(100% / 3 / 2);
     right: calc(100% / 3 / 2);
   }
-  .sfn-name { font-size: 11px; }
-  .sfn-num  { font-size: 9px; }
+  .sfn-name { font-size: var(--font-small); }
+  .sfn-num  { font-size: var(--font-small); }
 }
 
 

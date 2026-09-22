@@ -31,7 +31,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 20px;
+  font-size: var(--font-title);
   color: var(--neutral-950);
   background: var(--text-blanco);
   border: 0.5px solid var(--neutral-600);
@@ -67,7 +67,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 20px;
+  font-size: var(--font-title);
   font-weight: 500;
   color: #185fa5;
   background: #e6f1fb;
@@ -87,6 +87,6 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 20px;
+  font-size: var(--font-title);
   color: var(--color-text-tertiary);
 }

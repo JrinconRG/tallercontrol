@@ -8,8 +8,8 @@
 }
 
 .header-title {
-  font-family: var(--font-title);
-  font-size: 25px;
+  font-family: var(--font-family-title);
+  font-size: var(--font-title);
   font-weight: 600;
 }
 
