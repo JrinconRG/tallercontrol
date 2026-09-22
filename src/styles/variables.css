@@ -130,9 +130,20 @@
   /* ===== SHADOW ===== */
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
 
-  /* ===== TYPO ===== */
+  /* ===== TYPOGRAPHY =====
+     All values use rem so they honour both browser preferences and the
+     in-app text scale selector. */
   --font-base: 'Inter', system-ui, sans-serif;
-  --font-title: 'Poppins', system-ui, sans-serif;
+  --font-family-title: 'Poppins', system-ui, sans-serif;
+  --font-caption: 0.75rem;   /* 12px at the default browser size */
+  --font-small: 0.875rem;    /* 14px */
+  --font-body: 1rem;         /* 16px */
+  --font-subtitle: 1.125rem; /* 18px */
+  --font-title: 1.5rem;      /* 24px */
+  --font-heading: 1.875rem;  /* 30px */
+  --font-display: 2.5rem;    /* 40px */
+  --line-height-tight: 1.2;
+  --line-height-body: 1.5;
 
 
   --filter-height: 40.2667px;
@@ -140,5 +151,5 @@
   --filter-border: var(--neutral-400);
   --filter-bg: var(--neutral-50);
   --filter-text: var(--neutral-600);
-  --filter-font-size: 14px;
+  --filter-font-size: var(--font-small);
 }

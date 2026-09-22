@@ -1,0 +1,84 @@
+.accessibility-control {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 10000;
+}
+
+.accessibility-trigger,
+.accessibility-panel button {
+  font: inherit;
+}
+
+.accessibility-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand-700);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  font-size: var(--font-small);
+  font-weight: 700;
+}
+
+.accessibility-trigger:focus-visible,
+.accessibility-panel button:focus-visible {
+  outline: 0.1875rem solid var(--brand-300);
+  outline-offset: 0.1875rem;
+}
+
+.accessibility-panel {
+  width: min(20rem, calc(100vw - 3rem));
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+  border: 0.0625rem solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--bg-card-login);
+  box-shadow: var(--shadow-card);
+}
+
+.accessibility-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.875rem;
+}
+
+.accessibility-panel h2 { font-size: var(--font-subtitle); line-height: var(--line-height-tight); }
+.accessibility-panel p { color: var(--text-secondary); font-size: var(--font-small); }
+
+.accessibility-close {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.accessibility-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+.accessibility-options button {
+  min-height: 2.5rem;
+  border: 0.0625rem solid var(--border-default);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: var(--font-small);
+}
+.accessibility-options button.is-selected { border-color: var(--action-primary); background: var(--brand-100); color: var(--brand-800); font-weight: 700; }
+
+@media (max-width: 30rem) {
+  .accessibility-control { right: 1rem; bottom: 1rem; }
+  .accessibility-trigger span { display: none; }
+}

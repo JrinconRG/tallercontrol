@@ -4,8 +4,25 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 100%;
+}
+
+html[data-text-scale="120"] { font-size: 120%; }
+html[data-text-scale="150"] { font-size: 150%; }
+html[data-text-scale="200"] { font-size: 200%; }
+
 body {
   font-family: var(--font-base);
   background-color: var(--bg-page);
   color: #1f2937;
+  font-size: var(--font-body);
+  line-height: var(--line-height-body);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }

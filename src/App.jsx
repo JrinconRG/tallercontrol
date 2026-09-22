@@ -1,13 +1,14 @@
 import "./styles/variables.css";
 import "./styles/layout.css";
 import { Routes, Route, Navigate } from "react-router-dom";
+
 //Layouts
 import PublicLayout from "./components/layout/PublicLayout";
 import PrivateLayout from "./components/layout/PrivateLayout";
 import RequireRole from "./components/auth/RequireRole";
 //Páginas
 import LoginPage from "./pages/auth/LoginPage/LoginPage";
-import InicioTrabajador from "./pages/Trabajador/InicioTrabajador/InicioTrabajador";
+import InicioTrabajador from "./features/procesos/presentation/pages/InicioTrabajador";
 import Historial from "./pages/Trabajador/Historial/Historial";
 import Dashboard from "./pages/Gerente/Dashboard/Dashboard";
 import NoAutorizado from "./pages/NoAutorizado";

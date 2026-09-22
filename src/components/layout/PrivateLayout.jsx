@@ -2,6 +2,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { useAuthStore } from "../../stores/authStore.js";
+import AccessibilityControl from "../accessibility/AccessibilityControl";
 
 export default function PrivateLayout() {
     const { isAuthenticated, role } = useAuthStore();
@@ -17,6 +18,7 @@ export default function PrivateLayout() {
           <div className="main-content">
             <Outlet />
           </div>
+          <AccessibilityControl />
         </div>
       );
     }
