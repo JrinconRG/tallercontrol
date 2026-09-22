@@ -50,8 +50,8 @@ export default function ReferenciasCofre() {
         <ActionCell
           row={row}
           displayField="codigo"
-          referenciaAEliminar={referenciaAEliminar}
-          setReferenciaAEliminar={setReferenciaAEliminar}
+          itemAEliminar={referenciaAEliminar}
+          setItemAEliminar={setReferenciaAEliminar}
           isDeleting={isDeleting}
           handleConfirmarEliminar={handleConfirmarEliminar}
         />

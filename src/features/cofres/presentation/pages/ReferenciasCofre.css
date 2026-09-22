@@ -23,7 +23,7 @@
   background-color: #f3f4f6;
   border: 1px solid #e5e7eb;
   color: #374151;
-  font-size: 12px;
+  font-size: var(--font-small);
   font-weight: 500;
   padding: 3px 8px;
   border-radius: 4px;
