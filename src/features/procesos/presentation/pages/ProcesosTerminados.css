@@ -18,7 +18,7 @@
   background: transparent;
   border: none;
   padding: 0.8rem 0.25rem;
-  font-size: 18px;
+  font-size: var(--font-subtitle);
   font-weight: 500;
   color: var(--neutral-600);
   cursor: pointer;
@@ -40,7 +40,7 @@
 
 /* Elementos de la Tabla y Estado */
 .procesos-terminados-contador {
-  font-size: 15px;
+  font-size: var(--font-body);
   color: var(--neutral-600);
   margin: 0.5rem 0;
 }
@@ -49,7 +49,7 @@
   text-align: center;
   padding: 2rem 1rem;
   color: var(--neutral-500);
-  font-size: 14px;
+  font-size: var(--font-small);
 }
 
 /* Barra Flotante de Asignación */
@@ -68,7 +68,7 @@
 }
 
 .procesos-terminados-contador-seleccion {
-  font-size: 14px;
+  font-size: var(--font-small);
   font-weight: 500;
   color: var(--brand-700);
 }
@@ -90,7 +90,7 @@
   color: var(--neutral-700, #374151);
   padding: 2px 8px;
   border-radius: 12px;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   border: 1px solid var(--neutral-200, #e5e7eb);
 }
 
@@ -99,7 +99,7 @@
   color: var(--brand-700, #1d4ed8);
   padding: 2px 8px;
   border-radius: 12px;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   font-weight: 500;
 }
 
@@ -107,7 +107,7 @@
   background: none;
   border: none;
   color: var(--brand-600, #2563eb);
-  font-size: 0.8rem;
+  font-size: var(--font-caption);
   font-weight: 500;
   cursor: pointer;
   text-decoration: underline;
@@ -151,14 +151,14 @@
 
 .modal-header h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: var(--font-body);
   font-weight: 600;
 }
 
 .btn-close {
   background: none;
   border: none;
-  font-size: 1.25rem;
+  font-size: var(--font-title);
   cursor: pointer;
   color: var(--neutral-500);
 }
@@ -185,11 +185,11 @@
 
 .cofre-codigo {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: var(--font-small);
   color: var(--neutral-800);
 }
 
 .cofre-ref {
-  font-size: 0.75rem;
+  font-size: var(--font-caption);
   color: var(--neutral-500);
 }

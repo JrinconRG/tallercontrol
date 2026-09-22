@@ -1,12 +1,15 @@
 import { useState } from "react";
 import Modal from "../../../../components/modal/Modal";
-import { useObtenerReferenciasCofres } from "../../../../features/cofres/application/hook/useObtenerReferenciasCofres";
-import { useCrearProceso } from "../../../../features/procesos/application/hooks/useCrearProceso";
+import { useObtenerReferenciasCofres } from "../../../cofres/application/hook/useObtenerReferenciasCofres";
+import { useCrearProceso } from "../../application/hooks/useCrearProceso";
 import PropTypes from "prop-types";
+import { useToast } from "../../../../hooks/useToast";
+import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
 
 export default function CrearProceso({ onClose, onSuccess }) {
   const [referenciaId, setReferenciaId] = useState("");
   const [validacionError, setValidacionError] = useState("");
+  const { showError } = useToast();
   // limpiar error cuando el usuario selecciono
   const { referencias, loading: loadingRefs } = useObtenerReferenciasCofres();
 
@@ -46,8 +49,11 @@ export default function CrearProceso({ onClose, onSuccess }) {
         });
         onClose();
       },
-      onError: () => {
-        setValidacionError("Hubo un fallo en el servidor. Intenta de nuevo.");
+      onError: (error) => {
+        showError(
+          "No se pudo crear el proceso",
+          mapSupabaseError(error).message,
+        );
       },
     });
   }
@@ -83,7 +89,7 @@ export default function CrearProceso({ onClose, onSuccess }) {
           </select>
 
           {validacionError && (
-            <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+            <p style={{ color: "red", fontSize: "var(--font-small)", marginTop: "4px" }}>
               {validacionError}
             </p>
           )}

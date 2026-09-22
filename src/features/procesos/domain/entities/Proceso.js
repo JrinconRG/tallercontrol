@@ -17,6 +17,8 @@ export class Proceso {
     referenciaCodigoNombre,
     referenciaNombre,
     detalleSubprocesos = [],
+    color,
+    asignado,
   }) {
     this.id = id;
     this.totalAcumulado = totalAcumulado;
@@ -35,6 +37,8 @@ export class Proceso {
     this.referenciaCodigoNombre = referenciaCodigoNombre;
     this.referenciaNombre = referenciaNombre;
     this.detalleSubprocesos = detalleSubprocesos;
+    this.color = color;
+    this.asignado = asignado;
   }
   estaActivo() {
     return this.estado === "activo" || this.estado === "en_proceso";

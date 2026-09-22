@@ -1,0 +1,19 @@
+/* FiltrosProcesos.css */
+.filtros-procesos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filtros-procesos-controles {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.filtros-limpiar {
+  white-space: nowrap;
+}

@@ -10,6 +10,14 @@
   margin: 0 auto;
 }
 
+.trabajador-filtros {
+    background: #fff;
+    border: 2px solid var(--filter-border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
 /* ── Header de la página ── */
 .trabajador-header {
   display: flex;
@@ -30,7 +38,7 @@
 
 /* Título de sección — etiqueta discreta */
 .title-procesos {
-  font-size: 1.4rem;
+  font-size: var(--font-title);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -94,7 +102,7 @@
 }
 .mensaje-confirmacion{
 
-  font-size: 20px;
+  font-size: var(--font-title);
  
   margin: 0; 
 }

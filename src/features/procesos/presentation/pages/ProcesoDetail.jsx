@@ -1,4 +1,4 @@
-import { Icon } from "../../../components/ui/Icon";
+import { Icon } from "../../../../components/ui/Icon";
 import "./ProcesoDetail.css";
 import PropTypes from "prop-types";
 

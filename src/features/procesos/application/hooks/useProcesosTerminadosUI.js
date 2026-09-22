@@ -4,12 +4,15 @@ import { useObtenerClientes } from "../../../clientes/application/hooks/useObten
 import { useAsignarPedido } from "../../../pedido/application/hooks/useAsignarPedido";
 import { usePagination } from "../../../../hooks/usePagination";
 import { useAuthStore } from "../../../../stores/authStore";
+import { useToast } from "../../../../hooks/useToast";
+import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
 
 export const useProcesosTerminadosUI = () => {
   const [search, setSearch] = useState("");
   const [selectedReference, setSelectedReference] = useState("");
   const [seleccionados, setSeleccionados] = useState([]);
   const [selectedCliente, setSelectedCliente] = useState("");
+  const { showSuccess, showError } = useToast();
 
   const user = useAuthStore((state) => state.user);
 
@@ -100,10 +103,16 @@ export const useProcesosTerminadosUI = () => {
         procesoIds: seleccionados,
         creadoPor: user?.id,
       });
+      const cliente = clientes.find((item) => String(item.id) === String(selectedCliente));
+      showSuccess(
+        "Pedido creado",
+        `${seleccionados.length} cofre${seleccionados.length !== 1 ? "s" : ""} asignado${seleccionados.length !== 1 ? "s" : ""} a ${cliente?.nombre ?? "el cliente seleccionado"}.`,
+      );
       limpiarSeleccion();
       setSelectedCliente("");
     } catch (err) {
       console.error("Error al asignar el cliente:", err);
+      showError("No se pudo crear el pedido", mapSupabaseError(err).message);
     }
   };
 

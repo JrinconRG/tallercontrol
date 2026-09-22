@@ -1,14 +1,17 @@
 import { useState } from "react";
 import Modal from "../../../../components/modal/Modal";
-import { useTrabajadoresPorCargo } from "../../../../features/Trabajadores/application/hooks/useTrabajadoresPorCargo";
-import { useCrearSubproceso } from "../../../../features/subProcesos/application/hooks/useCrearSubProceso";
+import { useTrabajadoresPorCargo } from "../../../Trabajadores/application/hooks/useTrabajadoresPorCargo";
+import { useCrearSubproceso } from "../../../subProcesos/application/hooks/useCrearSubProceso";
 import PropTypes from "prop-types";
+import { useToast } from "../../../../hooks/useToast";
+import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
 
 export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
   const [trabajadorId, setTrabajadorId] = useState("");
   const { proceso, fase } = contexto;
   console.log("Contexto recibido en CrearSubproceso:", contexto); // Agrega este log para verificar el contexto recibido
   const [errorValidacion, setErrorValidacion] = useState("");
+  const { showError } = useToast();
   // funcion para limpiar el error si se selecciona
 
   const handleSelectChange = (e) => {
@@ -83,7 +86,10 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
           console.error("❌ Mensaje final:", mensaje);
           console.error("❌ Status:", status);
 
-          setErrorValidacion(mensaje);
+          showError(
+            "No se pudo iniciar la fase",
+            mapSupabaseError(err).message,
+          );
         },
       },
     );
@@ -114,7 +120,7 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
           ))}
         </select>
         {errorValidacion && (
-          <span style={{ color: "red", fontSize: "18px", marginTop: "4px" }}>
+          <span style={{ color: "red", fontSize: "var(--font-subtitle)", marginTop: "4px" }}>
             {errorValidacion}
           </span>
         )}

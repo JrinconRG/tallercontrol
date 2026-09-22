@@ -21,7 +21,7 @@
 
 /* Título principal — el código del cofre, único por proceso */
 .tittle-detail-process {
-  font-size: 1.75rem;
+  font-size: var(--font-heading);
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.2;
@@ -35,7 +35,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 1.1rem;
+  font-size: var(--font-subtitle);
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -45,7 +45,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 1.1rem;
+  font-size: var(--font-subtitle);
   color: var(--text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -57,7 +57,7 @@
   flex-shrink: 0;
   padding: 4px 12px;
   border-radius: 100px;
-  font-size: 0.75rem;
+  font-size: var(--font-caption);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -124,7 +124,7 @@
 }
 
 .estado-etiqueta {
-  font-size: 0.7rem;
+  font-size: var(--font-caption);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -134,7 +134,7 @@
 .siguientFase .estado-etiqueta { color: var(--brand-600); }
 
 .estado-valor {
-  font-size: 1.3rem;
+  font-size: var(--font-title);
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -148,7 +148,7 @@
 }
 
 .info-proceso {
-  font-size: 1.15rem;
+  font-size: var(--font-subtitle);
 }
 
 /* ── Footer — botón de acción ── */
@@ -165,7 +165,7 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: var(--font-subtitle);
   font-weight: 700;
   font-family: var(--font-base);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
@@ -212,6 +212,6 @@
 }
 
 .finalizado {
-  font-size: 1rem;
+  font-size: var(--font-body);
   color: var(--text-muted);
 }

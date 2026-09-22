@@ -8,6 +8,7 @@ export class ProcesoSinAsignar {
     fechaFin,
     referenciaNombre,
     empresaId,
+    color,
   }) {
     this.id = id;
     this.codigoCofre = codigoCofre;
@@ -15,6 +16,7 @@ export class ProcesoSinAsignar {
     this.fechaFin = fechaFin;
     this.referenciaNombre = referenciaNombre;
     this.empresaId = empresaId;
+    this.color = color;
   }
 
   duracionTotal() {

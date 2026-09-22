@@ -4,6 +4,8 @@ import { subirEvidencia } from "../../../../services/storage.js";
 import { useFinalizarSubProceso } from "../../../../features/subProcesos/application/hooks/useFinalizarSubProceso.js";
 import { Icon } from "../../../../components/ui/Icon.jsx";
 import PropTypes from "prop-types";
+import { useToast } from "../../../../hooks/useToast";
+import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
 
 export default function FinalizarSubproceso({
   subproceso,
@@ -12,6 +14,7 @@ export default function FinalizarSubproceso({
 }) {
   const [file, setFile] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const { showError } = useToast();
   console.log("Subproceso recibido en modal:", subproceso); // Debug: Verificar datos del subproceso
 
   // limpiar error cuando el usuario selecciono
@@ -53,10 +56,7 @@ export default function FinalizarSubproceso({
       onClose();
     } catch (error) {
       console.error(error.message);
-      setErrorMsg(
-        "Hubo un error al procesar la solicitud. Intenta de nuevo.",
-        error,
-      );
+      showError("No se pudo finalizar la fase", mapSupabaseError(error).message);
     }
   }
 
@@ -75,7 +75,7 @@ export default function FinalizarSubproceso({
 
       <label htmlFor="evidencia">Subir evidencia (foto)</label>
       {errorMsg && (
-        <p style={{ color: "red", fontSize: "20px", marginTop: "4px" }}>
+        <p style={{ color: "red", fontSize: "var(--font-title)", marginTop: "4px" }}>
           {errorMsg}
         </p>
       )}
