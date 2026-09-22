@@ -1,7 +1,7 @@
 .badge-finalizado {
     padding: 4px 12px;
     border-radius: var(--radius-md);
-    font-size: 12px;
+    font-size: var(--font-small);
     font-weight: 600;
     display: inline-flex;
     align-items: center;
