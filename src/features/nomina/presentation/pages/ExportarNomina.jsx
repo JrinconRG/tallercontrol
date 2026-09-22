@@ -8,6 +8,8 @@ import { useGetDetalleNominaGenerada } from "../../application/hooks/useObtenerN
 import { generarPDFNomina } from "../../../../utils/generarPDFNomina";
 import "./ExportarNomina.css";
 import { useAuthStore } from "../../../../stores/authStore";
+import { useToast } from "../../../../hooks/useToast";
+import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
 
 const formatCOP = (val) => "$" + Number(val).toLocaleString("es-CO");
 
@@ -15,6 +17,7 @@ export default function ExportarNomina() {
   const ejecucionIniciada = useRef(false);
   const [dataNomina, setDataNomina] = useState(null);
   const [cargando, setCargando] = useState(true);
+  const { showError, showSuccess } = useToast();
 
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -38,19 +41,23 @@ export default function ExportarNomina() {
           setDataNomina(res);
           setCargando(false);
         })
-        .catch(() => setCargando(false));
+        .catch((error) => {
+          showError("No se pudo generar la nómina", mapSupabaseError(error).message);
+          setCargando(false);
+        });
     }
   }, []);
 
   const handleDescargarPDF = () => {
     if (!resultado || !detalleNominaGenerada?.length) {
-      alert("Los datos del PDF aún no están listos.");
+      showError("PDF no disponible", "Los datos de la nómina aún no están listos.");
       return;
     }
     generarPDFNomina({
       cabecera: resultado,
       trabajadores: detalleNominaGenerada,
     });
+    showSuccess("PDF generado", "La nómina se descargó correctamente.");
   };
 
   console.log("detalleNominaGenerada", detalleNominaGenerada);

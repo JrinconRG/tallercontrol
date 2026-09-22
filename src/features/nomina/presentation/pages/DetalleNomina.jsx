@@ -154,7 +154,7 @@ export default function DetalleNomina() {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
-                fontSize: "12px",
+                fontSize: "var(--font-small)",
                 background: "#f3f4f6",
                 padding: "4px 8px",
                 borderRadius: "6px",
@@ -186,7 +186,7 @@ export default function DetalleNomina() {
                 <span
                   style={{
                     marginLeft: "4px",
-                    fontSize: "11px",
+                    fontSize: "var(--font-small)",
                     fontWeight: "700",
                     color: incluirPendientes[row.trabajadorId]
                       ? "#16a34a"
@@ -316,7 +316,7 @@ export default function DetalleNomina() {
                 <p
                   style={{
                     color: "var(--neutral-600)",
-                    fontSize: "16px",
+                    fontSize: "var(--font-body)",
                     fontWeight: "500",
                   }}
                 >

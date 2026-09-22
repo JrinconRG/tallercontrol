@@ -43,7 +43,7 @@
 /* GenerarNomina.css */
 .nomina-btn-continuar {
   padding: 0.9rem 3rem;
-  font-size: 1.2rem;
+  font-size: var(--font-subtitle);
 }
 
 .page-nomina-calendario-contenedor{
@@ -82,7 +82,7 @@
   display: flex;
   align-items: center;       /* Centra verticalmente el ícono con el texto */
   gap: 0.5rem;               /* Separa el ícono del texto por los lados */
-  font-size: 18px;
+  font-size: var(--font-subtitle);
   color: var(--neutral-600);
   margin: 0 0 0.5rem 0;     
   font-weight: 500; /* Margen inferior para separarlo de la cifra */
@@ -90,7 +90,7 @@
 
 
 .page-nomina-info-value {
-  font-size: 30px;
+  font-size: var(--font-heading);
   font-weight: 700;
   color: var(--text-black);
   margin: 0;
@@ -110,13 +110,13 @@
 
 .nomina-alerta-titulo {
   font-weight: 600;
-  font-size: 1.2rem;
+  font-size: var(--font-subtitle);
   color: var(--neutral-800);
   margin: 0 0 0.2rem 0;
 }
 
 .nomina-alerta-detalle {
-  font-size: 1rem;
+  font-size: var(--font-body);
   color: var(--neutral-600);
   margin: 0;
 }

@@ -133,7 +133,7 @@ export default function AuditoriaNominaDrawer({
                 >
                   <span
                     style={{
-                      fontSize: "12px",
+                      fontSize: "var(--font-small)",
                       color: "#6b7280",
                       fontWeight: "500",
                       textTransform: "uppercase",
@@ -143,7 +143,7 @@ export default function AuditoriaNominaDrawer({
                   </span>
                   <span
                     style={{
-                      fontSize: "20px",
+                      fontSize: "var(--font-title)",
                       fontWeight: "700",
                       color: "var(--neutral-900)",
                     }}
@@ -161,7 +161,7 @@ export default function AuditoriaNominaDrawer({
                 >
                   <span
                     style={{
-                      fontSize: "12px",
+                      fontSize: "var(--font-small)",
                       color: "#6b7280",
                       fontWeight: "500",
                       textTransform: "uppercase",
@@ -171,7 +171,7 @@ export default function AuditoriaNominaDrawer({
                   </span>
                   <span
                     style={{
-                      fontSize: "20px",
+                      fontSize: "var(--font-title)",
                       fontWeight: "700",
                       color: "var(--neutral-900)",
                     }}
@@ -189,7 +189,7 @@ export default function AuditoriaNominaDrawer({
                 >
                   <span
                     style={{
-                      fontSize: "12px",
+                      fontSize: "var(--font-small)",
                       color: "#6b7280",
                       fontWeight: "500",
                       textTransform: "uppercase",
@@ -199,7 +199,7 @@ export default function AuditoriaNominaDrawer({
                   </span>
                   <span
                     style={{
-                      fontSize: "20px",
+                      fontSize: "var(--font-title)",
                       fontWeight: "700",
                     }}
                   >

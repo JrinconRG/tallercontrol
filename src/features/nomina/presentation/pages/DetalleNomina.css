@@ -2,13 +2,13 @@
    1. ELEMENTOS DE TEXTO E INFORMACIÓN SUPERIOR
    ========================================================================== */
 .page-detalle-nomina-subtittle {
-    font-size: 25px;
+    font-size: var(--font-title);
     margin-bottom: 10px;
     color: var(--neutral-800);
 }
 
 .page-detalle-nomina-info {
-    font-size: 20px;
+    font-size: var(--font-title);
     color: var(--neutral-600);
     font-weight: 400;
     margin-bottom: 20px;
@@ -29,7 +29,7 @@
 .custom-table thead tr th {
     padding: 16px 22px;
     text-align: left;
-    font-size: 16px; 
+    font-size: var(--font-body); 
     font-weight: 700;
     color: var(--neutral-800);
     background-color: var(--neutral-100); 
@@ -46,7 +46,7 @@
 .custom-table tbody tr td {
     padding: 14px 22px;
     color: var(--neutral-700);
-    font-size: 15px;
+    font-size: var(--font-body);
     border-bottom: 1px solid var(--neutral-400);
     border-right: 1px solid var(--neutral-400); 
     vertical-align: middle;
@@ -126,13 +126,13 @@
 
 .currency-prefix {
     color: var(--neutral-700); 
-    font-size: 15px;
+    font-size: var(--font-body);
 }
 
 .nomina-input-ajuste {
     border: none;
     background: transparent;
-    font-size: 15px;
+    font-size: var(--font-body);
     width: 100%;
     max-width: 190px;
     outline: none;
@@ -168,7 +168,7 @@ input.nomina-input-ajuste.nomina-input-deduccion { padding-left: 0; }
 }
 
 .tabla-totales-separada tbody tr td {
-    font-size: 16px;
+    font-size: var(--font-body);
     color: var(--neutral-900) !important;
     border-top: 1px solid var(--neutral-400) !important;
     border-bottom: 1px solid var(--neutral-400) !important;
