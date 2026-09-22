@@ -1,6 +1,9 @@
 import { renderHook, act } from "@testing-library/react";
+import { createElement } from "react";
 import { beforeEach, afterEach, describe, expect, vi } from "vitest";
-import { useToast } from "../../../hooks/useToast";
+import { ToastProvider, useToast } from "../../../hooks/useToast";
+
+const wrapper = ({ children }) => createElement(ToastProvider, null, children);
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -15,7 +18,7 @@ describe("Test hook useToast", () => {
   test("useToast - Estado inicial: lista de toasts vacía", () => {
     // Arrange & Act
     //  montar el hook
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     // Assert
     //no debe haver nada
@@ -24,7 +27,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - showToast agrega un toast con type 'success' por defecto", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     // Act
     act(() => {
@@ -39,7 +42,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - showToast respeta el type y duration", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     // Act
     act(() => {
@@ -57,7 +60,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - el toast se elimina al cumplirse la duracion", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     act(() => {
       result.current.showToast({ message: "Hola", duration: 3000 });
@@ -74,7 +77,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - el toast NO se elimina antes de que pase la duration", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     act(() => {
       result.current.showToast({ message: "nada  q elimina", duration: 3000 });
@@ -91,7 +94,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - se apilan en orden de llegada", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     // Act
     act(() => {
@@ -113,7 +116,7 @@ describe("Test hook useToast", () => {
     // Arrange
     vi.spyOn(Date, "now").mockReturnValueOnce(1000).mockReturnValueOnce(2000);
 
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     act(() => {
       result.current.showToast({ message: "Corto", duration: 1000 });
@@ -132,7 +135,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - lista vacia cuando se acabo el tiempo", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     act(() => {
       result.current.showToast({ message: "A", duration: 1000 });
@@ -151,7 +154,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - duration 0 descarta el toast de forma inmediata", () => {
     // Arrange
-    const { result } = renderHook(() => useToast());
+    const { result } = renderHook(() => useToast(), { wrapper });
 
     act(() => {
       result.current.showToast({ message: "Flash", duration: 0 });
@@ -168,7 +171,7 @@ describe("Test hook useToast", () => {
 
   test("useToast - showToast mantiene la misma referencia entre re-renders", () => {
     // Arrange
-    const { result, rerender } = renderHook(() => useToast());
+    const { result, rerender } = renderHook(() => useToast(), { wrapper });
     const refAntes = result.current.showToast;
 
     // Act
