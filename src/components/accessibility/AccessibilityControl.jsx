@@ -21,7 +21,7 @@ export default function AccessibilityControl() {
   return (
     <div className="accessibility-control">
       {isOpen && (
-        <section className="accessibility-panel" aria-label="Opciones de accesibilidad">
+        <section id="accessibility-options" className="accessibility-panel" aria-label="Opciones de accesibilidad">
           <div className="accessibility-panel-header">
             <div>
               <h2>Accesibilidad</h2>
