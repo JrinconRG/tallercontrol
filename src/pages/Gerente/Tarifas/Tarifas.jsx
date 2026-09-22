@@ -7,24 +7,15 @@ import TableHeader from "../../../components/Table/TableHeader";
 import Card from "../../../components/card/Card";
 import "./Tarifas.css";
 import { useEffect, useState } from "react";
+import { useToast } from "../../../hooks/useToast";
+import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
 
 export default function Tarifas() {
   const [trabajadorId, setTrabajadorId] = useState("");
 
   const [matrizEditable, setMatrizEditable] = useState({});
   const [matrizOriginal, setMatrizOriginal] = useState({});
-  const [message, setMessage] = useState("");
-  useEffect(() => {
-    if (!message) return;
-
-    const timer = setTimeout(() => setMessage(""), 5000);
-
-    return () => clearTimeout(timer);
-  }, [message]);
-
-  useEffect(() => {
-    setMessage("");
-  }, [trabajadorId]);
+  const { showSuccess, showError, showInfo } = useToast();
 
   // hook Obtener tarifas y trabajadores
   const {
@@ -111,17 +102,17 @@ export default function Tarifas() {
     const cambios = detectarCambios(matrizOriginal, matrizEditable);
 
     if (cambios.length === 0) {
-      setMessage("No hay cambios para guardar");
+      showInfo("Sin cambios", "No hay tarifas pendientes por guardar.");
       return;
     }
 
     guardarTarifasMutation.mutate(cambios, {
       onSuccess: () => {
-        setMessage("Tarifas actualizadas correctamente");
+        showSuccess("Tarifas actualizadas", `${cambios.length} tarifa${cambios.length !== 1 ? "s" : ""} actualizada${cambios.length !== 1 ? "s" : ""} correctamente.`);
         setMatrizOriginal(structuredClone(matrizEditable));
       },
       onError: (error) => {
-        setMessage(error.message);
+        showError("No se pudieron guardar las tarifas", mapSupabaseError(error).message);
       },
     });
   }
@@ -162,7 +153,6 @@ export default function Tarifas() {
             },
           ]}
         />
-        {message && <div className="mensaje">{message}</div>}
         <div className="tarifas-toolbar">
           {cambiosPendientes > 0 && (
             <span className="badge-cambios">
