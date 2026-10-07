@@ -5,7 +5,7 @@ import { useFinalizarSubProceso } from "../../../../features/subProcesos/applica
 import { Icon } from "../../../../components/ui/Icon.jsx";
 import PropTypes from "prop-types";
 import { useToast } from "../../../../hooks/useToast";
-import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export default function FinalizarSubproceso({
   subproceso,
@@ -38,7 +38,7 @@ export default function FinalizarSubproceso({
 
       //SUBIR IMAGEN
 
-      const evidenciaPath = `cofre_${subproceso.subproceso.rc_nombre}/proceso_${subproceso.subproceso.id_nombre_proceso}/subproceso_${subproceso.subproceso.nombre_fase}_ID_${subproceso.subproceso.sub_id_subproceso}.jpg`;
+      const evidenciaPath = `cofre_${subproceso.subproceso.rc_nombre}/proceso_${subproceso.subproceso.id_nombre_proceso}/subproceso_${subproceso.subproceso.nombre_fase}_ID_${subproceso.subproceso.id}.jpg`;
 
       await subirEvidencia(file, evidenciaPath);
       const dataParaBackend = {
@@ -55,8 +55,7 @@ export default function FinalizarSubproceso({
       });
       onClose();
     } catch (error) {
-      console.error(error.message);
-      showError("No se pudo finalizar la fase", mapSupabaseError(error).message);
+      showError("No se pudo finalizar la fase", getAppErrorMessage(error));
     }
   }
 
@@ -75,7 +74,13 @@ export default function FinalizarSubproceso({
 
       <label htmlFor="evidencia">Subir evidencia (foto)</label>
       {errorMsg && (
-        <p style={{ color: "red", fontSize: "var(--font-title)", marginTop: "4px" }}>
+        <p
+          style={{
+            color: "red",
+            fontSize: "var(--font-title)",
+            marginTop: "4px",
+          }}
+        >
           {errorMsg}
         </p>
       )}

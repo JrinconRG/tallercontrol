@@ -4,7 +4,7 @@ import { useTrabajadoresPorCargo } from "../../../Trabajadores/application/hooks
 import { useCrearSubproceso } from "../../../subProcesos/application/hooks/useCrearSubProceso";
 import PropTypes from "prop-types";
 import { useToast } from "../../../../hooks/useToast";
-import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
   const [trabajadorId, setTrabajadorId] = useState("");
@@ -73,23 +73,7 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
           onClose();
         },
         onError: (err) => {
-          console.error("❌ Error completo:", err);
-
-          const mensaje =
-            err?.response?.data?.message ||
-            err?.message || // supabase / throw new Error
-            err?.error_description || // algunos casos de supabase
-            "Ocurrió un error inesperado en el sistema.";
-
-          const status = err?.status || err?.response?.status || "Sin status";
-
-          console.error("❌ Mensaje final:", mensaje);
-          console.error("❌ Status:", status);
-
-          showError(
-            "No se pudo iniciar la fase",
-            mapSupabaseError(err).message,
-          );
+          showError("No se pudo iniciar la fase", getAppErrorMessage(err));
         },
       },
     );
@@ -120,7 +104,13 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
           ))}
         </select>
         {errorValidacion && (
-          <span style={{ color: "red", fontSize: "var(--font-subtitle)", marginTop: "4px" }}>
+          <span
+            style={{
+              color: "red",
+              fontSize: "var(--font-subtitle)",
+              marginTop: "4px",
+            }}
+          >
             {errorValidacion}
           </span>
         )}

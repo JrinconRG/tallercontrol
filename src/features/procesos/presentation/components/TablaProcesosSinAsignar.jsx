@@ -35,6 +35,10 @@ export default function TablaProcesosSinAsignar() {
     { key: "codigoCofre", label: "Cofre" },
     { key: "referenciaNombre", label: "Referencia" },
     {
+      key: "color",
+      label: "Color",
+    },
+    {
       key: "fechaFin",
       label: "Finalizado",
       render: (row) =>

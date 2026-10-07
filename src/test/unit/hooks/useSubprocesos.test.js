@@ -74,4 +74,18 @@ describe("Test hook useImagenes", () => {
     expect(result.current.url).toBe(mockUrls[0]);
     expect(StorageService.getImageUrl).toHaveBeenCalledTimes(2);
   });
+
+  test("useImagenes - captura errores de carga", async () => {
+    const loadError = new Error("falló la carga");
+    StorageService.getImageUrl.mockRejectedValue(loadError);
+
+    const { result } = renderHook(() => useImagenes("ruta/error.jpg"));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.urls).toEqual([]);
+    expect(result.current.error).toBe(loadError);
+  });
 });

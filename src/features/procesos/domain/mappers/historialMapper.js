@@ -15,7 +15,9 @@ export const historialProcesosMapper = (data) => {
       referenciaNombre: item.rc_nombre,
       referenciaCodigoNombre: item.rc_codigo,
       totalAcumulado: item.total_acumulado,
-      color: item.col_nombre,
+      color: item.color_nombre,
+      colorHex: item.color_hex,
+
       asignado: item.asignado_a,
       pagado: item.pro_pagado,
       detalleSubprocesos: item.detalle_subprocesos.map(

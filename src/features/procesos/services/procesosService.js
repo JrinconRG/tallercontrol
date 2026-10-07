@@ -8,8 +8,7 @@ export async function obtenerProcesosActivos() {
     .order("pro_fecha_inicio", { ascending: true });
 
   if (error) {
-    console.error("Error cargando procesos activos:", error);
-    throw new Error(error.message);
+    throw error;
   }
 
   return data;
@@ -23,20 +22,20 @@ export async function obtenerHistorialProcesos() {
     .order("pro_fecha_fin", { ascending: false }); // false = Los más nuevos primero
 
   if (error) {
-    console.error("Error cargando historial de procesos:", error);
-    throw new Error(error.message);
+    throw error;
   }
 
   return data;
 }
 
-export async function crearProceso(referenciaId) {
+export async function crearProceso(referenciaId, colorId) {
   const { data, error } = await supabase.rpc("sp_crear_proceso", {
     p_referencia_id: referenciaId,
+    p_color_id: colorId,
   });
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
   return data; // devuelve pro_id
@@ -46,8 +45,7 @@ export async function obtenerFaseActualProcesos() {
   const { data, error } = await supabase.from("vw_fase_actual").select("*");
 
   if (error) {
-    console.error("Error cargando fase actual:", error);
-    throw new Error(error.message);
+    throw error;
   }
 
   return data;
@@ -60,8 +58,7 @@ export async function validarSiguienteFase(procesoId, cargoId) {
   });
 
   if (error) {
-    console.error("Error validando siguiente fase:", error);
-    throw new Error(error.message);
+    throw error;
   }
 
   return data; // true | false
@@ -71,11 +68,11 @@ export async function obtenerDetallesProcesosGerente() {
   const { data, error } = await supabase
     .from("vista_dashboard_gerente")
     .select(
-      "pro_id_proceso, pro_codigo_cofre, pro_estado, pro_fecha_inicio, rc_nombre, rc_codigo, fase_actual, fases",
+      "pro_id_proceso, pro_codigo_cofre, pro_estado, pro_fecha_inicio, rc_nombre, rc_codigo, fase_actual, fases , color_nombre, color_hex",
     );
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
   return data;
@@ -84,12 +81,19 @@ export async function obtenerDetallesProcesosGerente() {
 export async function obtenerProcesosSinAsignar() {
   const { data, error } = await supabase
     .from("vw_procesos_terminados_sin_asignar")
-    .select(
-      "id, codigo_cofre , fecha_inicio, fecha_fin,referencia_nombre, empresa_id",
-    );
+    .select("*");
+
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
 
+  return data;
+}
+
+export async function obtenerColores() {
+  const { data, error } = await supabase.from("vw_colores").select("*");
+  if (error) {
+    throw error;
+  }
   return data;
 }

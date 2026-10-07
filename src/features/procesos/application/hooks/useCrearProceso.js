@@ -5,7 +5,8 @@ export const useCrearProceso = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (referenciaId) => ProcesoRepository.crear(referenciaId),
+    mutationFn: ({ referenciaId, colorId }) =>
+      ProcesoRepository.crear(referenciaId, colorId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["procesos-activos"] });

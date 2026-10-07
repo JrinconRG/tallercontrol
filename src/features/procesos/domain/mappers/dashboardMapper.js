@@ -15,6 +15,8 @@ export const dashboardMapper = (data) => {
       referenciaCodigoNombre: item.rc_codigo,
       fechaInicio: item.pro_fecha_inicio,
       faseActual: item.fase_actual,
+      color: item.color_nombre,
+      colorHex: item.color_hex,
       detalleSubprocesos: (fasesParsed || []).map((sub, index) => {
         let fotos = [];
         if (Array.isArray(sub.foto)) {

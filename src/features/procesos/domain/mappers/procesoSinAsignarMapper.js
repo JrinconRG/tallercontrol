@@ -8,6 +8,8 @@ export const procesoSinAsignarMapper = (row) => {
     fecha_fin,
     referencia_nombre,
     empresa_id,
+    color_nombre,
+    color_hex,
   } = row;
 
   return new ProcesoSinAsignar({
@@ -17,5 +19,7 @@ export const procesoSinAsignarMapper = (row) => {
     fechaFin: fecha_fin,
     referenciaNombre: referencia_nombre,
     empresaId: empresa_id,
+    color: color_nombre,
+    colorHex: color_hex,
   });
 };

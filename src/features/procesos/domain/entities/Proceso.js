@@ -18,6 +18,7 @@ export class Proceso {
     referenciaNombre,
     detalleSubprocesos = [],
     color,
+    colorHex,
     asignado,
   }) {
     this.id = id;
@@ -38,6 +39,7 @@ export class Proceso {
     this.referenciaNombre = referenciaNombre;
     this.detalleSubprocesos = detalleSubprocesos;
     this.color = color;
+    this.colorHex = colorHex;
     this.asignado = asignado;
   }
   estaActivo() {

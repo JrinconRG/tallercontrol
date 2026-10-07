@@ -38,7 +38,6 @@ export async function finalizarSubproceso(datos) {
   });
 
   if (error) {
-    console.error("Error detallado de Supabase:", error);
     throw error;
   }
   return data;

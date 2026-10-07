@@ -5,7 +5,7 @@ import { useAsignarPedido } from "../../../pedido/application/hooks/useAsignarPe
 import { usePagination } from "../../../../hooks/usePagination";
 import { useAuthStore } from "../../../../stores/authStore";
 import { useToast } from "../../../../hooks/useToast";
-import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export const useProcesosTerminadosUI = () => {
   const [search, setSearch] = useState("");
@@ -23,12 +23,14 @@ export const useProcesosTerminadosUI = () => {
     error: errorProcesos,
     errorMessage,
   } = useGetProcesosSinAsignar();
+
   const {
     clientes = [],
     loading: loadingClientes,
     error: errorClientes,
     errorMessage: errorMessageClientes,
   } = useObtenerClientes();
+
   const { mutateAsync: asignarPedido, isPending: asignando } =
     useAsignarPedido();
 
@@ -103,7 +105,9 @@ export const useProcesosTerminadosUI = () => {
         procesoIds: seleccionados,
         creadoPor: user?.id,
       });
-      const cliente = clientes.find((item) => String(item.id) === String(selectedCliente));
+      const cliente = clientes.find(
+        (item) => String(item.id) === String(selectedCliente),
+      );
       showSuccess(
         "Pedido creado",
         `${seleccionados.length} cofre${seleccionados.length !== 1 ? "s" : ""} asignado${seleccionados.length !== 1 ? "s" : ""} a ${cliente?.nombre ?? "el cliente seleccionado"}.`,
@@ -111,8 +115,7 @@ export const useProcesosTerminadosUI = () => {
       limpiarSeleccion();
       setSelectedCliente("");
     } catch (err) {
-      console.error("Error al asignar el cliente:", err);
-      showError("No se pudo crear el pedido", mapSupabaseError(err).message);
+      showError("No se pudo crear el pedido", getAppErrorMessage(err));
     }
   };
 
