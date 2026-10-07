@@ -7,7 +7,7 @@ import { useGenerarNomina } from "../../application/hooks/useGenerarNomina";
 import { useGetDetalleNominaGenerada } from "../../application/hooks/useObtenerNominaGenerada";
 import { useGetTareasNomina } from "../../application/hooks/useObtenerTareasNomina";
 import { generarPDFNomina } from "../../../../utils/generarPDFNomina";
-import { generarExcelNomina } from "../../../../utils/generarExcelNomina";
+import { generarExcelNomina } from "../../../../utils/generarexcelnomina";
 import "./ExportarNomina.css";
 import { useAuthStore } from "../../../../stores/authStore";
 import { useToast } from "../../../../hooks/useToast";
