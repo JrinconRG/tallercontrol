@@ -5,10 +5,12 @@ export default function Table({
   rowKey = "id",
   selectedId,
   footer,
+  footerSpacer = false, // fila vacía entre el cuerpo y el footer (opcional)
+  tableClassName = "",
 }) {
   return (
     <div className="table-responsive-wrapper">
-      <table className="custom-table">
+      <table className={`custom-table ${tableClassName}`.trim()}>
         <thead>
           <tr>
             {columns?.map((col) => (
@@ -43,6 +45,11 @@ export default function Table({
         </tbody>
         {footer && (
           <tfoot>
+            {footerSpacer && (
+              <tr className="table-footer-spacer" aria-hidden="true">
+                <td colSpan={columns?.length ?? 1} />
+              </tr>
+            )}
             <tr className="table-footer-row">
               {footer.map((cell, idx) => (
                 <td key={idx} className={cell.className}>

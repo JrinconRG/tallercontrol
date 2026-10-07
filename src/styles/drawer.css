@@ -11,6 +11,17 @@
   backdrop-filter: blur(2px);
 }
 
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+
 /* variante sin oscurecer fondo */
 .drawer-overlay.drawer-overlay--transparent {
   background: transparent;
@@ -22,7 +33,9 @@
 ========================= */
 dialog.drawer {
   position: relative;
-  width: 720px; /* Notion-like: más compacto */
+  z-index: 1;
+  width: min(720px, 100%);
+  max-width: 100%;
   height: 100%;
   background: #ffffff;
   border: none;
@@ -35,6 +48,7 @@ dialog.drawer {
   transform: translateX(100%);
   animation: slideIn 0.25s ease-out forwards;
   border-left: 2px solid var(--neutral-400);
+  box-sizing: border-box;
 
 }
 
@@ -62,6 +76,18 @@ dialog.drawer {
 
   padding: 20px 20px 12px 20px;
   border-bottom: 1px solid var(--neutral-400);
+}
+
+.drawer-header h3 {
+  margin: 0 0 6px;
+  color: var(--brand-700);
+  overflow-wrap: anywhere;
+}
+
+.drawer-subtitle {
+  display: block;
+  color: var(--neutral-700);
+  overflow-wrap: anywhere;
 }
 
 /* título agrupado */
@@ -93,6 +119,41 @@ dialog.drawer {
   display: flex;
   flex-direction: column;
   gap: 20px; /* clave estilo Notion */
+}
+
+.drawer-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--neutral-300, #d9d9d9);
+  border-radius: var(--radius-md, 8px);
+  background: var(--neutral-50, #fafafa);
+}
+
+.summary-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--neutral-700);
+  font-size: var(--font-small);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.summary-card strong {
+  display: block;
+  color: var(--brand-700);
+  font-size: var(--font-subtitle);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.summary-card:nth-child(3) strong {
+  color: var(--success-700, #15803d);
 }
 
 .drawer-section {
@@ -176,4 +237,16 @@ hr {
 .drawer,
 .drawer-backdrop {
   pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .drawer-header,
+  .drawer-body {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .drawer-summary-grid {
+    grid-template-columns: 1fr;
+  }
 }

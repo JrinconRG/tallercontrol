@@ -12,3 +12,60 @@
 
 
 }
+
+/* Distribuye la tabla del gerente sin comprimir fechas, referencias o valores. */
+.custom-table.historial-table {
+    min-width: 1280px;
+}
+
+.custom-table.historial-table .historial-col-codigo {
+    width: 8%;
+}
+
+.custom-table.historial-table .historial-col-referencia {
+    width: 14%;
+}
+
+.custom-table.historial-table .historial-col-color {
+    width: 6%;
+}
+
+.custom-table.historial-table .historial-col-asignado {
+    width: 16%;
+    overflow-wrap: anywhere;
+}
+
+.custom-table.historial-table .historial-col-duracion {
+    width: 12%;
+    overflow-wrap: anywhere;
+}
+
+.custom-table.historial-table .historial-col-inicio {
+    width: 9%;
+}
+
+.custom-table.historial-table .historial-col-finalizacion {
+    width: 10%;
+}
+
+.custom-table.historial-table .historial-col-valor {
+    width: 12%;
+    min-width: 150px;
+    text-align: right;
+}
+
+.custom-table.historial-table .historial-col-pagoEstado {
+    width: 15%;
+    min-width: 180px;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+
+.custom-table.historial-table .historial-col-pagoEstado .badge {
+    display: inline-flex;
+    max-width: 100%;
+    justify-content: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+}

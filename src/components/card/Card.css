@@ -41,3 +41,22 @@
 .card-curso {
     border-left: 5px solid #3b82f6;
 }
+
+
+/* =========================
+   CARD — variante con badge (opt-in, no afecta el .card base)
+========================= */
+
+.card--with-badge .card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.card-badge-slot {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from "../../../../../components/modal/Modal";
 import { useCrearReferenciaCofre } from "../../../application/hook/useCrearReferenciaCofre";
+import { getAppErrorMessage } from "../../../../../shared/errors/getAppErrorMessage";
 
 export default function AgregarReferenciaCofre({ isOpen, onClose, onToast }) {
   const [codigo, setCodigo] = useState("");
@@ -44,7 +45,7 @@ export default function AgregarReferenciaCofre({ isOpen, onClose, onToast }) {
           onClose();
         },
         onError: (error) => {
-          setFieldError(error.message);
+          setFieldError(getAppErrorMessage(error));
         },
       },
     );

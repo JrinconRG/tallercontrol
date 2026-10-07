@@ -1,10 +1,11 @@
 import Modal from "../modal/Modal";
 import { useImagenes } from "../../hooks/useSubprocesos";
+import { getAppErrorMessage } from "../../shared/errors/getAppErrorMessage";
 import PropTypes from "prop-types";
 
 export default function MostrarImagenesModal({ isOpen, onClose, path, fase }) {
   //hoook de las imagenes
-  const { url, urls, loading } = useImagenes(path);
+  const { url, urls, loading, error } = useImagenes(path);
 
   return (
     <Modal
@@ -13,6 +14,7 @@ export default function MostrarImagenesModal({ isOpen, onClose, path, fase }) {
       onClose={onClose}
     >
       {loading && <p>Cargando imágenes...</p>}
+      {!loading && error && <p role="alert">{getAppErrorMessage(error)}</p>}
       {!loading && url && (
         <img
           src={url}

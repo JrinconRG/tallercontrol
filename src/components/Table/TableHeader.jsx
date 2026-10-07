@@ -9,6 +9,7 @@ export default function TableHeader({
   onSearchChange,
   filters = [],
   actions = [],
+  extraContent = null,
 }) {
   return (
     <div className="table-header">
@@ -18,6 +19,7 @@ export default function TableHeader({
         {filters.map((filter) => (
           <Select key={filter.name} {...filter} />
         ))}
+        {extraContent}
         {onSearchChange && (
           <SearchBar value={searchValue} onChange={onSearchChange} />
         )}
@@ -44,4 +46,5 @@ TableHeader.propTypes = {
   onSearchChange: PropTypes.func,
   filters: PropTypes.array,
   actions: PropTypes.array,
+  extraContent: PropTypes.node,
 };

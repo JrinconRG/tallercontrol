@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { useObtenerClientes } from "../../application/hooks/useObtenerClientes";
 import { useEliminarCliente } from "../../application/hooks/useEliminarCliente";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 import AgregarClienteModal from "../components/AgregarClienteModal";
 import "./Clientes.css";
 
@@ -30,7 +31,7 @@ export default function Clientes() {
         setClienteAEliminar(null);
       },
       onError: (err) => {
-        showToast(err.message || "Error al eliminar", "error");
+        showToast(getAppErrorMessage(err), "error");
         setClienteAEliminar(null);
       },
     });

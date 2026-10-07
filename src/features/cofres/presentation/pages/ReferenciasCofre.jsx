@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { useObtenerReferenciasCofres } from "../../application/hook/useObtenerReferenciasCofres";
 import { useEliminarReferenciaCofres } from "../../application/hook/useEliminarReferenciaCofres";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 import AgregarReferenciaCofre from "./components/AgregarReferenciaCofre";
 import "./ReferenciasCofre.css";
 
@@ -35,7 +36,7 @@ export default function ReferenciasCofre() {
         setReferenciaAEliminar(null);
       },
       onError: (err) => {
-        showToast(err.message || "Error al eliminar", "error");
+        showToast(getAppErrorMessage(err), "error");
         setReferenciaAEliminar(null);
       },
     });

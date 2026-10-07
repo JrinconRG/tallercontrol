@@ -11,7 +11,6 @@ export async function obtenerTrabajadoresPorCargo(cargoId) {
     .eq("cargo_id", cargoId);
 
   if (error) {
-    console.error("Error cargando trabajadores por cargo:", error);
     throw error;
   }
 

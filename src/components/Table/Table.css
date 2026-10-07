@@ -8,14 +8,15 @@
     width: calc(100% + 32px);
     margin: 0 -16px -16px -16px;
     overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
 .custom-table {
-    width: 100%;
+    width: max(100%, 900px);
     border-collapse: collapse;
-    table-layout: auto; /* Permite que las columnas se ajusten al contenido */
-    min-width: 700px;   /* Evita que los datos se amontonen en pantallas pequeñas */
+    table-layout: fixed;
+    min-width: 900px;
 }
 
 /* ==========================================================================
@@ -24,21 +25,47 @@
 
 /* Encabezados (th) */
 .custom-table thead tr th {
-    padding: 16px 22px;
+    padding: 16px 20px;
     text-align: left;
     font-size: var(--font-title);
     font-weight: 700;
     border-bottom: 2px solid var(--neutral-400);
     white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.35;
+    vertical-align: top;
+    box-sizing: border-box;
 }
 
 /* Celdas del cuerpo (td) - Sin color base forzado para permitir herencia fluida */
 .custom-table tbody tr td {
-    padding: 14px 22px;
+    padding: 14px 20px;
     color: var(--neutral-700);
     font-size: var(--font-title);
     border-bottom: 1px solid var(--neutral-400);
     vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    line-height: 1.4;
+    box-sizing: border-box;
+}
+
+.custom-table th > *,
+.custom-table td > * {
+    max-width: 100%;
+    min-width: 0;
+}
+
+.custom-table .badge {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
 }
 
 /* Eliminar borde inferior en la última fila */
@@ -87,7 +114,6 @@
 .custom-table tbody tr.row-selected td {
     color: var(--neutral-900);
 }
-
 
 /* ==========================================================================
    CLASES DE UTILIDAD PARA COLUMNAS
@@ -142,6 +168,7 @@
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
     gap: 20px;
 }

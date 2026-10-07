@@ -25,3 +25,7 @@
 .tituloTabla{
     padding-left: 12px;
 }
+
+.table-header-left > .badge-cambios {
+    flex-shrink: 0;
+}

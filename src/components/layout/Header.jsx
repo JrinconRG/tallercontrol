@@ -1,7 +1,11 @@
 import "../../styles/header.css";
 import { useAuthStore } from "../../stores/authStore";
+import { useToast } from "../../hooks/useToast";
+import { getAppErrorMessage } from "../../shared/errors/getAppErrorMessage";
+
 export default function Header() {
   const { role, logout } = useAuthStore();
+  const { showError } = useToast();
   const titleByRole = {
     trabajador: "Bienvenidos",
     gerente: "Bienvenidos",
@@ -16,12 +20,20 @@ export default function Header() {
     trabajador: null,
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      showError("No se pudo cerrar la sesión", getAppErrorMessage(error));
+    }
+  };
+
   return (
     <header className="header">
       <div className="header-title">{titleByRole[role]}</div>
 
       <div className="header-actions">
-        <button className="btn btn-primary" onClick={logout}>
+        <button className="btn btn-primary" onClick={handleLogout}>
           Cerrar sesión
         </button>
         {actionByRole[role]}

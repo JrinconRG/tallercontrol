@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from "../../../../components/modal/Modal";
 import { useCrearCliente } from "../../application/hooks/useCrearCliente";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export default function AgregarClienteModal({ isOpen, onClose, onToast }) {
   const [nombre, setNombre] = useState("");
@@ -38,7 +39,7 @@ export default function AgregarClienteModal({ isOpen, onClose, onToast }) {
           onClose();
         },
         onError: (error) => {
-          setFieldError(error.message);
+          setFieldError(getAppErrorMessage(error));
         },
       },
     );

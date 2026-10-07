@@ -21,17 +21,30 @@ export default function AccessibilityControl() {
   return (
     <div className="accessibility-control">
       {isOpen && (
-        <section id="accessibility-options" className="accessibility-panel" aria-label="Opciones de accesibilidad">
+        <section
+          id="accessibility-options"
+          className="accessibility-panel"
+          aria-label="Opciones de accesibilidad"
+        >
           <div className="accessibility-panel-header">
             <div>
               <h2>Accesibilidad</h2>
               <p>Tamaño del texto</p>
             </div>
-            <button type="button" className="accessibility-close" aria-label="Cerrar opciones de accesibilidad" onClick={() => setIsOpen(false)}>
+            <button
+              type="button"
+              className="accessibility-close"
+              aria-label="Cerrar opciones de accesibilidad"
+              onClick={() => setIsOpen(false)}
+            >
               <X aria-hidden="true" />
             </button>
           </div>
-          <div className="accessibility-options" role="group" aria-label="Seleccionar tamaño de texto">
+          <div
+            className="accessibility-options"
+            role="group"
+            aria-label="Seleccionar tamaño de texto"
+          >
             {SCALE_OPTIONS.map((option) => (
               <button
                 key={option}
@@ -55,7 +68,6 @@ export default function AccessibilityControl() {
         onClick={() => setIsOpen((open) => !open)}
       >
         <Accessibility aria-hidden="true" />
-        <span>Accesibilidad</span>
       </button>
     </div>
   );

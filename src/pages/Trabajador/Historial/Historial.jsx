@@ -8,6 +8,7 @@ import MostrarImagenesModal from "../../../components/mostrarImagenModal/Mostrar
 import { usePagination } from "../../../hooks/usePagination";
 import "./Historial.css";
 import { Icon } from "../../../components/ui/Icon";
+import { getAppErrorMessage } from "../../../shared/errors/getAppErrorMessage";
 
 export default function Historial() {
   const [search, setSearch] = useState("");
@@ -111,12 +112,6 @@ export default function Historial() {
     },
     { key: "trabajadorNombreCompleto", label: "Trabajador" },
     { key: "cargoNombre", label: "Fase realizada" },
-    {
-      key: "valor",
-      label: "Valor",
-      className: "col-num",
-      render: (row) => `$${row.valor?.toLocaleString("es-CO")}`,
-    },
 
     {
       key: "fotosEvidencia",
@@ -144,7 +139,7 @@ export default function Historial() {
   ];
 
   if (loading) return <p>Cargando historial...</p>;
-  if (error) return <p>Error al cargar: {error.message}</p>;
+  if (error) return <p>Error al cargar: {getAppErrorMessage(error)}</p>;
 
   return (
     <div className="page-content-historial">
