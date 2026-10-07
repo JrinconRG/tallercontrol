@@ -12,13 +12,13 @@ import InicioTrabajador from "./features/procesos/presentation/pages/InicioTraba
 import Historial from "./pages/Trabajador/Historial/Historial";
 import Dashboard from "./pages/Gerente/Dashboard/Dashboard";
 import NoAutorizado from "./pages/NoAutorizado";
-import Tarifas from "./pages/Gerente/Tarifas/Tarifas";
+import Tarifas from "./features/tarifas/presentation/pages/Tarifas";
 
 //Gerente routes
 import ProcesosTerminados from "./features/procesos/presentation/pages/ProcesosTerminados";
-import Empleados from "./pages/Gerente/Empleados/Empleados";
+import Empleados from "./features/Trabajadores/presentation/pages/Empleados";
 import GenerarNomina from "./features/nomina/presentation/pages/GenerarNomina";
-import HistorialGerente from "./pages/Gerente/HistorialGerente/HistorialGerente";
+import HistorialGerente from "./features/procesos/presentation/pages/HistorialGerente/HistorialGerente";
 import DetalleNomina from "./features/nomina/presentation/pages/DetalleNomina";
 import ExportarNomina from "./features/nomina/presentation/pages/ExportarNomina";
 import ReferenciasCofre from "./features/cofres/presentation/pages/ReferenciasCofre";

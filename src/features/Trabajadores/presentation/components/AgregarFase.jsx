@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { useAsignarCargo } from "../../../../features/Trabajadores/application/hooks/useAsignarCargo";
-import { useCargos } from "../../../../features/cargos/application/hooks/useCargos";
+import { useAsignarCargo } from "../../application/hooks/useAsignarCargo";
+import { useCargos } from "../../../cargos/application/hooks/useCargos";
 import PropTypes from "prop-types";
 import "./AgregarFase.css";
 

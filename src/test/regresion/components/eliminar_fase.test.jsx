@@ -161,7 +161,7 @@ describe("REGRESION - EliminarFase", () => {
 
     // ASSERT
     expect(onToast).toHaveBeenCalledWith({
-      message: "Error de red",
+      message: "Ocurrió un error inesperado, intenta de nuevo",
     });
   });
 });

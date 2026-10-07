@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useDesignarCargos } from "../../../../features/Trabajadores/application/hooks/useDesignarCargo";
+import { useDesignarCargos } from "../../application/hooks/useDesignarCargo";
 import "./EliminarFase.css";
 import PropTypes from "prop-types";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
   const [confirmando, setConfirmando] = useState(false);
@@ -17,7 +18,7 @@ export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
         },
         onError: (error) => {
           onToast({
-            message: error.message || `Error eliminando ${cargo.nombre}`,
+            message: getAppErrorMessage(error),
           });
         },
       },
@@ -37,7 +38,9 @@ export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
           gap: "6px",
         }}
       >
-        <span style={{ fontSize: "var(--font-small)" }}>¿Eliminar {cargo.nombre}?</span>
+        <span style={{ fontSize: "var(--font-small)" }}>
+          ¿Eliminar {cargo.nombre}?
+        </span>
 
         <button
           className="chip-confirm-btn chip-confirm-btn--yes"

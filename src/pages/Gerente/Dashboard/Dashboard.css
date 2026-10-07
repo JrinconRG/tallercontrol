@@ -7,3 +7,29 @@
   padding-bottom: 20px;
 }
 
+/* agregar a Dashboard.css */
+.proceso-card-shell {
+  position: relative;
+  border-radius: var(--card-radius, 12px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* select.css o Dashboard.css, donde tengas .proceso-card-shell */
+.proceso-card-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px; /* antes 4px, más grueso */
+  background-color: var(--proceso-color, var(--neutral-300));
+  /* fallback visible aunque el color sea blanco/muy claro */
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 2;
+}
+.proceso-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 16px 0;
+}

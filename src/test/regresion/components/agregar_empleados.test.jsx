@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import RegistrarEmpleados from "../../../pages/Gerente/Empleados/funciones/RegistrarEmpleados";
 import { useCrearTrabajador } from "../../../features/Trabajadores/application/hooks/useCrearEmpleado";
+import { ConflictError } from "../../../shared/errors/ConflictError";
 
 vi.mock(
   "../../../features/Trabajadores/application/hooks/useCrearEmpleado",
@@ -115,9 +116,9 @@ describe("Regresión: Componente RegistrarEmpleados", () => {
 
   test("CP-1.5: Debe mostrar el mensaje de error cuando la mutación falla (Caja Blanca)", async () => {
     // ARRANGE
-    const serverError = "El documento ya existe";
+    const appError = new ConflictError("El documento ya existe");
     mockMutate.mockImplementation((data, options) => {
-      options.onError({ response: { data: { message: serverError } } });
+      options.onError(appError);
     });
     render(<RegistrarEmpleados onClose={mockOnClose} onToast={mockOnToast} />);
 
@@ -126,7 +127,7 @@ describe("Regresión: Componente RegistrarEmpleados", () => {
     fireEvent.click(screen.getByRole("button", { name: /Registrar/i }));
 
     // ASSERT
-    const errorMsg = await screen.findByText(serverError);
+    const errorMsg = await screen.findByText(appError.message);
     expect(errorMsg).toBeInTheDocument();
     expect(mockOnClose).not.toHaveBeenCalled();
   });

@@ -1,14 +1,14 @@
-import { detectarCambios } from "../../../utils/construirMatrizTarifas";
-import { useObtenerTarifas } from "../../../features/tarifas/application/hooks/useObtenerTarifas";
-import { useGuardarTarifas } from "../../../features/tarifas/application/hooks/useGuardarTarifas";
-import { useTrabajadoresSelect } from "../../../features/Trabajadores/application/hooks/useTrabajadoresSelect";
-import Table from "../../../components/Table/Table";
-import TableHeader from "../../../components/Table/TableHeader";
-import Card from "../../../components/card/Card";
+import { detectarCambios } from "../../../../utils/construirMatrizTarifas";
+import { useObtenerTarifas } from "../../application/hooks/useObtenerTarifas";
+import { useGuardarTarifas } from "../../application/hooks/useGuardarTarifas";
+import { useTrabajadoresSelect } from "../../../Trabajadores/application/hooks/useTrabajadoresSelect";
+import Table from "../../../../components/Table/Table";
+import TableHeader from "../../../../components/Table/TableHeader";
+import Card from "../../../../components/card/Card";
 import "./Tarifas.css";
 import { useEffect, useState } from "react";
-import { useToast } from "../../../hooks/useToast";
-import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
+import { useToast } from "../../../../hooks/useToast";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export default function Tarifas() {
   const [trabajadorId, setTrabajadorId] = useState("");
@@ -70,10 +70,29 @@ export default function Tarifas() {
           <span className="input-precio-simbolo">$</span>
           <input
             type="number"
+            min="0"
+            step="0.01"
+            inputMode="decimal"
             value={row[cargo.id] ?? ""}
             placeholder="0"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
+            onPaste={(e) => {
+              if (!/^\d*\.?\d*$/.test(e.clipboardData.getData("text"))) {
+                e.preventDefault();
+              }
+            }}
             onChange={(e) =>
-              handleChange(row.cofreId, cargo.id, e.target.value)
+              handleChange(
+                row.cofreId,
+                cargo.id,
+                e.target.value
+                  .replace(/[^\d.]/g, "")
+                  .replace(/\.(?=.*\.)/g, ""),
+              )
             }
             className={
               row[cargo.id] !== null && row[cargo.id] !== ""
@@ -108,11 +127,17 @@ export default function Tarifas() {
 
     guardarTarifasMutation.mutate(cambios, {
       onSuccess: () => {
-        showSuccess("Tarifas actualizadas", `${cambios.length} tarifa${cambios.length !== 1 ? "s" : ""} actualizada${cambios.length !== 1 ? "s" : ""} correctamente.`);
+        showSuccess(
+          "Tarifas actualizadas",
+          `${cambios.length} tarifa${cambios.length !== 1 ? "s" : ""} actualizada${cambios.length !== 1 ? "s" : ""} correctamente.`,
+        );
         setMatrizOriginal(structuredClone(matrizEditable));
       },
       onError: (error) => {
-        showError("No se pudieron guardar las tarifas", mapSupabaseError(error).message);
+        showError(
+          "No se pudieron guardar las tarifas",
+          getAppErrorMessage(error),
+        );
       },
     });
   }
@@ -140,27 +165,30 @@ export default function Tarifas() {
               options: trabajadoresSelect,
             },
           ]}
-          actions={[
-            {
-              name: "guardar",
-              label: guardarTarifasMutation.isPending
-                ? "Guardando..."
-                : "Guardar",
-              onClick: handleGuardar,
-              disabled:
-                guardarTarifasMutation.isPending || cambiosPendientes === 0,
-              className: "btn-secondary",
-            },
-          ]}
+          extraContent={
+            cambiosPendientes > 0 ? (
+              <span className="badge-cambios">
+                {cambiosPendientes} cambio{cambiosPendientes > 1 ? "s" : ""} sin
+                guardar
+              </span>
+            ) : null
+          }
+          actions={
+            cambiosPendientes > 0
+              ? [
+                  {
+                    name: "guardar",
+                    label: guardarTarifasMutation.isPending
+                      ? "Guardando..."
+                      : "Guardar",
+                    onClick: handleGuardar,
+                    disabled: guardarTarifasMutation.isPending,
+                    className: "btn-secondary",
+                  },
+                ]
+              : []
+          }
         />
-        <div className="tarifas-toolbar">
-          {cambiosPendientes > 0 && (
-            <span className="badge-cambios">
-              {cambiosPendientes} cambio{cambiosPendientes > 1 ? "s" : ""} sin
-              guardar
-            </span>
-          )}
-        </div>
         {trabajadorId && <Table columns={columns} data={data} />}
       </Card>
     </div>

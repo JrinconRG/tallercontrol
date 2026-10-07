@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useCrearTrabajador } from "../../../../features/Trabajadores/application/hooks/useCrearEmpleado";
+import { useCrearTrabajador } from "../../application/hooks/useCrearEmpleado";
 
 import Modal from "../../../../components/modal/Modal";
 import PropTypes from "prop-types";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 export default function RegistrarEmpleados({ onClose, onToast }) {
   const [nombre, setNombre] = useState("");
@@ -64,12 +65,7 @@ export default function RegistrarEmpleados({ onClose, onToast }) {
           onToast?.({ message: `Empleado ${nombre} registrado exitosamente` });
           onClose();
         },
-        onError: (error) =>
-          setErrorMsg(
-            error.response?.data?.message ||
-              error.message ||
-              "Error inesperado",
-          ),
+        onError: (error) => setErrorMsg(getAppErrorMessage(error)),
       },
     );
   };

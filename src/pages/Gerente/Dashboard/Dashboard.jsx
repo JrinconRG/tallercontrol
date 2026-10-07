@@ -8,6 +8,7 @@ import MostrarImagenesModal from "../../../components/mostrarImagenModal/Mostrar
 import Pagination from "../../../components/pagination/Pagination";
 import SearchBar from "../../../components/ui/seachBar";
 import Select from "../../../components/ui/select";
+import ColorBadge from "../../../components/colorBadge/ColorBadge";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -21,18 +22,17 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [selectedReference, setSelectedReference] = useState("");
   const [selectedEstado, setSelectedEstado] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
   const [sortOrder, setSortOrder] = useState("recent"); // 'recent' o 'oldest
 
   //hook para traer los procesos activos
   const { detallesProcesoGerente, loading, error } =
     useGetDetallesProcesoGerente();
 
-  console.log(detallesProcesoGerente);
-
   // Si los filtros cambian, reiniciamos a la page 1
   useEffect(() => {
     setPage(1);
-  }, [search, selectedReference, selectedEstado, sortOrder]);
+  }, [search, selectedReference, selectedEstado, selectedColor, sortOrder]);
 
   //opciones para los selects
   const opcionesReferencias = useMemo(() => {
@@ -51,6 +51,20 @@ export default function Dashboard() {
     return unicas.map((est) => ({ value: est, label: est }));
   }, [detallesProcesoGerente]);
 
+  const opcionesColores = useMemo(() => {
+    const mapa = new Map();
+    detallesProcesoGerente.forEach((p) => {
+      if (p.color && !mapa.has(p.color)) {
+        mapa.set(p.color, p.colorHex);
+      }
+    });
+    return [...mapa.entries()].map(([nombre, hex]) => ({
+      value: nombre,
+      label: nombre,
+      color: hex,
+    }));
+  }, [detallesProcesoGerente]);
+
   const opcionesOrden = [
     { value: "recent", label: "Más recientes primero" },
     { value: "oldest", label: "Más antiguos primero" },
@@ -63,23 +77,22 @@ export default function Dashboard() {
       .filter((p) => {
         const estadoDetallado = p.obtenerEstadoDetallado();
 
-        //2. filtro searchBar
         const matchSearch =
           !term ||
           (p.codigoCofre || "").toLowerCase().includes(term) ||
           (p.referenciaNombre || "").toLowerCase().includes(term);
 
-        //filtro referencia
         const matchReference = selectedReference
           ? p.referenciaNombre?.trim() === selectedReference.trim()
           : true;
 
-        // filtro esrado
         const matchEstado = selectedEstado
           ? estadoDetallado === selectedEstado
           : true;
 
-        return matchSearch && matchReference && matchEstado;
+        const matchColor = selectedColor ? p.color === selectedColor : true;
+
+        return matchSearch && matchReference && matchEstado && matchColor;
       })
       .sort((a, b) => {
         const fechaA = new Date(a.fechaFin);
@@ -91,6 +104,7 @@ export default function Dashboard() {
     search,
     selectedReference,
     selectedEstado,
+    selectedColor,
     sortOrder,
   ]);
 
@@ -100,16 +114,19 @@ export default function Dashboard() {
   }, [datosFiltradosyOrdenados, page, limit]);
 
   const hayFiltrosActivos =
-    search || selectedReference || selectedEstado || sortOrder !== "recent";
+    search ||
+    selectedReference ||
+    selectedEstado ||
+    selectedColor ||
+    sortOrder !== "recent";
 
   const limpiarFiltros = () => {
     setSearch("");
     setSelectedReference("");
     setSelectedEstado("");
+    setSelectedColor("");
     setSortOrder("recent");
   };
-
-  console.log(datosPaginados.map((p) => p.id));
 
   if (loading) return <p>Cargando detalle...</p>;
   if (error) return <p>Error cargando datos</p>;
@@ -153,6 +170,16 @@ export default function Dashboard() {
           </div>
 
           <div className="filter-field">
+            <label className="filter-label">Color</label>
+            <Select
+              value={selectedColor}
+              onChange={setSelectedColor}
+              options={opcionesColores}
+              placeholder="Todos"
+            />
+          </div>
+
+          <div className="filter-field">
             <label className="filter-label">Ordenar por</label>
             <Select
               value={sortOrder}
@@ -181,33 +208,44 @@ export default function Dashboard() {
 
       <div className="page-content-dashboard-grid">
         {datosPaginados.map((proceso) => (
-          <Card
+          <div
             key={proceso.id}
-            title={proceso.codigoCofre}
-            description={proceso.referenciaNombre}
+            className="proceso-card-shell"
+            style={{ "--proceso-color": proceso.colorHex || undefined }}
           >
-            <Stepper
-              fases={proceso.detalleSubprocesos}
-              selectedId={faseDetalle[proceso.id]?.id}
-              onSelectFase={(fase) => {
-                setFaseDetalle((prev) => ({
-                  ...prev,
-                  [proceso.id]: prev[proceso.id]?.id === fase.id ? null : fase,
-                }));
-              }}
-            />
-            {faseDetalle[proceso.id] && (
-              <FaseDetalle
-                fase={faseDetalle[proceso.id]}
-                onVerFotos={(fase) =>
-                  setModalFotos({
-                    path: fase.foto,
-                    fase: fase.fase,
-                  })
-                }
+            <Card
+              key={proceso.id}
+              title={proceso.codigoCofre}
+              description={proceso.referenciaNombre}
+              borderColor={proceso.colorHex}
+              badge={
+                <ColorBadge color={proceso.color} colorHex={proceso.colorHex} />
+              }
+            >
+              <Stepper
+                fases={proceso.detalleSubprocesos}
+                selectedId={faseDetalle[proceso.id]?.id}
+                onSelectFase={(fase) => {
+                  setFaseDetalle((prev) => ({
+                    ...prev,
+                    [proceso.id]:
+                      prev[proceso.id]?.id === fase.id ? null : fase,
+                  }));
+                }}
               />
-            )}
-          </Card>
+              {faseDetalle[proceso.id] && (
+                <FaseDetalle
+                  fase={faseDetalle[proceso.id]}
+                  onVerFotos={(fase) =>
+                    setModalFotos({
+                      path: fase.foto,
+                      fase: fase.fase,
+                    })
+                  }
+                />
+              )}
+            </Card>
+          </div>
         ))}
       </div>
 

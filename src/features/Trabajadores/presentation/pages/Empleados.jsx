@@ -1,16 +1,16 @@
-import { useInformacionEmpleados } from "../../../features/Trabajadores/application/hooks/useInformacionEmpleados";
-import Card from "../../../components/card/Card";
-import Table from "../../../components/Table/Table";
-import TableHeader from "../../../components/Table/TableHeader";
+import { useInformacionEmpleados } from "../../application/hooks/useInformacionEmpleados";
+import Card from "../../../../components/card/Card";
+import Table from "../../../../components/Table/Table";
+import TableHeader from "../../../../components/Table/TableHeader";
 import "./Empleados.css";
 import { useState, useEffect, useMemo } from "react";
-import RegistrarEmpleados from "./funciones/RegistrarEmpleados";
-import AgregarFase from "./funciones/AgregarFase";
-import EliminarFase from "./funciones/EliminarFase";
-import { useToast } from "../../../hooks/useToast";
-import Toast from "../../../components/Toast/Toast";
-import Pagination from "../../../components/pagination/Pagination";
-import { usePagination } from "../../../hooks/usePagination";
+import RegistrarEmpleados from "../components/RegistrarEmpleados";
+import AgregarFase from "../components/AgregarFase";
+import EliminarFase from "../components/EliminarFase";
+import { useToast } from "../../../../hooks/useToast";
+import Toast from "../../../../components/Toast/Toast";
+import Pagination from "../../../../components/pagination/Pagination";
+import { usePagination } from "../../../../hooks/usePagination";
 
 const stringToPastelColor = (str) => {
   let hash = 0;
