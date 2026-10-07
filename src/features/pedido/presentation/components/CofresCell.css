@@ -1,0 +1,45 @@
+/* Detalle de cofres dentro del modal del pedido.
+   Clases con prefijo "cofres-cell-" para no chocar con otras de la app.
+   Modal, overlay y botón de cerrar siguen usando tus clases existentes. */
+
+.cofres-cell-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.cofres-cell-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background-color: #fff;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-md);
+}
+
+/* Código a la izquierda, color a la derecha */
+.cofres-cell-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cofres-cell-codigo {
+  font-size: var(--font-body);
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.cofres-cell-ref {
+  font-size: var(--font-body);
+  font-weight: 500;
+  color: var(--neutral-600);
+}
+
+/* Mismo tamaño que el texto del ColorBadge (12px) para que se vea parejo */
+.cofres-cell-sin-color {
+  font-size: 12px;
+  color: var(--neutral-500);
+}

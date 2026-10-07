@@ -1,4 +1,12 @@
 import { useState } from "react";
+import ColorBadge from "../../../../components/colorBadge/ColorBadge"; // ajusta la ruta a donde esté tu componente
+import "./CofresCell.css";
+
+// col_hex puede estar guardado con o sin "#"; ColorBadge lo necesita con "#".
+const normalizarHex = (hex) => {
+  if (!hex) return undefined;
+  return hex.startsWith("#") ? hex : `#${hex}`;
+};
 
 export function CofresCell({ cofres = [] }) {
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -63,11 +71,25 @@ export function CofresCell({ cofres = [] }) {
             </div>
 
             <div className="modal-body-cofres">
-              <div className="cofres-grid">
+              <div className="cofres-cell-grid">
                 {cofres.map((item, idx) => (
-                  <div key={item.procesoId || idx} className="cofre-card-item">
-                    <span className="cofre-codigo">{item.codigoCofre}</span>
-                    <span className="cofre-ref">{item.referenciaNombre}</span>
+                  <div key={item.procesoId || idx} className="cofres-cell-item">
+                    <div className="cofres-cell-item-top">
+                      <span className="cofres-cell-codigo">
+                        {item.codigoCofre}
+                      </span>
+                      {item.colorNombre ? (
+                        <ColorBadge
+                          color={item.colorNombre}
+                          colorHex={normalizarHex(item.colorHex)}
+                        />
+                      ) : (
+                        <span className="cofres-cell-sin-color">Sin color</span>
+                      )}
+                    </div>
+                    <span className="cofres-cell-ref">
+                      {item.referenciaNombre || "Sin referencia"}
+                    </span>
                   </div>
                 ))}
               </div>

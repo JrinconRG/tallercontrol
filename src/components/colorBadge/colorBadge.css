@@ -1,0 +1,25 @@
+.color-badge {
+  --badge-color: var(--neutral-400);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, var(--badge-color) 14%, rgb(255, 255, 255));
+  border: 1px solid color-mix(in srgb, var(--badge-color) 35%, rgba(0, 0, 0, 0.12));
+  font-size: 12px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--badge-color) 65%, black);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.color-badge-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--badge-color);
+  border: 1px solid rgba(0, 0, 0, 0.15); /* asegura visibilidad si el color es blanco */
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--badge-color) 25%, white);
+  flex-shrink: 0;
+}

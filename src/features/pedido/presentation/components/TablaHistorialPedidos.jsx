@@ -4,6 +4,7 @@ import Pagination from "../../../../components/pagination/Pagination";
 import Card from "../../../../components/card/Card";
 import { useObtenerPedidos } from "../../application/hooks/useObtenerPedidos";
 import { CofresCell } from "./CofresCell";
+
 export default function TablaHistorialPedidos() {
   const { pedidos, loading, error, errorMessage } = useObtenerPedidos();
   console.log("pedidos", pedidos);

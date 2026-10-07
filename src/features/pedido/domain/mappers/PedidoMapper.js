@@ -9,6 +9,7 @@ export const pedidoMapper = (data) => {
     fecha: data.ped_fecha ?? data.fecha,
     totalCofres: data.ped_total_cofres ?? data.total_cofres ?? data.totalCofres,
     estado: data.ped_estado ?? data.estado,
+
     creadoPor: data.ped_creado_por ?? data.creado_por_id ?? data.creadoPor,
     empresaId: data.ped_empresa_id ?? data.empresa_id ?? data.empresaId,
     // Propiedades mapeadas desde la vista vw_pedidos_detalle
