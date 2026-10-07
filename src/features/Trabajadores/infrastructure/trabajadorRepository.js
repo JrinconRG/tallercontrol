@@ -11,32 +11,57 @@ import { trabajadorConCargosMapper } from "../domain/mappers/trabajadorConCargos
 import { trabajadorSelectMapper } from "../domain/mappers/trabajadorSelectMapper";
 import { trabajadorPorCargoMapper } from "../domain/mappers/trabajadorPorCargosMapper";
 import { trabajadorCreadoMapper } from "../domain/mappers/trabajadorCreadoMapper";
+import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
 
 export const trabajadorRepository = {
   async getTrabajadoresPorCargo(cargoId) {
-    const data = await obtenerTrabajadoresPorCargo(cargoId);
-    return (data || []).map(trabajadorPorCargoMapper);
+    try {
+      const data = await obtenerTrabajadoresPorCargo(cargoId);
+      return (data || []).map(trabajadorPorCargoMapper);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 
   async getTrabajadorSelect() {
-    const data = await getTrabajadoresSelect();
-    return (data || []).map(trabajadorSelectMapper);
+    try {
+      const data = await getTrabajadoresSelect();
+      return (data || []).map(trabajadorSelectMapper);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 
   async getInfoEmpleados() {
-    const data = await getInformacionEmpleados();
-    return (data || []).map(trabajadorConCargosMapper);
+    try {
+      const data = await getInformacionEmpleados();
+      return (data || []).map(trabajadorConCargosMapper);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 
   async createEmpleado(trabajadorData) {
-    const data = await crearEmpleado(trabajadorData);
-    return trabajadorCreadoMapper(data);
+    try {
+      const data = await crearEmpleado(trabajadorData);
+      return trabajadorCreadoMapper(data);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
   async assignCargo(data) {
-    return await asignarCargo(data);
+    try {
+      return await asignarCargo(data);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 
   async removeCargo(data) {
-    return await designarCargo(data);
+    try {
+      return await designarCargo(data);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 };

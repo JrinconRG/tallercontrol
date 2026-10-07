@@ -7,28 +7,40 @@ import {
 
 import { historialSubprocesosNoPagadoMapper } from "../domain/mappers/historialSubprocesosNoPagadoMapper";
 import { infoSubprocesoActualMapper } from "../domain/mappers/infoSubprocesoActual";
+import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
 
 export const subProcesosRepository = {
   async createSubproceso(cargoId, procesoId, trabajadorId) {
-    return await crearSubproceso(cargoId, procesoId, trabajadorId);
+    try {
+      return await crearSubproceso(cargoId, procesoId, trabajadorId);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 
   async finishSubproceso(data) {
-    return await finalizarSubproceso(data);
+    try {
+      return await finalizarSubproceso(data);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 
   obtenerHistorialSubprocesosPendientes: async () => {
     try {
       const data = await getHistorialSubprocesosTrabajadorNoPagado();
-      console.log("Datos brutos:", data);
       return (data || []).map(historialSubprocesosNoPagadoMapper);
     } catch (error) {
-      throw new Error(`Error al procesar el historial: ${error.message}`);
+      throw mapSupabaseError(error);
     }
   },
 
   async getInfoSubprocesoActual() {
-    const data = await getInformacionSubprocesoActual();
-    return (data || []).map(infoSubprocesoActualMapper);
+    try {
+      const data = await getInformacionSubprocesoActual();
+      return (data || []).map(infoSubprocesoActualMapper);
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
   },
 };

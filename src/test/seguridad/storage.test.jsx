@@ -79,29 +79,37 @@ describe("subirEvidencia › seguridad", () => {
 
   it("[SEC-03] getUser falla completamente (network) → propaga error, no sube", async () => {
     // Arrange
-    supabase.auth.getUser.mockRejectedValue(new Error("network error"));
+    const originalError = new Error("network error");
+    supabase.auth.getUser.mockRejectedValue(originalError);
 
     // Act + Assert
-    await expect(subirEvidencia(crearFile(), "ruta/foto.jpg")).rejects.toThrow(
-      "network error",
-    );
+    await expect(
+      subirEvidencia(crearFile(), "ruta/foto.jpg"),
+    ).rejects.toMatchObject({
+      message: "Ocurrió un error inesperado, intenta de nuevo",
+      cause: originalError,
+    });
     expect(supabase.storage.from).not.toHaveBeenCalled();
   });
 
   it("[SEC-04] storage devuelve error → propaga el error sin silenciarlo", async () => {
     // Arrange
     mockUserAutenticado();
+    const originalError = { message: "bucket no existe" };
     supabase.storage.from.mockReturnValue({
       upload: vi.fn().mockResolvedValue({
         data: null,
-        error: { message: "bucket no existe" },
+        error: originalError,
       }),
     });
 
-    // Act + Assert — el error no debe ser tragado silenciosamente
+    // Act + Assert — el error se presenta de forma segura y conserva la causa
     await expect(
       subirEvidencia(crearFile(), "ruta/foto.jpg"),
-    ).rejects.toMatchObject({ message: "bucket no existe" });
+    ).rejects.toMatchObject({
+      message: "Ocurrió un error inesperado, intenta de nuevo",
+      cause: originalError,
+    });
   });
 
   it("[SEC-05] upload exitoso  retorna data del storage (no expone internals)", async () => {
@@ -222,15 +230,16 @@ describe("getImageUrl - seguridad", () => {
     expect(supabase.storage.from).not.toHaveBeenCalled();
   });
 
-  it("[SEC-10] error al generar URL  retorna nul", async () => {
+  it("[SEC-10] error al generar URL se propaga con mensaje seguro", async () => {
     // Arrange
-    mockStorageUrl({ data: null, error: { message: "bucket privado" } });
+    const originalError = { message: "bucket privado" };
+    mockStorageUrl({ data: null, error: originalError });
 
-    // Act
-    const result = await getImageUrl("ruta/foto.jpg");
-
-    // Assert retorna null)
-    expect(result).toBeNull();
+    // Act + Assert
+    await expect(getImageUrl("ruta/foto.jpg")).rejects.toMatchObject({
+      message: "Ocurrió un error inesperado, intenta de nuevo",
+      cause: originalError,
+    });
   });
 
   it("[SEC-11] URL generada exitosamente → retorna solo signedUrl", async () => {

@@ -11,8 +11,12 @@ import { cofresErrorMap } from "./errors/cofresErrorMap";
 
 export const CofreRepository = {
   async getReferencias() {
-    const data = await obtenerReferenciasCofre();
-    return (data || []).map(referenciaMapper);
+    try {
+      const data = await obtenerReferenciasCofre();
+      return (data || []).map(referenciaMapper);
+    } catch (error) {
+      throw mapSupabaseError(error, cofresErrorMap);
+    }
   },
 
   async deleteReferencia(referenciaId) {

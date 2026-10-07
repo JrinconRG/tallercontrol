@@ -19,7 +19,6 @@ export const PedidoRepository = {
   async getPedidos() {
     try {
       const data = await obtenerPedidos();
-      console.log("data", data);
 
       return (data || []).map((pedido) => pedidoMapper(pedido));
     } catch (error) {
