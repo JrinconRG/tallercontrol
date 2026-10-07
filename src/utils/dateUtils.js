@@ -46,3 +46,12 @@ export function normalizarFechaUTC(fecha) {
 
   return new Date(str);
 }
+
+export const aFechaYMD = (valor) => {
+  if (!valor) return null;
+  if (typeof valor === "string" && /^\d{4}-\d{2}-\d{2}$/.test(valor))
+    return valor;
+  const d = valor instanceof Date ? valor : new Date(valor);
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+};

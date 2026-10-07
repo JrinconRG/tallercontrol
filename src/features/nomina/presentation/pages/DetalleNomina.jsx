@@ -8,6 +8,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useGetDetalleNominaPreview } from "../../application/hooks/useObtenerDetalleNominaPreview";
 import AuditoriaNominaDrawer from "../components/AuditoriaNominaDrawer";
 import Pagination from "../../../../components/pagination/Pagination";
+import { obtenerValoresAutomaticosNomina } from "../../../../utils/calculoNomina";
 
 export default function DetalleNomina() {
   const navigate = useNavigate();
@@ -18,23 +19,24 @@ export default function DetalleNomina() {
 
   const [incluirPendientes, setIncluirPendientes] = useState({});
   const [search, setSearch] = useState("");
+
+  // ajustes[trabajadorId] = { bonificacion, deduccion, transporte, segSocial, observaciones }
   const [ajustes, setAjustes] = useState({});
 
   useEffect(() => {
     setPage(1);
   }, [search]);
 
+  const valoresAutoNomina = useMemo(
+    () => obtenerValoresAutomaticosNomina(),
+    [],
+  );
+
   const togglePendientes = (trabajadorId) => {
     setIncluirPendientes((prev) => ({
       ...prev,
       [trabajadorId]: !prev[trabajadorId],
     }));
-  };
-
-  const bloqueadorCaracteres = (e) => {
-    if (["-", "e", "E", ".", ","].includes(e.key)) {
-      e.preventDefault();
-    }
   };
 
   const { fechaInicio, fechaFin } = location.state ?? {};
@@ -44,12 +46,41 @@ export default function DetalleNomina() {
     fechaFin,
   );
 
-  const handleAjuste = (trabajadorId, campo, valor) => {
+  // Formateador estándar COP estático
+  const formatCOP = (val) => "$" + Number(val || 0).toLocaleString("es-CO");
+
+  // Formatea números con puntos de miles para los inputs de texto
+  const formatDisplayNumber = (val) => {
+    if (val === "" || val === undefined || val === null) return "";
+    const num = Number(String(val).replace(/\D/g, ""));
+    return isNaN(num) || num === 0 ? "" : num.toLocaleString("es-CO");
+  };
+
+  // Parsea cadenas formateadas con puntos de nuevo a enteros
+  const parseNumberValue = (rawValue) => {
+    const cleanStr = String(rawValue).replace(/\D/g, "");
+    return cleanStr === "" ? 0 : Number(cleanStr);
+  };
+
+  // Actualiza un campo NUMÉRICO editable
+  const handleAjusteNumerico = (trabajadorId, campo, valorTexto) => {
+    const numValue = parseNumberValue(valorTexto);
     setAjustes((prev) => ({
       ...prev,
       [trabajadorId]: {
         ...prev[trabajadorId],
-        [campo]: valor === "" ? 0 : Number(valor),
+        [campo]: numValue,
+      },
+    }));
+  };
+
+  // Actualiza el campo de texto libre (observaciones)
+  const handleObservacion = (trabajadorId, valor) => {
+    setAjustes((prev) => ({
+      ...prev,
+      [trabajadorId]: {
+        ...prev[trabajadorId],
+        observaciones: valor,
       },
     }));
   };
@@ -58,25 +89,39 @@ export default function DetalleNomina() {
     () =>
       detalleNominaPreview.map((t) => {
         const mapper = t;
-        const bonificacion = ajustes[mapper.trabajadorId]?.bonificacion ?? 0;
-        const deduccion = ajustes[mapper.trabajadorId]?.deduccion ?? 0;
+        const ajusteTrabajador = ajustes[mapper.trabajadorId] ?? {};
+
+        const bonificacion = ajusteTrabajador.bonificacion ?? 0;
+        const deduccion = ajusteTrabajador.deduccion ?? 0;
+
+        const transporte =
+          ajusteTrabajador.transporte ?? valoresAutoNomina.transporte;
+        const segSocial =
+          ajusteTrabajador.segSocial ?? valoresAutoNomina.seguridadSocialTotal;
+
+        const observaciones = ajusteTrabajador.observaciones ?? "";
 
         const conPendientes = incluirPendientes[mapper.trabajadorId] ?? false;
 
-        // Base calculada: Si se incluyen pendientes, sumamos el valor acumulado al pagoPeriodo
         const baseCalculada = conPendientes
           ? mapper.pagoPeriodo + mapper.valorPendientes
           : mapper.pagoPeriodo;
+
+        const pagoReal =
+          baseCalculada + transporte - segSocial + bonificacion - deduccion;
 
         return {
           ...mapper,
           bonificacion,
           deduccion,
+          transporte,
+          segSocial,
+          observaciones,
           baseCalculada,
-          pagoReal: baseCalculada + bonificacion - deduccion,
+          pagoReal,
         };
       }),
-    [detalleNominaPreview, ajustes, incluirPendientes],
+    [detalleNominaPreview, ajustes, incluirPendientes, valoresAutoNomina],
   );
 
   const datosFiltrados = useMemo(() => {
@@ -92,28 +137,34 @@ export default function DetalleNomina() {
     return datosFiltrados.slice(offset, offset + limit);
   }, [datosFiltrados, page, limit]);
 
-  // 2. TOTALES ACTUALIZADOS EN TIEMPO REAL
+  // TOTALES ACTUALIZADOS EN TIEMPO REAL
   const totales = datosFiltrados.reduce(
     (acc, t) => ({
       pagoBase: acc.pagoBase + t.baseCalculada,
+      transporte: acc.transporte + t.transporte,
+      segSocial: acc.segSocial + t.segSocial,
       bonificacion: acc.bonificacion + t.bonificacion,
       deduccion: acc.deduccion + t.deduccion,
       pagoReal: acc.pagoReal + t.pagoReal,
     }),
-    { pagoBase: 0, bonificacion: 0, deduccion: 0, pagoReal: 0 },
+    {
+      pagoBase: 0,
+      transporte: 0,
+      segSocial: 0,
+      bonificacion: 0,
+      deduccion: 0,
+      pagoReal: 0,
+    },
   );
 
-  // 3. CONTROLADOR INTELIGENTE DE RENDERIZADO DEL DRAWER
   const handleRowClick = (row) => {
     const tieneTareasPeriodoActual = row.pagoPeriodo > 0;
     const tienePendientesIncluidos =
       row.valorPendientes > 0 && (incluirPendientes[row.trabajadorId] ?? false);
 
-    // Si tiene liquidación en este mes, o si tiene acumulados viejos y el usuario los "Aceptó" con el checkbox
     if (tieneTareasPeriodoActual || tienePendientesIncluidos) {
       setTrabajadorSeleccionado(row);
     } else {
-      // Feedback opcional: Aquí podrías disparar un toast o simplemente dejarlo inactivo (lo ideal)
       console.log(
         "No hay información de tareas para auditar en este empleado.",
       );
@@ -134,7 +185,7 @@ export default function DetalleNomina() {
     {
       key: "pagoPeriodo",
       label: "Pago base",
-      className: "col-num",
+      className: "col-num col-pago-base",
       render: (row) => (
         <div
           style={{
@@ -202,6 +253,54 @@ export default function DetalleNomina() {
       ),
     },
     {
+      key: "transporte",
+      label: "Transporte",
+      className: "col-num col-transporte",
+      render: (row) => (
+        <div className="input-wrapper">
+          <span className="currency-prefix">$</span>
+          <input
+            className="nomina-input-ajuste nomina-input-transporte"
+            type="text"
+            inputMode="numeric"
+            value={formatDisplayNumber(row.transporte)}
+            onChange={(e) =>
+              handleAjusteNumerico(
+                row.trabajadorId,
+                "transporte",
+                e.target.value,
+              )
+            }
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      ),
+    },
+    {
+      key: "segSocial",
+      label: "EPS",
+      className: "col-num col-seg-social",
+      render: (row) => (
+        <div className="input-wrapper">
+          <span className="currency-prefix">−$</span>
+          <input
+            className="nomina-input-ajuste nomina-input-seg-social"
+            type="text"
+            inputMode="numeric"
+            value={formatDisplayNumber(row.segSocial)}
+            onChange={(e) =>
+              handleAjusteNumerico(
+                row.trabajadorId,
+                "segSocial",
+                e.target.value,
+              )
+            }
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      ),
+    },
+    {
       key: "bonificacion",
       label: "Bonificaciones",
       className: "col-num col-bonificacion",
@@ -212,13 +311,16 @@ export default function DetalleNomina() {
             {val > 0 && <span className="currency-prefix">$</span>}
             <input
               className="nomina-input-ajuste nomina-input-bonificacion"
-              type="number"
-              min="0"
-              onKeyDown={bloqueadorCaracteres}
-              value={val ?? ""}
+              type="text"
+              inputMode="numeric"
+              value={formatDisplayNumber(val)}
               placeholder="—"
               onChange={(e) =>
-                handleAjuste(row.trabajadorId, "bonificacion", e.target.value)
+                handleAjusteNumerico(
+                  row.trabajadorId,
+                  "bonificacion",
+                  e.target.value,
+                )
               }
               onClick={(e) => e.stopPropagation()}
             />
@@ -237,13 +339,16 @@ export default function DetalleNomina() {
             {val > 0 && <span className="currency-prefix">$</span>}
             <input
               className="nomina-input-ajuste nomina-input-deduccion"
-              type="number"
-              min="0"
-              value={val ?? ""}
-              onKeyDown={bloqueadorCaracteres}
+              type="text"
+              inputMode="numeric"
+              value={formatDisplayNumber(val)}
               placeholder="—"
               onChange={(e) =>
-                handleAjuste(row.trabajadorId, "deduccion", e.target.value)
+                handleAjusteNumerico(
+                  row.trabajadorId,
+                  "deduccion",
+                  e.target.value,
+                )
               }
               onClick={(e) => e.stopPropagation()}
             />
@@ -254,12 +359,57 @@ export default function DetalleNomina() {
     {
       key: "pagoReal",
       label: "Pago real",
-      className: "col-num",
-      render: (row) => formatCOP(row.pagoReal),
+      className: "col-num col-pago-real",
+      render: (row) => (
+        <span style={{ fontWeight: "700" }}>{formatCOP(row.pagoReal)}</span>
+      ),
+    },
+    {
+      key: "observaciones",
+      label: "Observaciones",
+      className: "col-observaciones",
+      render: (row) => (
+        <textarea
+          className="nomina-textarea-observaciones"
+          rows={2}
+          placeholder={"Ej: debe $10.000\nreparación $39.000"}
+          value={row.observaciones}
+          onChange={(e) => handleObservacion(row.trabajadorId, e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
     },
   ];
 
-  const formatCOP = (val) => "$" + Number(val).toLocaleString("es-CO");
+  const footer = [
+    { className: "col-sh celda-oculta", content: "" },
+    { className: "col-main table-footer-label", content: "Total" },
+    {
+      className: "col-num col-pago-base",
+      content: formatCOP(totales.pagoBase),
+    },
+    {
+      className: "col-num col-transporte",
+      content: formatCOP(totales.transporte),
+    },
+    {
+      className: "col-num col-seg-social",
+      content: `−${formatCOP(totales.segSocial)}`,
+    },
+    {
+      className: "col-num col-bonificacion",
+      content: formatCOP(totales.bonificacion),
+    },
+    {
+      className: "col-num col-deduccion",
+      content: formatCOP(totales.deduccion),
+    },
+    {
+      className: "col-num col-pago-real",
+      content: formatCOP(totales.pagoReal),
+    },
+    { className: "col-observaciones", content: "" },
+  ];
 
   const handlePaso = (numero) => {
     const rutas = {
@@ -286,8 +436,7 @@ export default function DetalleNomina() {
           <div className="page-detalle-nomina-card">
             <h3 className="page-detalle-nomina-subtittle">Pagos y ajustes</h3>
             <p className="page-detalle-nomina-info">
-              Revisa el pago correspondiente a cada empleado y aplica
-              bonificaciones o deducciones cuando sea necesario
+              Revisa el pago correspondiente a cada empleado.
             </p>
             <TableHeader searchValue={search} onSearchChange={setSearch} />
 
@@ -324,45 +473,26 @@ export default function DetalleNomina() {
                 </p>
               </div>
             ) : (
-              <div className="table-responsive-wrapper">
+              <>
                 <Table
                   columns={columns}
                   data={datosPaginados}
                   rowKey="trabajadorId"
                   onRowClick={handleRowClick}
                   selectedId={trabajadorSeleccionado?.trabajadorId}
+                  footer={footer}
+                  footerSpacer
                 />
-                <Pagination
-                  totalItems={datosFiltrados.length}
-                  limit={limit}
-                  page={page}
-                  onPageChange={setPage}
-                  onLimitChange={setLimit}
-                />
-
-                <div className="contenedor-totales-independiente">
-                  <table className="custom-table tabla-totales-separada">
-                    <tbody>
-                      <tr className="table-footer-row">
-                        <td className="col-sh celda-oculta"></td>
-                        <td className="col-main table-footer-label">Total</td>
-                        <td className="col-num">
-                          {formatCOP(totales.pagoBase)}
-                        </td>
-                        <td className="col-num col-bonificacion table-footer-bon">
-                          {formatCOP(totales.bonificacion)}
-                        </td>
-                        <td className="col-num col-deduccion table-footer-ded">
-                          {formatCOP(totales.deduccion)}
-                        </td>
-                        <td className="col-num">
-                          {formatCOP(totales.pagoReal)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div className="nomina-paginacion">
+                  <Pagination
+                    totalItems={datosFiltrados.length}
+                    limit={limit}
+                    page={page}
+                    onPageChange={setPage}
+                    onLimitChange={setLimit}
+                  />
                 </div>
-              </div>
+              </>
             )}
           </div>
         </Card>
@@ -385,14 +515,11 @@ export default function DetalleNomina() {
               trabajador_id: t.trabajadorId,
               bonificacion: t.bonificacion,
               deduccion: t.deduccion,
+              transporte: t.transporte,
+              seguridad_social: t.segSocial,
+              observaciones: t.observaciones,
               incluir_pendientes: incluirPendientes[t.trabajadorId] ?? false,
             }));
-
-            console.log("incluirPendientes estado:", incluirPendientes);
-            console.log(
-              "ajustes finales:",
-              JSON.stringify(ajustesFinales, null, 2),
-            );
 
             navigate("/gerente/nomina/exportar", {
               state: { fechaInicio, fechaFin, ajustes: ajustesFinales },

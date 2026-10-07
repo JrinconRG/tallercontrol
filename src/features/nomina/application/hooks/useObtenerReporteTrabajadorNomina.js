@@ -15,13 +15,20 @@ export const useGetReporteTrabajadorNomina = (
       fechaFin,
       incluirPendientes,
     ],
-    queryFn: () =>
-      NominaRepository.getReporteTrabajador(
+    queryFn: () => {
+      console.log("RPC params:", {
         trabajadorId,
         fechaInicio,
         fechaFin,
         incluirPendientes,
-      ),
+      });
+      return NominaRepository.getReporteTrabajador(
+        trabajadorId,
+        fechaInicio,
+        fechaFin,
+        incluirPendientes,
+      );
+    },
     enabled: !!trabajadorId && !!fechaInicio && !!fechaFin, // Solo ejecuta la consulta si el trabajadorId y ambas fechas están disponibles
     staleTime: 0, // No cachear resultados, siempre obtener datos frescos
     refetchOnWindowFocus: false, // No refetch al enfocar la ventana

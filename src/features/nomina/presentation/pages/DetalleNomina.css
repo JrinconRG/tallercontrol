@@ -187,8 +187,18 @@ input.nomina-input-ajuste.nomina-input-deduccion { padding-left: 0; }
     width: 180px !important;
 }
 
+
+.col-main, .col-observaciones {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
 .table-footer-label { color: var(--neutral-500) !important; font-weight: 700; }
-td.col-main.table-footer-label { background: var(--neutral-100); }
+td.col-main.table-footer-label { background: var(--neutral-100); 
+border-left: 1px solid var(--neutral-400) !important;}
 
 /* ==========================================================================
    7. CONTENEDOR DE SCROLL RESPONSIVE (LAYOUT)
@@ -204,3 +214,95 @@ td.col-main.table-footer-label { background: var(--neutral-100); }
 .table-responsive-wrapper::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 4px; }
 .table-responsive-wrapper::-webkit-scrollbar-thumb { background: var(--neutral-400); border-radius: 4px; }
 .table-responsive-wrapper::-webkit-scrollbar-thumb:hover { background: var(--neutral-500); }
+
+.page-detalle-nomina-card .custom-table {
+    min-width: 1680px; /* suma de todos los anchos de abajo */
+}
+
+.page-detalle-nomina-card .col-sh          { width: 150px !important; }
+.page-detalle-nomina-card .col-main        { width: 200px !important; }
+.page-detalle-nomina-card .col-pago-base   { width: 250px !important; } /* cabe el badge de pendientes */
+.page-detalle-nomina-card .col-transporte,
+.page-detalle-nomina-card .col-seg-social  { width: 150px !important; }
+.page-detalle-nomina-card .col-bonificacion,
+.page-detalle-nomina-card .col-deduccion   { width: 160px !important; }
+.page-detalle-nomina-card .col-pago-real   { width: 160px !important; }
+.page-detalle-nomina-card .col-observaciones { width: 300px !important; }
+
+/* La celda vacía del footer debe medir igual que col-sh para que las dos tablas alineen */
+.page-detalle-nomina-card .tabla-totales-separada .celda-oculta {
+    width: 150px !important;
+}
+
+/* Celda de la tabla alineada arriba para que el textarea encaje bien */
+.custom-table tbody tr td.col-observaciones {
+    vertical-align: top;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Textarea adaptable hacia abajo */
+.nomina-textarea-observaciones {
+    width: 100%;
+    min-height: 42px; /* Altura inicial para ~2 líneas */
+    max-height: 120px; /* Límite para que no deforme la fila en exceso */
+    box-sizing: border-box;
+    padding: 6px 10px;
+    border: 1px solid var(--neutral-400);
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: var(--font-body);
+    font-family: inherit; /* Hereda la tipografía exacta del sistema */
+    color: var(--neutral-700);
+    outline: none;
+    line-height: 1.35;
+    resize: vertical; /* Permite al usuario estirarlo verticalmente si necesita ver más */
+    white-space: pre-wrap; /* Mantiene los saltos de línea visibles */
+}
+
+.nomina-textarea-observaciones:focus {
+    border-color: var(--neutral-600);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.nomina-textarea-observaciones::placeholder {
+    color: var(--neutral-400);
+    white-space: pre-line; /* Permite saltos de línea dentro del placeholder */
+}
+
+
+
+/* ==========================================================================
+   6. ESTILOS DEL FOOTER DENTRO DE LA TABLA (tfoot)
+   ========================================================================== */
+
+/* Fila espaciadora opcional */
+.custom-table tfoot .table-footer-spacer td {
+    height: 16px;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Estilo general para las celdas de totales */
+.custom-table tfoot .table-footer-row td {
+    font-size: var(--font-body);
+    font-weight: 700;
+    color: var(--neutral-900) !important;
+    border-top: 1px solid var(--neutral-400) !important;
+    border-bottom: 1px solid var(--neutral-400) !important;
+    border-right: 1px solid var(--neutral-400) !important;
+    padding: 16px 22px !important;
+}
+
+/* Aplicar borde izquierdo a la primera celda visible del footer */
+.custom-table tfoot .table-footer-row td:first-child {
+    border-left: 1px solid var(--neutral-300) !important;
+}
+
+
+/* Si usas la celda oculta/vacía en la columna de Identificación */
+.custom-table tfoot .table-footer-row td.celda-oculta {
+    background: transparent !important;
+    border: none !important;
+}
+

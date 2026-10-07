@@ -7,7 +7,7 @@ export async function nominaResumen(fechaInicio, fechaFin) {
   });
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data; //devuelve un json total_procesos, total_valor, total_trabajadores,tiene_pendientes_anteriores
 }
@@ -18,7 +18,7 @@ export async function nominaDetalleGenerada(nominaId) {
   });
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 }
@@ -30,7 +30,7 @@ export async function nominaDetallePreview(fechaInicio, fechaFin) {
   });
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data; //devuelve un json trabajador_id,nombre,documento,tareas_periodo,pago_base_periodo,tareas_pendientes,valor_pendientes,total_tareas,pago_base_total
 }
@@ -41,7 +41,7 @@ export async function obtenerHistorialNominas() {
     .select("*");
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 }
@@ -60,9 +60,20 @@ export async function reporteTrabajadorNomina(
   });
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data; //devuelve un json con subproceso_id, codigo_cofre, referencia_nombre, fecha_inicio,duracion_minutos, estado, valor_calculado, pagado
+}
+
+export async function nominaDetalleTareas(nominaId) {
+  const { data, error } = await supabase.rpc("fn_nomina_tareas", {
+    p_nomina_id: nominaId,
+  });
+
+  if (error) {
+    throw error;
+  }
+  return data;
 }
 
 export async function generarNomina(
@@ -79,7 +90,7 @@ export async function generarNomina(
     p_ajustes: ajustes ?? [],
   });
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data; // devuelve nomina id, total_ trabajadore, total
 }

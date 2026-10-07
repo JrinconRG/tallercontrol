@@ -1,7 +1,8 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import App from "../../../App";
 import { vi } from "vitest";
+import { ToastProvider } from "../../../hooks/useToast";
 
 // mock auth store
 vi.mock("../../../stores/authStore", () => ({
@@ -52,8 +53,12 @@ describe("App.jsx coverage boost", () => {
   test("renderiza rutas sin romper", () => {
     render(
       <MemoryRouter initialEntries={["/gerente"]}>
-        <App />
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </MemoryRouter>,
     );
+
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
   });
 });

@@ -5,11 +5,13 @@ import { Icon } from "../../../../components/ui/Icon";
 import { useEffect, useRef, useState } from "react";
 import { useGenerarNomina } from "../../application/hooks/useGenerarNomina";
 import { useGetDetalleNominaGenerada } from "../../application/hooks/useObtenerNominaGenerada";
+import { useGetTareasNomina } from "../../application/hooks/useObtenerTareasNomina";
 import { generarPDFNomina } from "../../../../utils/generarPDFNomina";
+import { generarExcelNomina } from "../../../../utils/generarExcelNomina";
 import "./ExportarNomina.css";
 import { useAuthStore } from "../../../../stores/authStore";
 import { useToast } from "../../../../hooks/useToast";
-import { mapSupabaseError } from "../../../../shared/errors/mapSupabaseError";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
 const formatCOP = (val) => "$" + Number(val).toLocaleString("es-CO");
 
@@ -17,6 +19,7 @@ export default function ExportarNomina() {
   const ejecucionIniciada = useRef(false);
   const [dataNomina, setDataNomina] = useState(null);
   const [cargando, setCargando] = useState(true);
+  const [generandoExcel, setGenerandoExcel] = useState(false);
   const { showError, showSuccess } = useToast();
 
   const { user } = useAuthStore();
@@ -32,6 +35,8 @@ export default function ExportarNomina() {
   const { detalleNominaGenerada, loading: loadingDetalle } =
     useGetDetalleNominaGenerada(nominaId);
 
+  const { tareasNomina, loading: loadingTareas } = useGetTareasNomina(nominaId);
+
   useEffect(() => {
     if (fechaInicio && fechaFin && !ejecucionIniciada.current) {
       ejecucionIniciada.current = true;
@@ -42,7 +47,7 @@ export default function ExportarNomina() {
           setCargando(false);
         })
         .catch((error) => {
-          showError("No se pudo generar la nómina", mapSupabaseError(error).message);
+          showError("No se pudo generar la nómina", getAppErrorMessage(error));
           setCargando(false);
         });
     }
@@ -50,7 +55,10 @@ export default function ExportarNomina() {
 
   const handleDescargarPDF = () => {
     if (!resultado || !detalleNominaGenerada?.length) {
-      showError("PDF no disponible", "Los datos de la nómina aún no están listos.");
+      showError(
+        "PDF no disponible",
+        "Los datos de la nómina aún no están listos.",
+      );
       return;
     }
     generarPDFNomina({
@@ -60,7 +68,31 @@ export default function ExportarNomina() {
     showSuccess("PDF generado", "La nómina se descargó correctamente.");
   };
 
-  console.log("detalleNominaGenerada", detalleNominaGenerada);
+  const handleDescargarExcel = async () => {
+    if (!resultado || !detalleNominaGenerada?.length) {
+      showError(
+        "Excel no disponible",
+        "Los datos de la nómina aún no están listos.",
+      );
+      return;
+    }
+    try {
+      setGenerandoExcel(true);
+      await generarExcelNomina({
+        cabecera: resultado,
+        trabajadores: detalleNominaGenerada,
+        tareas: tareasNomina,
+      });
+      showSuccess(
+        "Excel generado",
+        "Se descargó una hoja por cada trabajador.",
+      );
+    } catch (error) {
+      showError("No se pudo generar el Excel", getAppErrorMessage(error));
+    } finally {
+      setGenerandoExcel(false);
+    }
+  };
 
   // — ESTADO: Cargando —
   if (cargando && !errorMessage) {
@@ -121,7 +153,7 @@ export default function ExportarNomina() {
       <div className="header-page">
         <h1 className="page-tittle">Generar nueva nómina</h1>
         <p className="page-mini-info">
-          Aquí podrás exportar la nómina en formato PDF
+          Aquí podrás exportar la nómina generada
         </p>
       </div>
       <div className="page-nomina-stepper">
@@ -187,13 +219,16 @@ export default function ExportarNomina() {
         <Card>
           <div className="page-nomina-info-general">
             <div className="titulo-nomina-info">
-              <h3 className="page-nomina-subtittle">Exportar archivo</h3>
+              <h3 className="page-nomina-subtittle">Exportar archivos</h3>
               <p className="page-nomina-exportar-info">
-                En este archivo encontrarás toda la información relacionada a la
-                nómina generada
+                El PDF trae el resumen general de la nómina. El Excel trae una
+                hoja por cada trabajador, con el detalle de lo que realizó.
               </p>
             </div>
-            <div className="page-nomina-exportar-boton">
+            <div
+              className="page-nomina-exportar-boton"
+              style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}
+            >
               <button
                 className="btn btn-primary"
                 onClick={handleDescargarPDF}
@@ -201,6 +236,24 @@ export default function ExportarNomina() {
               >
                 <Icon name="Download" color="white" size="20" />
                 {loadingDetalle ? "Obteniendo datos..." : "Descargar PDF"}
+              </button>
+
+              <button
+                className="btn btn-secondary"
+                onClick={handleDescargarExcel}
+                disabled={
+                  loadingDetalle ||
+                  loadingTareas ||
+                  generandoExcel ||
+                  !detalleNominaGenerada?.length
+                }
+              >
+                <Icon name="FileSpreadsheet" size="20" />
+                {generandoExcel
+                  ? "Generando..."
+                  : loadingTareas
+                    ? "Obteniendo datos..."
+                    : "Descargar Excel"}
               </button>
             </div>
           </div>

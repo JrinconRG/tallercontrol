@@ -4,6 +4,8 @@ export const ReporteTrabajadorNominaMapper = (data) => ({
   codigoCofre: data?.codigo_cofre ?? "",
   faseNombre: data?.fase ?? "",
   referenciaNombre: data?.referencia_nombre ?? "",
+  colorNombre: data?.color_nombre ?? null,
+  colorHex: data?.color_hex ?? null,
   fechaInicio: data?.fecha_inicio ?? null,
   fechaFin: data?.fecha_fin ?? null,
   duracionMinutos: data?.duracion_minutos ?? 0,
@@ -11,4 +13,5 @@ export const ReporteTrabajadorNominaMapper = (data) => ({
   estado: data?.estado ?? "",
   valorCalculado: data?.valor_calculado ?? 0,
   pagado: data?.pagado ?? false,
+  esPendiente: data?.es_pendiente ?? false,
 });
