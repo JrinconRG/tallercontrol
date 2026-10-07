@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../stores/authStore";
+import { validateLoginCredentials } from "../../../utils/authValidation";
 import toast from "react-hot-toast";
 import "../../../styles/login.css";
 
 export default function LoginPage() {
-  const [usuario, setUsuario] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
   const { login, isLoading } = useAuthStore();
@@ -14,51 +15,60 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!usuario || !password) {
-      toast.error("Por favor, complete todos los campos.");
+    // Invocación del utilitario modular de validaciones
+    const validation = validateLoginCredentials(identifier, password);
+
+    if (!validation.isValid) {
+      toast.error(validation.error);
       return;
     }
 
-    const result = await login(usuario, password);
+    const result = await login(validation.cleanIdentifier, validation.password);
 
     if (result.success) {
       toast.success("Inicio de sesión exitoso.");
 
       if (result.role === "gerente") {
-        navigate("/gerente");
+        navigate("/gerente", { replace: true });
       } else {
-        navigate("/trabajador/inicio");
+        navigate("/trabajador/inicio", { replace: true });
       }
     } else {
-      toast.error(result.error || "Error al iniciar sesión.");
+      toast.error(result.error || "Credenciales incorrectas.");
     }
   };
+
   return (
     <div className="login-page">
       <div className="login-card">
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit} noValidate>
           <h2>Iniciar Sesión</h2>
 
-          <p className="login-texto-imputs"> Ingrese su usuario:</p>
-
+          <p className="login-texto-imputs">Ingrese su usuario o correo:</p>
           <input
             className="input-login"
             type="text"
-            placeholder="Usuario"
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
+            placeholder="Usuario o Correo"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            autoComplete="username"
+            disabled={isLoading}
           />
-          <p className="login-texto-imputs"> Ingrese su contraseña:</p>
+
+          <p className="login-texto-imputs">Ingrese su contraseña:</p>
           <input
             className="input-login"
             type="password"
             placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            disabled={isLoading}
           />
+
           <div className="login-button-container">
             <button type="submit" disabled={isLoading}>
-              {isLoading ? "Cargando..." : "Iniciar Sesión"}
+              {isLoading ? "Ingresando..." : "Iniciar Sesión"}
             </button>
           </div>
         </form>

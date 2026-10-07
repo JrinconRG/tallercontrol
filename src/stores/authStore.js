@@ -1,6 +1,10 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { supabase } from "../lib/supabase";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { authRepository } from "../features/auth/infrastructure/authRepository";
+import { getAppErrorMessage } from "../shared/errors/getAppErrorMessage";
+
+// Definimos la duración de la sesión (8 horas)
+const SESSION_DURATION_MS = 8 * 60 * 60 * 1000;
 
 export const useAuthStore = create(
   persist(
@@ -11,72 +15,43 @@ export const useAuthStore = create(
       empresaNombre: null,
       isAuthenticated: false,
       isLoading: false,
+      lastLoginTime: null,
 
-      login: async (usuario, password) => {
+      // Verificar si la sesión ha expirado por tiempo
+      isSessionExpired: () => {
+        const { lastLoginTime, isAuthenticated } = get();
+        if (!isAuthenticated || !lastLoginTime) return true;
+
+        const now = Date.now();
+        return now - lastLoginTime > SESSION_DURATION_MS;
+      },
+
+      login: async (identifier, password) => {
         set({ isLoading: true });
 
         try {
-          // Validar credenciales con la tabla personalizada tbl_usuarios
-          const { data: userData, error: validationError } = await supabase.rpc(
-            "validar_login",
-            {
-              p_usuario: usuario,
-              p_password: password,
-            },
+          const { user, authUserId } = await authRepository.login(
+            identifier,
+            password,
           );
 
-          if (validationError) throw validationError;
-          if (!userData || userData.length === 0) {
-            throw new Error("Usuario o contraseña incorrectos");
-          }
-
-          const user = userData[0];
-
-          //Crear sesion real de supabase Auth con el email del usuario
-          const email = `${usuario}@tuempresa.local`;
-          const { data: authData, error: authError } =
-            await supabase.auth.signInWithPassword({
-              email: email,
-              password: password,
-            });
-
-          if (authError) {
-            console.error("Error creando sesion de supabase:", authError);
-            throw new Error("Error de autenticación");
-          }
-          //3. actualizar u_auth_user_id si no existe
-          if (!user.u_auth_user_id) {
-            console.log("🔗 Vinculando usuario...");
-            const { error: updateError } = await supabase
-              .from("tbl_usuarios")
-              .update({ u_auth_user_id: authData.user.id })
-              .eq("u_id", user.u_id);
-
-            if (updateError) {
-              console.error("⚠️ Error vinculando usuario:", updateError);
-            } else {
-              console.log("✅ Usuario vinculado exitosamente");
-            }
-          }
-          // guardar datos en zustand
           const newState = {
             user: {
               id: user.u_id,
               nombre: user.u_nombre,
               usuario: user.u_usuario,
-              authUserId: authData.user.id,
+              authUserId,
             },
             role: user.u_rol,
             empresaId: user.u_empresa_id,
             empresaNombre: user.empresa_nombre,
             isAuthenticated: true,
             isLoading: false,
+            lastLoginTime: Date.now(), // Se guarda el momento exacto de ingreso
           };
 
-          console.log("💾 Guardando estado:", newState);
           set(newState);
 
-          console.log("✅ Login exitoso");
           return {
             success: true,
             role: user.u_rol,
@@ -85,28 +60,39 @@ export const useAuthStore = create(
           set({
             isLoading: false,
             isAuthenticated: false,
+            user: null,
+            role: null,
           });
-          return { success: false, error: error.message };
+          return {
+            success: false,
+            error: getAppErrorMessage(error),
+          };
         }
       },
 
       logout: async () => {
-        // Cerrar sesión en Supabase Auth
-        await supabase.auth.signOut();
-        set({
-          user: null,
-          role: null,
-          empresaId: null,
-          empresaNombre: null,
-          isAuthenticated: false,
-          authUserId: null,
-        });
+        try {
+          await authRepository.logout();
+        } catch (err) {
+          console.error("Error al cerrar sesión:", err);
+        } finally {
+          set({
+            user: null,
+            role: null,
+            empresaId: null,
+            empresaNombre: null,
+            isAuthenticated: false,
+            lastLoginTime: null,
+          });
+          localStorage.removeItem("tallercontrol-auth");
+        }
       },
-      // Helper para debugging
+
       getState: () => get(),
     }),
     {
       name: "tallercontrol-auth",
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );
