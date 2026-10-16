@@ -25,7 +25,21 @@ import ReferenciasCofre from "./features/cofres/presentation/pages/ReferenciasCo
 import Clientes from "./features/clientes/presentation/pages/Clientes";
 import HistorialNomina from "./features/nomina/presentation/pages/HistorialNomina";
 
+import { useEffect } from "react";
+import { supabase } from "./lib/supabase";
+import { useAuthStore } from "./stores/authStore";
+
 function App() {
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || !session) {
+        useAuthStore.getState().clearSession();
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   return (
     <Routes>
       <Route element={<PublicLayout />}>
