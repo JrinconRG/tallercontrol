@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../stores/authStore";
 import { validateLoginCredentials } from "../../../utils/authValidation";
-import toast from "react-hot-toast";
+import { useToast } from "../../../hooks/useToast";
 import "../../../styles/login.css";
 
 export default function LoginPage() {
@@ -11,6 +11,7 @@ export default function LoginPage() {
 
   const { login, isLoading } = useAuthStore();
   const navigate = useNavigate();
+  const { showSuccess, showError } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,22 +20,19 @@ export default function LoginPage() {
     const validation = validateLoginCredentials(identifier, password);
 
     if (!validation.isValid) {
-      toast.error(validation.error);
+      showError("Datos incompletos", validation.error);
       return;
     }
 
     const result = await login(validation.cleanIdentifier, validation.password);
 
     if (result.success) {
-      toast.success("Inicio de sesión exitoso.");
-
-      if (result.role === "gerente") {
-        navigate("/gerente", { replace: true });
-      } else {
-        navigate("/trabajador/inicio", { replace: true });
-      }
+      showSuccess("Inicio de sesión exitoso");
+      navigate(result.role === "gerente" ? "/gerente" : "/trabajador/inicio", {
+        replace: true,
+      });
     } else {
-      toast.error(result.error || "Credenciales incorrectas.");
+      showError("No se pudo iniciar sesión", result.error);
     }
   };
 
