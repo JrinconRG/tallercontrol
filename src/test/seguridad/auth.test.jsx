@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 
 vi.mock("../../lib/supabase", () => ({
@@ -53,7 +53,7 @@ describe("authStore  login", () => {
 
   it("[SEC-01] credenciales invalida  no autentica y retorna error", async () => {
     // Arrange
-    supabase.rpc.mockResolvedValue({ data: [], error: null });
+    supabase.rpc.mockResolvedValue({ data: null, error: null });
 
     // Act
     const { result } = renderHook(() => useAuthStore());
@@ -90,7 +90,10 @@ describe("authStore  login", () => {
 
   it("[SEC-03] error de supabase Auth  no persiste sesion parcial", async () => {
     // Arrange — RPC ok pero Auth falla
-    supabase.rpc.mockResolvedValue({ data: [VALID_USER_ROW], error: null });
+    supabase.rpc.mockResolvedValueOnce({
+      data: "ana@example.com",
+      error: null,
+    });
     supabase.auth.signInWithPassword.mockResolvedValue({
       data: null,
       error: { message: "invalid credentials" },
@@ -110,7 +113,9 @@ describe("authStore  login", () => {
 
   it("[SEC-04] login exitoso role se asigna desde el servidor, no del cliente", async () => {
     // Arrange
-    supabase.rpc.mockResolvedValue({ data: [VALID_USER_ROW], error: null });
+    supabase.rpc
+      .mockResolvedValueOnce({ data: "ana@example.com", error: null })
+      .mockResolvedValueOnce({ data: [VALID_USER_ROW], error: null });
     supabase.auth.signInWithPassword.mockResolvedValue({
       data: AUTH_SESSION,
       error: null,
@@ -131,7 +136,9 @@ describe("authStore  login", () => {
 
   it("[SEC-05] login exitoso → password nunca se almacena en el store", async () => {
     // Arrange
-    supabase.rpc.mockResolvedValue({ data: [VALID_USER_ROW], error: null });
+    supabase.rpc
+      .mockResolvedValueOnce({ data: "ana@example.com", error: null })
+      .mockResolvedValueOnce({ data: [VALID_USER_ROW], error: null });
     supabase.auth.signInWithPassword.mockResolvedValue({
       data: AUTH_SESSION,
       error: null,
@@ -153,11 +160,14 @@ describe("authStore  login", () => {
 
   it("[PERF-01] login completo resuelve en menos de 200ms (mock network)", async () => {
     // Arrange — simular latencia realista de red (~50ms)
+    let rpcCall = 0;
     supabase.rpc.mockImplementation(
       () =>
-        new Promise((r) =>
-          setTimeout(() => r({ data: [VALID_USER_ROW], error: null }), 50),
-        ),
+        new Promise((resolve) => {
+          const data =
+            rpcCall++ === 0 ? "ana@example.com" : [VALID_USER_ROW];
+          setTimeout(() => resolve({ data, error: null }), 50);
+        }),
     );
     supabase.auth.signInWithPassword.mockImplementation(
       () =>
@@ -200,7 +210,7 @@ describe("authStore  login", () => {
 
     // Act — resolver la promesa
     await act(async () => {
-      resolveRpc({ data: [], error: null });
+        resolveRpc({ data: null, error: null });
     });
 
     // Assert — loading debe terminar aunque el login falle

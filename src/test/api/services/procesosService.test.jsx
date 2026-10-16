@@ -16,7 +16,7 @@ vi.mock("../../../lib/supabase", () => ({
   },
 }));
 
-function mockFrom({ select, in: inFn, order, resolveWith } = {}) {
+function mockFrom({ resolveWith } = {}) {
   const chain = {
     select: vi.fn().mockReturnThis(),
     in: vi.fn().mockReturnThis(),
@@ -273,7 +273,7 @@ describe("Test Api - procesosService", () => {
 
       // que se pida los campos correctos
       expect(chain.select).toHaveBeenCalledWith(
-        "pro_id_proceso, pro_codigo_cofre, pro_estado, pro_fecha_inicio, rc_nombre, rc_codigo, fase_actual, fases",
+        "pro_id_proceso, pro_codigo_cofre, pro_estado, pro_fecha_inicio, rc_nombre, rc_codigo, fase_actual, fases , color_nombre, color_hex",
       );
     });
 

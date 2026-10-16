@@ -8,13 +8,14 @@ import {
 import { historialSubprocesosNoPagadoMapper } from "../domain/mappers/historialSubprocesosNoPagadoMapper";
 import { infoSubprocesoActualMapper } from "../domain/mappers/infoSubprocesoActual";
 import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
+import { subProcesosErrorMap } from "./errors/subProcesosErrorMap";
 
 export const subProcesosRepository = {
   async createSubproceso(cargoId, procesoId, trabajadorId) {
     try {
       return await crearSubproceso(cargoId, procesoId, trabajadorId);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, subProcesosErrorMap);
     }
   },
 
@@ -22,7 +23,7 @@ export const subProcesosRepository = {
     try {
       return await finalizarSubproceso(data);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, subProcesosErrorMap);
     }
   },
 
@@ -31,7 +32,7 @@ export const subProcesosRepository = {
       const data = await getHistorialSubprocesosTrabajadorNoPagado();
       return (data || []).map(historialSubprocesosNoPagadoMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, subProcesosErrorMap);
     }
   },
 
@@ -40,7 +41,7 @@ export const subProcesosRepository = {
       const data = await getInformacionSubprocesoActual();
       return (data || []).map(infoSubprocesoActualMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, subProcesosErrorMap);
     }
   },
 };

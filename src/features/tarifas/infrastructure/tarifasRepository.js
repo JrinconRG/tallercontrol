@@ -1,6 +1,7 @@
 import { getMatrizPrecios, crearTarifa } from "../services/tarifaService";
 import { matrizPreciosMapper } from "../domain/mappers/matrizPreciosMapper";
 import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
+import { tarifasErrorMap } from "./errors/tarifasErrorMap";
 
 export const tarifaRepository = {
   async getMatrizPrecios(trabajadorId) {
@@ -8,7 +9,7 @@ export const tarifaRepository = {
       const data = await getMatrizPrecios(trabajadorId);
       return matrizPreciosMapper(data);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, tarifasErrorMap);
     }
   },
 
@@ -20,7 +21,7 @@ export const tarifaRepository = {
         ),
       );
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, tarifasErrorMap);
     }
   },
 };

@@ -1,16 +1,19 @@
 import {
-  render,
+  render as renderComponent,
   screen,
   fireEvent,
   waitFor,
-  within,
 } from "@testing-library/react";
+import { ToastProvider } from "../../hooks/useToast";
 import { beforeEach, describe, expect, vi } from "vitest";
-import InicioTrabajador from "../../pages/Trabajador/InicioTrabajador/InicioTrabajador";
+import InicioTrabajador from "../../features/procesos/presentation/pages/InicioTrabajador";
 
 import * as useProcesosHook from "../../features/procesos/application/hooks/useProcesosActivos";
 import * as useFaseHook from "../../features/procesos/application/hooks/useObtenerFaseActualProcesos";
 import * as useSubprocesosHook from "../../features/subProcesos/application/hooks/useObtenerInformacionSubprocesoActual";
+
+const render = (ui, options) =>
+  renderComponent(ui, { wrapper: ToastProvider, ...options });
 
 vi.mock("../../features/procesos/application/hooks/useProcesosActivos", () => ({
   useProcesosActivos: vi.fn(),
@@ -31,7 +34,7 @@ vi.mock(
 );
 
 vi.mock(
-  "../../pages/Trabajador/InicioTrabajador/funciones/CrearProceso",
+  "../../features/procesos/presentation/components/CrearProceso",
   () => ({
     default: ({ onClose, onSuccess }) => (
       <div data-testid="modal-crear-proceso">
@@ -49,7 +52,7 @@ vi.mock(
 );
 
 vi.mock(
-  "../../pages/Trabajador/InicioTrabajador/funciones/CrearSubproceso",
+  "../../features/procesos/presentation/components/CrearSubproceso",
   () => ({
     default: ({ onClose, onSuccess }) => (
       <div data-testid="modal-crear-subproceso">

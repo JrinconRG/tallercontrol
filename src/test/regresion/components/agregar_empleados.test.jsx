@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import RegistrarEmpleados from "../../../pages/Gerente/Empleados/funciones/RegistrarEmpleados";
+import RegistrarEmpleados from "../../../features/Trabajadores/presentation/components/RegistrarEmpleados";
 import { useCrearTrabajador } from "../../../features/Trabajadores/application/hooks/useCrearEmpleado";
 import { ConflictError } from "../../../shared/errors/ConflictError";
 

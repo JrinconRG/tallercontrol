@@ -1,14 +1,25 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render as renderComponent, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, vi, test, beforeEach } from "vitest";
-import CrearProceso from "../../../pages/Trabajador/InicioTrabajador/funciones/CrearProceso";
+import { ToastProvider } from "../../../hooks/useToast";
+import { useGetColores } from "../../../features/procesos/application/hooks/useGetColores";
+import CrearProceso from "../../../features/procesos/presentation/components/CrearProceso";
 
 import { useObtenerReferenciasCofres } from "../../../features/cofres/application/hook/useObtenerReferenciasCofres";
 import { useCrearProceso } from "../../../features/procesos/application/hooks/useCrearProceso";
+
+const render = (ui, options) =>
+  renderComponent(ui, { wrapper: ToastProvider, ...options });
 
 vi.mock(
   "../../../features/cofres/application/hook/useObtenerReferenciasCofres",
 );
 vi.mock("../../../features/procesos/application/hooks/useCrearProceso");
+vi.mock("../../../features/procesos/application/hooks/useGetColores");
+
+async function selectOption(label, option) {
+  fireEvent.click(screen.getByRole("button", { name: label }));
+  fireEvent.click(await screen.findByRole("option", { name: option }));
+}
 
 describe("Test Caja Blanca - Crear Proceso", () => {
   const mockEjecutarCrearProceso = vi.fn();
@@ -25,6 +36,10 @@ describe("Test Caja Blanca - Crear Proceso", () => {
       mutate: mockEjecutarCrearProceso,
       isPending: false,
     });
+    useGetColores.mockReturnValue({
+      colores: [{ id: 3, nombre: "Rojo", hex: "#ff0000" }],
+      loading: false,
+    });
   });
 
   // Test 1: CP-1.1 Camino exitoso
@@ -33,7 +48,7 @@ describe("Test Caja Blanca - Crear Proceso", () => {
     const onSuccess = vi.fn();
     const onClose = vi.fn();
 
-    mockEjecutarCrearProceso.mockImplementation((id, options) => {
+    mockEjecutarCrearProceso.mockImplementation((_, options) => {
       options.onSuccess({ codigo: "PROC-001" });
     });
 
@@ -41,8 +56,8 @@ describe("Test Caja Blanca - Crear Proceso", () => {
 
     render(<CrearProceso onClose={onClose} onSuccess={onSuccess} />);
 
-    const select = await screen.findByRole("combobox");
-    fireEvent.change(select, { target: { value: "1" } });
+    await selectOption("Referencia de cofre", "Imperial(104)");
+    await selectOption("Color del cofre", "Rojo");
 
     fireEvent.click(screen.getByRole("button", { name: /Crear Proceso/i }));
 
@@ -57,6 +72,10 @@ describe("Test Caja Blanca - Crear Proceso", () => {
         }),
       );
       expect(onClose).toHaveBeenCalled();
+      expect(mockEjecutarCrearProceso).toHaveBeenCalledWith(
+        { referenciaId: 1, colorId: 3 },
+        expect.any(Object),
+      );
     });
   });
 
@@ -76,20 +95,18 @@ describe("Test Caja Blanca - Crear Proceso", () => {
 
   // Test 3: El Camino del Error (Fallo de Servidor)
   test("CP-1.3: Debe mostrar mensaje de error si la API falla", async () => {
-    mockEjecutarCrearProceso.mockImplementation((id, options) => {
+    mockEjecutarCrearProceso.mockImplementation((_, options) => {
       options.onError(new Error("Fallo"));
     });
 
     render(<CrearProceso onSuccess={vi.fn()} onClose={vi.fn()} />);
 
-    const select = await screen.findByRole("combobox");
-    fireEvent.change(select, { target: { value: "1" } });
+    await selectOption("Referencia de cofre", "Imperial(104)");
+    await selectOption("Color del cofre", "Rojo");
 
     fireEvent.click(screen.getByRole("button", { name: /Crear Proceso/i }));
 
-    const errorMsg = await screen.findByText(
-      /Hubo un fallo en el servidor. Intenta de nuevo/i,
-    );
+    const errorMsg = await screen.findByText(/Ocurrió un error inesperado/i);
     expect(errorMsg).toBeInTheDocument();
   });
 });

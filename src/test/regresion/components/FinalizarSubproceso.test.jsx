@@ -1,9 +1,13 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render as renderComponent, screen, fireEvent, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, vi, test } from "vitest";
-import FinalizarSubproceso from "../../../pages/Trabajador/InicioTrabajador/funciones/FinalizarSubproceso";
+import { ToastProvider } from "../../../hooks/useToast";
+import FinalizarSubproceso from "../../../features/procesos/presentation/components/FinalizarSubproceso";
 import * as storageService from "../../../services/storage";
 
 import { useFinalizarSubProceso } from "../../../features/subProcesos/application/hooks/useFinalizarSubProceso";
+
+const render = (ui, options) =>
+  renderComponent(ui, { wrapper: ToastProvider, ...options });
 
 vi.mock(
   "../../../features/subProcesos/application/hooks/useFinalizarSubProceso",
@@ -99,9 +103,6 @@ describe("Test caja blanca - FinalizarSubproceso Componente", () => {
       new Error("Firebase Error"),
     );
 
-    // Espiamos console.error para verificar que se captura el error
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
     render(
       <FinalizarSubproceso
         subproceso={crearSubprocesoMock()}
@@ -118,17 +119,15 @@ describe("Test caja blanca - FinalizarSubproceso Componente", () => {
 
     await waitFor(() => {
       expect(onSuccess).not.toHaveBeenCalled();
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(screen.getByText(/No se pudo finalizar la fase/i)).toBeInTheDocument();
       expect(
-        screen.getByText(/Hubo un error al procesar la solicitud/i),
+        screen.getByText(/Ocurrió un error inesperado/i),
       ).toBeInTheDocument();
     });
-    consoleSpy.mockRestore();
   });
 
   test("CP-1.5: Debe manejar el error del hook mutateAsync", async () => {
     mockMutateAsync.mockRejectedValue(new Error("Error backend"));
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     render(
       <FinalizarSubproceso
@@ -145,11 +144,9 @@ describe("Test caja blanca - FinalizarSubproceso Componente", () => {
     fireEvent.click(screen.getByRole("button", { name: /Finalizar/i }));
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalled();
       expect(
-        screen.getByText(/Hubo un error al procesar la solicitud/i),
+        screen.getByText(/Ocurrió un error inesperado/i),
       ).toBeInTheDocument();
     });
-    consoleSpy.mockRestore();
   });
 });

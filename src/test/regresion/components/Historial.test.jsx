@@ -24,7 +24,7 @@ const mockData = [
     duracion: "3h",
     fechaInicio: "2026-02-16",
     fechaFin: "2026-02-19",
-    trabajadoNombreCompleto: "Laura Gómez",
+    trabajadorNombreCompleto: "Laura Gómez",
     cargoNombre: "Pulidor",
     valor: 45000,
     fotosEvidencia: ["img1.jpg"],
@@ -109,7 +109,7 @@ describe("REGRESION - Historial", () => {
     render(<Historial />);
 
     // ACT
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(document.querySelector(".btn-primary"));
 
     // ASSERT
     expect(screen.getByText(/Modal abierto/i)).toBeInTheDocument();

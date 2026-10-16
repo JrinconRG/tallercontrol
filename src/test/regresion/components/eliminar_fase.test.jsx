@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import EliminarFase from "../../../pages/Gerente/Empleados/funciones/EliminarFase";
+import EliminarFase from "../../../features/Trabajadores/presentation/components/EliminarFase";
 import * as useDesignarCargosHook from "../../../features/Trabajadores/application/hooks/useDesignarCargo";
 
 vi.mock(

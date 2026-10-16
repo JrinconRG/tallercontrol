@@ -1,9 +1,13 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render as renderComponent, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, expect, vi, test, beforeEach } from "vitest";
-import CrearSubproceso from "../../../pages/Trabajador/InicioTrabajador/funciones/CrearSubproceso";
+import { ToastProvider } from "../../../hooks/useToast";
+import CrearSubproceso from "../../../features/procesos/presentation/components/CrearSubproceso";
 
 import { useTrabajadoresPorCargo } from "../../../features/Trabajadores/application/hooks/useTrabajadoresPorCargo";
 import { useCrearSubproceso } from "../../../features/subProcesos/application/hooks/useCrearSubProceso";
+
+const render = (ui, options) =>
+  renderComponent(ui, { wrapper: ToastProvider, ...options });
 
 vi.mock(
   "../../../features/Trabajadores/application/hooks/useTrabajadoresPorCargo",
@@ -121,7 +125,9 @@ describe("Test Caja Blanca - Crear Subproceso", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: /Iniciar fase/i }));
 
-    expect(await screen.findByText(/Servidor caído/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Ocurrió un error inesperado/i),
+    ).toBeInTheDocument();
   });
 
   // CP-1.4: Estado de carga del Hook

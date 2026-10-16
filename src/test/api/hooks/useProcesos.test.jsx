@@ -53,10 +53,10 @@ describe("Suite Integral de Hooks: Dominio Procesos", () => {
       const { result } = renderHook(() => useCrearProceso(), {
         wrapper: Wrapper,
       });
-      await result.current.mutateAsync(referenciaId);
+      await result.current.mutateAsync({ referenciaId });
 
       // Assert
-      expect(ProcesoRepository.crear).toHaveBeenCalledWith(referenciaId);
+      expect(ProcesoRepository.crear).toHaveBeenCalledWith(referenciaId, undefined);
       expect(ProcesoRepository.crear).toHaveBeenCalledTimes(1);
     });
 
@@ -70,7 +70,7 @@ describe("Suite Integral de Hooks: Dominio Procesos", () => {
       const { result } = renderHook(() => useCrearProceso(), {
         wrapper: Wrapper,
       });
-      await result.current.mutateAsync(1);
+      await result.current.mutateAsync({ referenciaId: 1 });
 
       // Assert
       expect(invalidateSpy).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ describe("Suite Integral de Hooks: Dominio Procesos", () => {
       const { result } = renderHook(() => useCrearProceso(), {
         wrapper: Wrapper,
       });
-      await expect(result.current.mutateAsync(1)).rejects.toThrow(
+      await expect(result.current.mutateAsync({ referenciaId: 1 })).rejects.toThrow(
         "Referencia no encontrada",
       );
     });

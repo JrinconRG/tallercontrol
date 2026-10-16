@@ -1,10 +1,14 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render as renderComponent, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
+import { ToastProvider } from "../../../hooks/useToast";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import Empleados from "../../../pages/Gerente/Empleados/Empleados";
+import Empleados from "../../../features/Trabajadores/presentation/pages/Empleados";
 import * as useEmpleadosHook from "../../../features/Trabajadores/application/hooks/useInformacionEmpleados";
+
+const render = (ui, options) =>
+  renderComponent(ui, { wrapper: ToastProvider, ...options });
 
 vi.mock(
   "../../../features/Trabajadores/application/hooks/useInformacionEmpleados",
@@ -14,7 +18,7 @@ vi.mock(
 );
 
 vi.mock(
-  "../../../pages/Gerente/Empleados/funciones/RegistrarEmpleados",
+  "../../../features/Trabajadores/presentation/components/RegistrarEmpleados",
   () => ({
     default: ({ onClose, onToast }) => (
       <div data-testid="modal-registrar">

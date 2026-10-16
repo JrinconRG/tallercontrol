@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import AgregarFase from "../../../pages/Gerente/Empleados/funciones/AgregarFase";
+import AgregarFase from "../../../features/Trabajadores/presentation/components/AgregarFase";
 
 import { useCargos } from "../../../features/cargos/application/hooks/useCargos";
 import { useAsignarCargo } from "../../../features/Trabajadores/application/hooks/useAsignarCargo";

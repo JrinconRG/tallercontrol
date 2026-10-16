@@ -2,6 +2,7 @@ import { render } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import RequireRole from "../../../components/auth/RequireRole";
 import { useAuthStore } from "../../../stores/authStore";
+import { ToastProvider } from "../../../hooks/useToast";
 import { vi } from "vitest";
 
 // mock del store
@@ -9,14 +10,18 @@ vi.mock("../../../stores/authStore");
 
 const MockPage = () => <div>Contenido protegido</div>;
 
-const renderWithRouter = (ui, initialRoute = "/") => {
+const renderWithRouter = (ui, initialRoute = "/protected") => {
   return render(
-    <MemoryRouter initialEntries={[initialRoute]}>
-      <Routes>
-        <Route path="/" element={ui} />
-        <Route path="/home" element={<div>HOME</div>} />
-      </Routes>
-    </MemoryRouter>,
+    <ToastProvider>
+      <MemoryRouter initialEntries={[initialRoute]}>
+        <Routes>
+          <Route path="/" element={<div>LOGIN</div>} />
+          <Route path="/protected" element={ui} />
+          <Route path="/home" element={<div>HOME</div>} />
+          <Route path="/no-autorizado" element={<div>No autorizado</div>} />
+        </Routes>
+      </MemoryRouter>
+    </ToastProvider>,
   );
 };
 

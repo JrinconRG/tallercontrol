@@ -15,6 +15,7 @@ import { DetalleNominaPreviewMapper } from "../domain/mappers/DetalleNominaPrevi
 import { ReporteTrabajadorNominaMapper } from "../domain/mappers/ReporteTrabajadorNominaMapper";
 import { toNomina } from "../domain/mappers/GenerarNominaMapper";
 import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
+import { nominaErrorMap } from "./errors/nominaErrorMap";
 export const NominaRepository = {
   async getNomina(fechaInicio, fechaFin, generadaPor, ajustes) {
     try {
@@ -27,7 +28,7 @@ export const NominaRepository = {
       );
       return data.map(toNomina);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
 
@@ -36,7 +37,7 @@ export const NominaRepository = {
       const data = await nominaDetalleGenerada(nominaId);
       return data.map(DetalleNominaGeneradaMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
 
@@ -45,7 +46,7 @@ export const NominaRepository = {
       const data = await nominaResumen(fechaInicio, fechaFin);
       return ResumenNominaMapper(data);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
 
@@ -54,7 +55,7 @@ export const NominaRepository = {
       const data = await nominaDetallePreview(fechaInicio, fechaFin);
       return data.map(DetalleNominaPreviewMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
 
@@ -73,7 +74,7 @@ export const NominaRepository = {
       );
       return data.map(ReporteTrabajadorNominaMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
   async getTareasNomina(nominaId) {
@@ -81,7 +82,7 @@ export const NominaRepository = {
       const data = await nominaDetalleTareas(nominaId);
       return data.map(NominaTareaMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
   async getHistorialNominas() {
@@ -89,7 +90,7 @@ export const NominaRepository = {
       const rawData = await obtenerHistorialNominas();
       return rawData.map(toNomina);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, nominaErrorMap);
     }
   },
 };

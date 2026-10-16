@@ -1,11 +1,20 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render as renderComponent, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import Tarifas from "../../../pages/Gerente/Tarifas/Tarifas";
+import { ToastProvider } from "../../../hooks/useToast";
+import Tarifas from "../../../features/tarifas/presentation/pages/Tarifas";
 
 import { useObtenerTarifas } from "../../../features/tarifas/application/hooks/useObtenerTarifas";
 import { useGuardarTarifas } from "../../../features/tarifas/application/hooks/useGuardarTarifas";
 import { useTrabajadoresSelect } from "../../../features/Trabajadores/application/hooks/useTrabajadoresSelect";
 import * as matrizUtils from "../../../utils/construirMatrizTarifas";
+
+const render = (ui, options) =>
+  renderComponent(ui, { wrapper: ToastProvider, ...options });
+
+async function selectTrabajador() {
+  fireEvent.click(screen.getByRole("button", { name: /Seleccionar trabajador/i }));
+  fireEvent.click(await screen.findByRole("option", { name: "Juan García" }));
+}
 
 vi.mock("../../../features/tarifas/application/hooks/useObtenerTarifas");
 vi.mock("../../../features/tarifas/application/hooks/useGuardarTarifas");
@@ -69,8 +78,7 @@ describe("Regresion:  Tarifas", () => {
     render(<Tarifas />);
 
     // ACT
-    const select = screen.getByRole("combobox");
-    fireEvent.change(select, { target: { value: "W-1" } });
+    await selectTrabajador();
 
     // ASSERT
     expect(screen.getByText("Referencia")).toBeInTheDocument();
@@ -82,8 +90,7 @@ describe("Regresion:  Tarifas", () => {
     //arrange
     render(<Tarifas />);
 
-    const select = screen.getByRole("combobox");
-    fireEvent.change(select, { target: { value: "W-1" } });
+    await selectTrabajador();
 
     //espera
 
@@ -123,7 +130,7 @@ describe("Regresion:  Tarifas", () => {
     // ASSERT
     expect(mockMutate).toHaveBeenCalledWith(cambio, expect.any(Object));
     expect(
-      await screen.findByText(/Tarifas actualizadas correctamente/i),
+      await screen.findByText(/1 tarifa actualizada correctamente/i),
     ).toBeInTheDocument();
   });
 
@@ -142,6 +149,8 @@ describe("Regresion:  Tarifas", () => {
     fireEvent.click(screen.getByRole("button", { name: /Guardar/i }));
 
     // ASSERT
-    expect(await screen.findByText(errorMsg)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Ocurrió un error inesperado/i),
+    ).toBeInTheDocument();
   });
 });

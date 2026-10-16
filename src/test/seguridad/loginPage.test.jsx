@@ -13,10 +13,13 @@ vi.mock("react-router-dom", async (importOriginal) => {
 vi.mock("../../stores/authStore");
 import { useAuthStore } from "../../stores/authStore";
 
-vi.mock("react-hot-toast", () => ({
-  default: { error: vi.fn(), success: vi.fn() },
+const { showError, showSuccess } = vi.hoisted(() => ({
+  showError: vi.fn(),
+  showSuccess: vi.fn(),
 }));
-import toast from "react-hot-toast";
+vi.mock("../../hooks/useToast", () => ({
+  useToast: () => ({ showError, showSuccess }),
+}));
 import LoginPage from "../../pages/auth/LoginPage/LoginPage";
 
 //helper
@@ -50,8 +53,9 @@ describe("LoginPage", () => {
 
     // Assert
     expect(mockLogin).not.toHaveBeenCalled();
-    expect(toast.error).toHaveBeenCalledWith(
-      "Por favor, complete todos los campos.",
+    expect(showError).toHaveBeenCalledWith(
+      "Datos incompletos",
+      "Por favor, ingrese su usuario o correo.",
     );
   });
 
@@ -60,7 +64,7 @@ describe("LoginPage", () => {
     const { mockLogin } = renderLogin();
 
     // Act
-    await userEvent.type(screen.getByPlaceholderText("Usuario"), "ana");
+    await userEvent.type(screen.getByPlaceholderText("Usuario o Correo"), "ana");
     fireEvent.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
     // Assert
@@ -76,13 +80,14 @@ describe("LoginPage", () => {
     });
 
     // Act
-    await userEvent.type(screen.getByPlaceholderText("Usuario"), "hacker");
+    await userEvent.type(screen.getByPlaceholderText("Usuario o Correo"), "hacker");
     await userEvent.type(screen.getByPlaceholderText("Contraseña"), "wrong");
     fireEvent.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
     // Assert
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith(
+      expect(showError).toHaveBeenCalledWith(
+        "No se pudo iniciar sesión",
         "Usuario o contraseña incorrectos",
       );
       expect(mockNavigate).not.toHaveBeenCalled();
@@ -95,13 +100,13 @@ describe("LoginPage", () => {
     mockLogin.mockResolvedValue({ success: true, role: "gerente" });
 
     // Act
-    await userEvent.type(screen.getByPlaceholderText("Usuario"), "ana");
+    await userEvent.type(screen.getByPlaceholderText("Usuario o Correo"), "ana");
     await userEvent.type(screen.getByPlaceholderText("Contraseña"), "1234");
     fireEvent.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
     // Assert
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/gerente");
+      expect(mockNavigate).toHaveBeenCalledWith("/gerente", { replace: true });
       expect(mockNavigate).not.toHaveBeenCalledWith("/trabajador/inicio");
     });
   });
@@ -112,13 +117,15 @@ describe("LoginPage", () => {
     mockLogin.mockResolvedValue({ success: true, role: "trabajador" });
 
     // Act
-    await userEvent.type(screen.getByPlaceholderText("Usuario"), "carlos");
+    await userEvent.type(screen.getByPlaceholderText("Usuario o Correo"), "carlos");
     await userEvent.type(screen.getByPlaceholderText("Contraseña"), "1234");
     fireEvent.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
     // Assert
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/trabajador/inicio");
+      expect(mockNavigate).toHaveBeenCalledWith("/trabajador/inicio", {
+        replace: true,
+      });
     });
   });
 
@@ -129,7 +136,7 @@ describe("LoginPage", () => {
     renderLogin({ isLoading: true });
 
     // Act + Assert
-    const btn = screen.getByRole("button", { name: /cargando/i });
+    const btn = screen.getByRole("button", { name: /ingresando/i });
     expect(btn).toBeDisabled();
   });
 
@@ -144,7 +151,7 @@ describe("LoginPage", () => {
     );
 
     // Act
-    await userEvent.type(screen.getByPlaceholderText("Usuario"), "ana");
+    await userEvent.type(screen.getByPlaceholderText("Usuario o Correo"), "ana");
     await userEvent.type(screen.getByPlaceholderText("Contraseña"), "1234");
 
     fireEvent.click(screen.getByRole("button", { name: /iniciar sesión/i }));

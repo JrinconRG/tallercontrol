@@ -16,6 +16,7 @@ import { historialProcesosMapper } from "../domain/mappers/historialMapper";
 import { dashboardMapper } from "../domain/mappers/dashboardMapper";
 import { faseActualMapper } from "../domain/mappers/faseActualMapper";
 import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
+import { procesosErrorMap } from "./errors/procesosErrorMap";
 
 export const ProcesoRepository = {
   async getActivos() {
@@ -23,7 +24,7 @@ export const ProcesoRepository = {
       const data = await obtenerProcesosActivos();
       return (data || []).map(procesoMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 
@@ -31,7 +32,7 @@ export const ProcesoRepository = {
     try {
       return await crearProceso(referenciaId, colorId);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
   async getColores() {
@@ -39,7 +40,7 @@ export const ProcesoRepository = {
       const data = await obtenerColores();
       return (data || []).map(mapColor);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 
@@ -47,7 +48,7 @@ export const ProcesoRepository = {
     try {
       return await validarSiguienteFase(procesoId, cargoId);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 
@@ -56,7 +57,7 @@ export const ProcesoRepository = {
       const data = await obtenerHistorialProcesos();
       return historialProcesosMapper(data || []);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 
@@ -65,7 +66,7 @@ export const ProcesoRepository = {
       const data = await obtenerDetallesProcesosGerente();
       return dashboardMapper(data || []);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 
@@ -74,7 +75,7 @@ export const ProcesoRepository = {
       const data = await obtenerFaseActualProcesos();
       return (data || []).map(faseActualMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 
@@ -83,7 +84,7 @@ export const ProcesoRepository = {
       const data = await obtenerProcesosSinAsignar();
       return (data || []).map(procesoSinAsignarMapper);
     } catch (error) {
-      throw mapSupabaseError(error);
+      throw mapSupabaseError(error, procesosErrorMap);
     }
   },
 };

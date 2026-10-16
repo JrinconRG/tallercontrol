@@ -119,19 +119,6 @@ function formatearFecha(iso) {
   });
 }
 
-function formatearMinutos(min) {
-  if (min == null) return "—";
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  if (h === 0) return `${m}min`;
-  return m === 0 ? `${h}h` : `${h}h ${m}min`;
-}
-
-function calcularTranscurrido(fechaInicio) {
-  const diff = Math.floor((Date.now() - new Date(fechaInicio)) / 60000);
-  return formatearMinutos(diff);
-}
-
 FaseDetalle.propTypes = {
   fase: PropTypes.shape({
     fase: PropTypes.string,

@@ -136,7 +136,7 @@ describe("Hooks de Dominio: Subprocesos", () => {
 
       try {
         await result.current.mutateAsync({});
-      } catch (e) {
+      } catch {
         /* ignore */
       }
 

@@ -6,10 +6,20 @@ import { ToastProvider } from "../../../hooks/useToast";
 
 // mock auth store
 vi.mock("../../../stores/authStore", () => ({
-  useAuthStore: () => ({
-    isAuthenticated: true,
-    role: "gerente",
-  }),
+  useAuthStore: Object.assign(
+    () => ({ isAuthenticated: true, role: "gerente" }),
+    { getState: () => ({ clearSession: vi.fn() }) },
+  ),
+}));
+
+vi.mock("../../../lib/supabase", () => ({
+  supabase: {
+    auth: {
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: vi.fn() } },
+      }),
+    },
+  },
 }));
 
 // mock pages pesadas (IMPORTANTE)
@@ -17,7 +27,7 @@ vi.mock("../../../pages/auth/LoginPage/LoginPage", () => ({
   default: () => <div>Login</div>,
 }));
 
-vi.mock("../../../pages/Trabajador/InicioTrabajador/InicioTrabajador", () => ({
+vi.mock("../../../features/procesos/presentation/pages/InicioTrabajador", () => ({
   default: () => <div>InicioTrabajador</div>,
 }));
 
@@ -33,11 +43,11 @@ vi.mock("../../../pages/NoAutorizado", () => ({
   default: () => <div>NoAutorizado</div>,
 }));
 
-vi.mock("../../../pages/Gerente/Tarifas/Tarifas", () => ({
+vi.mock("../../../features/tarifas/presentation/pages/Tarifas", () => ({
   default: () => <div>Tarifas</div>,
 }));
 
-vi.mock("../../../pages/Gerente/Empleados/Empleados", () => ({
+vi.mock("../../../features/Trabajadores/presentation/pages/Empleados", () => ({
   default: () => <div>Empleados</div>,
 }));
 

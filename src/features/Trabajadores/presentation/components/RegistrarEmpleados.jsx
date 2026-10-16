@@ -15,9 +15,9 @@ export default function RegistrarEmpleados({ onClose, onToast }) {
   const validarCampos = () => {
     const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{5,}$/;
 
-    const numeroRegex = /^[\d\/]+$/;
+    const numeroRegex = /^[\d/]+$/;
 
-    const celularRegex = /^[\d\/]{10}$/;
+    const celularRegex = /^[\d/]{10}$/;
     if (!nombreRegex.test(nombre)) {
       return "El nombre debe tener mínimo 5 letras y sin caracteres extraños.";
     }
