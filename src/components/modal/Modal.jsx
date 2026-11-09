@@ -1,19 +1,23 @@
 import "./Modal.css";
+import { useId } from "react";
 import PropTypes from "prop-types";
 
 export default function Modal({
   isOpen,
   title,
+  subtitle,
   children,
   onClose,
   onConfirm,
   confirmText = null,
   cancelText = "Cancelar",
   loading = false,
+  disableConfirm = false,
   className = "",
   style = {},
   borderColor,
 }) {
+  const tituloId = useId();
   if (!isOpen) return null;
 
   return (
@@ -26,10 +30,23 @@ export default function Modal({
         ...style,
       }}
     >
-      <div className="modal-container">
+      <dialog
+        open
+        className="modal-container"
+        aria-modal="true"
+        aria-labelledby={tituloId}
+      >
         <header className="modal-header">
-          <h3>{title}</h3>
-          <button className="modal-close" onClick={onClose}>
+          <div className="modal-header-texto">
+            <h3 id={tituloId}>{title}</h3>
+            {subtitle && <p className="modal-subtitle">{subtitle}</p>}
+          </div>
+          <button
+            type="button"
+            className="modal-close"
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
             ✕
           </button>
         </header>
@@ -39,8 +56,11 @@ export default function Modal({
         </section>
 
         <footer className="modal-footer">
+          {/* Con confirmar: Cancelar es secundario. Sin confirmar, el único
+              botón (cerrar) pasa a ser el principal. */}
           <button
-            className="btn btn-primary"
+            type="button"
+            className={`btn ${onConfirm ? "btn-terciary" : "btn-primary"}`}
             onClick={onClose}
             disabled={loading}
           >
@@ -50,15 +70,16 @@ export default function Modal({
           {/* Solo mostramos el botón de confirmar si pasamos la prop onConfirm */}
           {onConfirm && (
             <button
-              className="btn btn-secondary"
+              type="button"
+              className="btn btn-primary"
               onClick={onConfirm}
-              disabled={loading}
+              disabled={loading || disableConfirm}
             >
               {loading ? "Procesando..." : confirmText}
             </button>
           )}
         </footer>
-      </div>
+      </dialog>
     </div>
   );
 }
@@ -66,13 +87,15 @@ export default function Modal({
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   title: PropTypes.string,
+  subtitle: PropTypes.string,
   children: PropTypes.node,
   onClose: PropTypes.func,
   onConfirm: PropTypes.func,
   confirmText: PropTypes.string,
   cancelText: PropTypes.string,
   loading: PropTypes.bool,
+  disableConfirm: PropTypes.bool,
   className: PropTypes.string,
-  style: PropTypes.node,
+  style: PropTypes.object,
   borderColor: PropTypes.string,
 };
