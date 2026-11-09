@@ -8,15 +8,22 @@
   flex-direction: column;
   flex: 1;
   height: 100%;
-  padding: 20px 22px 0 22px;
+  padding: 20px 22px 22px 22px;
 }
 
-/* ── Header ── */
+/* ── Header: muestra de color + código + color + referencia ── */
 .proceso-detail-header {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 16px;
+}
+
+.cofre-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 /* Título principal — el código del cofre, único por proceso */
@@ -28,31 +35,21 @@
   margin: 0;
 }
 
-/* Fila del nombre/referencia + badge */
-.proceso-detail-badge {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
+/* Nombre del color: lo que el trabajador usa para ubicar el cofre */
+.cofre-color-nombre {
+  font-size: var(--font-title);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cofre-referencia {
   font-size: var(--font-subtitle);
-  color: var(--text-secondary);
   font-weight: 500;
-}
-
-/* Fecha de inicio */
-.info-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--font-subtitle);
   color: var(--text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* ── Badges de estado ── */
+/* ── Badges de estado (ya no se usan en esta card, se dejan por si
+      otras vistas los reutilizan) ── */
 .badge {
   flex-shrink: 0;
   padding: 4px 12px;
@@ -89,23 +86,36 @@
 .proceso-detail-body {
   display: flex;
   flex-direction: column;
-  padding: 16px 0;
   flex: 1;
-  gap: 10px;
 }
 
-/* Bloque destacado del estado actual */
+/* Bloque del estado actual: fase + trabajador + tiempo, todo junto */
 .estado-bloque {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 12px;
-  padding: 14px 16px;
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
 }
 
-.estado-bloque.enProceso    { background-color: var(--danger-50,  #FDF3F3); }
-.estado-bloque.porIniciar   { background-color: var(--success-50, #ecfdf6); }
-.estado-bloque.siguientFase { background-color: var(--brand-50); }
+.estado-bloque.enProceso {
+  background-color: var(--danger-50, #FDF3F3);
+  border-color: var(--danger-100);
+}
+/* "Sin iniciar" y "Siguiente fase" comparten color: ambos significan
+   "nadie lo ha tomado, puedes empezar" */
+.estado-bloque.porIniciar,
+.estado-bloque.siguientFase {
+  background-color: var(--brand-50);
+  border-color: var(--brand-200);
+}
+
+.estado-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 .estado-dot {
   width: 10px;
@@ -113,14 +123,12 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
-.enProceso   .estado-dot { background: var(--danger-500); }
-.porIniciar  .estado-dot { background: var(--success-500); }
-.siguientFase .estado-dot { background: var(--brand-500); }
-
-.estado-texto {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.enProceso .estado-dot {
+  background: var(--danger-500);
+}
+.porIniciar .estado-dot,
+.siguientFase .estado-dot {
+  background: var(--brand-500);
 }
 
 .estado-etiqueta {
@@ -129,17 +137,28 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
 }
-.enProceso   .estado-etiqueta { color: var(--danger-600,  #CC363C); }
-.porIniciar  .estado-etiqueta { color: var(--success-700); }
-.siguientFase .estado-etiqueta { color: var(--brand-600); }
+.enProceso .estado-etiqueta {
+  color: var(--danger-600, #CC363C);
+}
+.porIniciar .estado-etiqueta,
+.siguientFase .estado-etiqueta {
+  color: var(--brand-600);
+}
 
 .estado-valor {
   font-size: var(--font-title);
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1.1;
   color: var(--text-primary);
 }
 
-/* Info lines secundarias */
+.estado-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Info lines dentro del bloque */
 .info-line {
   display: flex;
   align-items: center;
@@ -150,10 +169,48 @@
 .info-proceso {
   font-size: var(--font-subtitle);
 }
+.info-proceso.con-trabajador {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.info-proceso.sin-asignar {
+  font-weight: 600;
+  color: var(--text-muted);
+}
 
-/* ── Footer — botón de acción ── */
+/* Avatar con iniciales; vacío (punteado) cuando no hay trabajador */
+.avatar-trabajador {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: #fff;
+  font-size: var(--font-caption);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.avatar-trabajador.vacio {
+  background: transparent;
+  border: 1.5px dashed var(--neutral-400);
+}
+
+/* Mismo ancho que el avatar para que los textos queden alineados */
+.info-icono {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Footer — botón de acción grande ── */
 .proceso-detail-footer {
-  margin: 0 -22px 0;
+  margin-top: 16px;
 }
 
 .footer-action-btn {
@@ -161,18 +218,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 22px;
+  padding: 0 20px;
+  min-height: 54px;
   border: none;
-  background: transparent;
+  border-radius: var(--radius-md);
+  color: #fff;
   cursor: pointer;
   font-size: var(--font-subtitle);
   font-weight: 700;
   font-family: var(--font-base);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-  transition: background 0.15s ease;
   text-align: left;
   gap: 12px;
-  min-height: 60px;
+  transition: filter 0.15s ease;
 }
 
 .footer-action-btn svg {
@@ -180,35 +237,39 @@
   transition: transform 0.15s ease;
 }
 
+.footer-action-btn:hover {
+  filter: brightness(1.12);
+}
+
 .footer-action-btn:hover svg {
   transform: translateX(5px);
 }
 
-.btn-porIniciar {
-  color: var(--success-700);
+.footer-action-btn:focus-visible {
+  outline: 3px solid var(--brand-200);
+  outline-offset: 2px;
 }
-.btn-porIniciar:hover {
-  background-color: var(--success-100);
+
+/* Mismo azul que .btn-primary del resto de la app */
+.btn-porIniciar,
+.btn-siguientFase {
+  background-color: var(--action-primary);
 }
+.btn-porIniciar:hover,
 .btn-siguientFase:hover {
-  background: var(--brand-100);
-}
-.btn-siguientFase{
-  color: var(--brand-700);
+  background-color: var(--action-primary-hover);
+  filter: none;
 }
 .terminar-boton {
-  color: var(--danger-800);
-}
-.terminar-boton:hover {
-  background-color: var(--danger-100);
+  background-color: var(--danger-800);
 }
 
 .finalizado-container {
-  padding: 18px 22px;
+  padding: 0;
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 60px;
+  min-height: 54px;
 }
 
 .finalizado {

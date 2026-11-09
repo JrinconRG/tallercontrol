@@ -173,8 +173,8 @@ export default function InicioTrabajador() {
     setModalCrearSubproceso(true);
   }
 
-  function abrirModalFinalizar(subproceso) {
-    setSubprocesoSeleccionado({ subproceso });
+  function abrirModalFinalizar(subproceso, proceso) {
+    setSubprocesoSeleccionado({ subproceso, proceso });
     setModalFinalizar(true);
   }
 

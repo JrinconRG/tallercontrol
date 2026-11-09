@@ -1,17 +1,11 @@
 import { Icon } from "../../../../components/ui/Icon";
 import "./ProcesoDetail.css";
+import ColorSwatch from "../../../../components/colorSwatch/ColorSwatch";
 import PropTypes from "prop-types";
+import { obtenerIniciales } from "../../../../utils/ObtenerIniciales";
 
-function formatearFecha(fechaIso) {
-  if (!fechaIso) return "—";
-  const fecha = new Date(fechaIso);
-  return fecha.toLocaleDateString("es-CO", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function esFechaValida(valor) {
+  return !!valor && !Number.isNaN(new Date(valor).getTime());
 }
 
 export default function ProcesoDetail({
@@ -26,15 +20,25 @@ export default function ProcesoDetail({
   const hayFaseActiva = !!subprocesoActual;
   const siguienteFase = fase?.siguienteFaseOrden;
   const siguienteNombre = fase?.siguienteCargoNombre;
-  const estadoClase =
-    proceso.estado?.toLowerCase() === "activo"
-      ? "badge-activo"
-      : "badge-default";
+  const nombreFase =
+    subprocesoActual?.cargoNombre ||
+    fase?.siguienteCargoNombre ||
+    "Sin asignar";
+  const nombreTrabajador = subprocesoActual?.trabajadorNombreCompleto;
+
+  const duracion = esFechaValida(subprocesoActual?.fechaInicio)
+    ? calcularDuracion(subprocesoActual.fechaInicio)
+    : null;
+  const textoTiempo = hayFaseActiva
+    ? duracion && duracion !== "Fecha inválida"
+      ? duracion
+      : "Sin hora de inicio"
+    : "Aún sin iniciar";
 
   const renderEtiquetaLabel = () => {
     const etiquetas = {
-      enProceso: "Fase activa",
-      porIniciar: "Sin iniciar",
+      enProceso: "En curso",
+      porIniciar: "Primera fase · sin iniciar",
     };
 
     return etiquetas[colorTitulo] || "Siguiente fase";
@@ -48,8 +52,8 @@ export default function ProcesoDetail({
           className="footer-action-btn terminar-boton"
           onClick={() => onFinalizarFase(subprocesoActual)}
         >
-          <span>Finalizar fase</span>
-          <Icon name="ArrowRight" size={25} />
+          <span>Finalizar {subprocesoActual?.cargoNombre || "fase"}</span>
+          <Icon name="ArrowRight" size={22} />
         </button>
       );
     }
@@ -57,11 +61,12 @@ export default function ProcesoDetail({
     if (siguienteFase) {
       return (
         <button
+          type="button"
           className={`footer-action-btn btn-${colorTitulo}`}
           onClick={() => onIniciarFase(proceso, fase)}
         >
-          <span>Siguiente fase: {siguienteNombre}</span>
-          <Icon name="ArrowRight" size={18} className="arrow-icon" />
+          <span>Iniciar {siguienteNombre}</span>
+          <Icon name="ArrowRight" size={22} className="arrow-icon" />
         </button>
       );
     }
@@ -80,59 +85,57 @@ export default function ProcesoDetail({
     >
       {/* HEADER */}
       <div className="proceso-detail-header">
-        <div className="content-tittle-detail ">
+        <ColorSwatch color={proceso.color} colorHex={proceso.colorHex} />
+        <div className="cofre-datos">
           <h2 className="tittle-detail-process">Cofre {proceso.codigoCofre}</h2>
-        </div>
-        <div className="proceso-detail-badge">
-          <p>
-            {proceso.referenciaNombre} - {proceso.referenciaCodigoNombre}{" "}
-          </p>
-          <span className={`badge ${estadoClase}`}>{proceso.estado}</span>
-        </div>
-
-        <div className="info-header">
-          <Icon name="Calendar" size={18} />
-          <span>Inicio: {formatearFecha(fase?.fechaInicio)}</span>
+          {proceso.color && (
+            <span className="cofre-color-nombre">{proceso.color}</span>
+          )}
+          <span className="cofre-referencia">
+            {proceso.referenciaNombre} · {proceso.referenciaCodigoNombre}
+          </span>
         </div>
       </div>
 
-      <div className="divider" />
-
-      {/* BODY */}
-
+      {/* BODY: ¿qué toca hacer? fase + quién + desde cuándo, todo en un bloque */}
       <div className="proceso-detail-body">
-        {/* Bloque de estado — lo más importante, grande y con color */}
-        <div className={`estado-bloque ${colorTitulo}`}>
-          <div className="estado-dot" />
-          <div className="estado-texto">
+        <section className={`estado-bloque ${colorTitulo}`}>
+          <div className="estado-cabecera">
+            <span className="estado-dot" />
             <span className="estado-etiqueta">{renderEtiquetaLabel()}</span>
-            <span className="estado-valor">
-              {subprocesoActual?.cargoNombre ||
-                fase?.siguienteCargoNombre ||
-                "Sin asignar"}
-            </span>
           </div>
-        </div>
 
-        <div className="info-line">
-          <Icon name="User" size={20} />
-          <span className="info-proceso">
-            {subprocesoActual?.trabajadorNombreCompleto || "Sin asignar"}
-          </span>
-        </div>
+          <span className="estado-valor">{nombreFase}</span>
 
-        <div className="info-line">
-          <Icon name="Clock" size={18} />
-          <span className="info-proceso">
-            {calcularDuracion(subprocesoActual?.fechaInicio) || "Sin iniciar"}
-          </span>
-        </div>
+          <div className="estado-detalles">
+            <div className="info-line">
+              {nombreTrabajador ? (
+                <span className="avatar-trabajador" aria-hidden="true">
+                  {obtenerIniciales(nombreTrabajador)}
+                </span>
+              ) : (
+                <span className="avatar-trabajador vacio" aria-hidden="true" />
+              )}
+              <span
+                className={`info-proceso ${
+                  nombreTrabajador ? "con-trabajador" : "sin-asignar"
+                }`}
+              >
+                {nombreTrabajador || "Sin asignar"}
+              </span>
+            </div>
+
+            <div className="info-line">
+              <span className="info-icono">
+                <Icon name="Clock" size={20} />
+              </span>
+              <span className="info-proceso">{textoTiempo}</span>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <div className="divider" />
-
-      {/* FOOTER */}
-
+      {/* FOOTER: botón grande con el nombre de la fase */}
       <div className="proceso-detail-footer">{renderFooterContent()}</div>
     </div>
   );
@@ -146,6 +149,8 @@ ProcesoDetail.propTypes = {
     estado: PropTypes.string,
     referenciaNombre: PropTypes.string,
     referenciaCodigoNombre: PropTypes.string,
+    color: PropTypes.string,
+    colorHex: PropTypes.string,
   }),
   colorTitulo: PropTypes.string,
   fase: PropTypes.shape({
