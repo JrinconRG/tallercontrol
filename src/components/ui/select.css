@@ -53,7 +53,7 @@
 
 .select-filter:focus {
   outline: none;
-  border-color: var(--primary-color, #3b82f6);
+  border-color: var(--action-primary);
 }
 
 .select-icon {
@@ -69,6 +69,22 @@
   min-width: 14px;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+/* Avatar con iniciales (opción `iniciales`) */
+.select-avatar {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  font-size: var(--font-caption);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -121,4 +137,44 @@
 
 .select-option--empty:hover {
   background-color: transparent;
+}
+
+/* ── Variante grande (size="lg"): ancho completo, pensada para modales ── */
+.select-wrapper--lg {
+  max-width: none;
+  height: 52px;
+}
+
+.select-wrapper--lg .select-filter {
+  font-size: var(--font-body);
+  border-width: 1.5px;
+  border-radius: var(--radius-md);
+  padding-left: 12px;
+}
+
+/* Abierto o con foco: borde de acción + halo suave */
+.select-wrapper--lg .select-filter[aria-expanded="true"],
+.select-wrapper--lg .select-filter:focus-visible {
+  border-color: var(--action-primary);
+  box-shadow: 0 0 0 3px var(--brand-200);
+}
+
+.select-wrapper--lg .select-options {
+  border-radius: var(--radius-md);
+  padding: 6px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+}
+
+.select-wrapper--lg .select-option {
+  min-height: 48px;
+  padding: 8px 10px;
+  gap: 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-body);
+  font-weight: 600;
+}
+
+.select-wrapper--lg .select-option:hover,
+.select-wrapper--lg .select-option--selected {
+  background-color: var(--brand-50);
 }

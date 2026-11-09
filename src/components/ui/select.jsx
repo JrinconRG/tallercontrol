@@ -10,6 +10,7 @@ export default function Select({
   onChange,
   options = [],
   placeholder = "Seleccionar...",
+  size = "md",
 }) {
   const [open, setOpen] = useState(false);
   const [direction, setDirection] = useState("down");
@@ -23,6 +24,7 @@ export default function Select({
         : `fallback-${index}`,
     label: opt?.label ?? "Sin nombre",
     color: opt?.color, // opcional: hex del color (ej. "#3b82f6")
+    iniciales: opt?.iniciales, // opcional: iniciales para el avatar (ej. "FT")
   }));
 
   const seleccionada = safeOptions.find((opt) => opt.value == value);
@@ -76,7 +78,10 @@ export default function Select({
   }
 
   return (
-    <div className="select-wrapper" ref={wrapperRef}>
+    <div
+      className={`select-wrapper${size === "lg" ? " select-wrapper--lg" : ""}`}
+      ref={wrapperRef}
+    >
       <button
         id={id}
         type="button"
@@ -91,6 +96,11 @@ export default function Select({
               className="select-swatch"
               style={{ backgroundColor: seleccionada.color }}
             />
+          )}
+          {seleccionada?.iniciales && (
+            <span className="select-avatar" aria-hidden="true">
+              {seleccionada.iniciales}
+            </span>
           )}
           <span className={seleccionada ? "" : "select-placeholder"}>
             {seleccionada ? seleccionada.label : placeholder}
@@ -125,6 +135,11 @@ export default function Select({
                   style={{ backgroundColor: opt.color }}
                 />
               )}
+              {opt.iniciales && (
+                <span className="select-avatar" aria-hidden="true">
+                  {opt.iniciales}
+                </span>
+              )}
               <span>{opt.label}</span>
             </li>
           ))}
@@ -135,6 +150,7 @@ export default function Select({
 }
 
 Select.propTypes = {
+  id: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   options: PropTypes.arrayOf(
@@ -142,7 +158,9 @@ Select.propTypes = {
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       label: PropTypes.string,
       color: PropTypes.string,
+      iniciales: PropTypes.string,
     }),
   ),
   placeholder: PropTypes.string,
+  size: PropTypes.oneOf(["md", "lg"]),
 };
