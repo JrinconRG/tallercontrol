@@ -10,7 +10,19 @@ import PropTypes from "prop-types";
 import Toast from "../components/Toast/Toast";
 
 const ToastContext = createContext(null);
-const DEFAULT_DURATION = 6000;
+// ── Duraciones (ms) ──
+const DURACION_NORMAL = 6000; // escritorio
+const DURACION_TABLET = 9000; // size: "large" → flujos del trabajador en tablet
+// Los errores NO se cierran solos: el trabajador debe poder leerlos con calma.
+const MAX_VISIBLES = 3;
+// duration: undefined → automática · null o negativo → no se cierra solo
+function resolverDuracion({ type, size, duration }) {
+  if (duration !== undefined) {
+    return duration === null || duration < 0 ? null : duration;
+  }
+  if (type === "error") return null;
+  return size === "large" ? DURACION_TABLET : DURACION_NORMAL;
+}
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
@@ -18,34 +30,52 @@ export function ToastProvider({ children }) {
     (id) => setToasts((current) => current.filter((toast) => toast.id !== id)),
     [],
   );
+
   const showToast = useCallback(
-    ({
-      title,
-      message,
-      type = "success",
-      size = "default",
-      duration = DEFAULT_DURATION,
-    }) => {
+    ({ title, message, type = "success", size = "default", duration }) => {
       const id = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
-      setToasts((current) => [...current, { id, title, message, type, size }]);
-      if (duration >= 0) window.setTimeout(() => dismissToast(id), duration);
+      const nuevo = {
+        id,
+        title,
+        message,
+        type,
+        size,
+        duration: resolverDuracion({ type, size, duration }),
+      };
+      setToasts((current) => {
+        // Evita duplicados por doble toque: mismo tipo, título y mensaje
+        const repetido = current.some(
+          (t) => t.type === type && t.title === title && t.message === message,
+        );
+        if (repetido) return current;
+        // Máximo 3 a la vez: si llega uno más, sale el más antiguo
+        return [...current, nuevo].slice(-MAX_VISIBLES);
+      });
       return id;
     },
-    [dismissToast],
+    [],
+  );
+  // `options` es opcional: { size: "large", duration: 12000 }
+  const showSuccess = useCallback(
+    (title, message, options) =>
+      showToast({ title, message, type: "success", ...options }),
+    [showToast],
+  );
+  const showError = useCallback(
+    (title, message, options) =>
+      showToast({ title, message, type: "error", ...options }),
+    [showToast],
+  );
+  const showInfo = useCallback(
+    (title, message, options) =>
+      showToast({ title, message, type: "info", ...options }),
+    [showToast],
   );
   const value = useMemo(
-    () => ({
-      toasts,
-      showToast,
-      showSuccess: (title, message) =>
-        showToast({ title, message, type: "success" }),
-      showError: (title, message) =>
-        showToast({ title, message, type: "error" }),
-      showInfo: (title, message) => showToast({ title, message, type: "info" }),
-      dismissToast,
-    }),
-    [dismissToast, showToast, toasts],
+    () => ({ showToast, showSuccess, showError, showInfo, dismissToast }),
+    [showToast, showSuccess, showError, showInfo, dismissToast],
   );
+
   return createElement(
     ToastContext.Provider,
     { value },

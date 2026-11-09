@@ -1,184 +1,138 @@
+// src/components/Toast/Toast.jsx
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
+import "./Toast.css";
 
-const palettes = {
-  success: {
-    background: "#f0faf5",
-    border: "#6fcf97",
-    color: "#1a7a4a",
-  },
+const CHECK = <path d="M5 12.5l4.5 4.5L19 7.5" />;
 
-  error: {
-    background: "#fff0f0",
-    border: "#ffb3b3",
-    color: "#cc0000",
-  },
-
-  info: {
-    background: "#eff6ff",
-    border: "#93c5fd",
-    color: "#1d4ed8",
-  },
-
-  created: {
-    background: "#f5f3ff",
-    border: "#c4b5fd",
-    color: "#6d28d9",
-  },
-
-  started: {
-    background: "#eff6ff",
-    border: "#60a5fa",
-    color: "#1d4ed8",
-  },
-
-  completed: {
-    background: "#ecfdf5",
-    border: "#34d399",
-    color: "#047857",
-  },
+// Un glifo por tipo (se dibuja en blanco dentro del círculo de color)
+const ICONOS = {
+  success: CHECK,
+  completed: CHECK,
+  error: (
+    <>
+      <path d="M12 6.5v7" />
+      <path d="M12 17.5h.01" />
+    </>
+  ),
+  info: (
+    <>
+      <path d="M12 11v6" />
+      <path d="M12 7.5h.01" />
+    </>
+  ),
+  created: <path d="M12 5v14M5 12h14" />,
+  started: <path d="M5 12h14M13 6l6 6-6 6" />,
 };
 
-const actionIcons = {
-  created: "+",
-  started: "→",
-  completed: "✓",
-};
+function ToastItem({ toast, onDismiss }) {
+  const { id, type, title, message, size, duration } = toast;
+  const tipo = ICONOS[type] ? type : "info";
+  const seCierraSolo = Number.isFinite(duration);
+
+  // Con el dedo o el mouse encima (o el foco en la X), el tiempo se pausa
+  const [pausado, setPausado] = useState(false);
+  const restante = useRef(duration);
+
+  useEffect(() => {
+    if (!seCierraSolo || pausado) return undefined;
+    const inicio = Date.now();
+    const timer = setTimeout(() => onDismiss(id), restante.current);
+    return () => {
+      clearTimeout(timer);
+      restante.current -= Date.now() - inicio;
+    };
+  }, [pausado, seCierraSolo, id, onDismiss]);
+
+  return (
+    <output
+      className={`toast toast--${tipo} toast--${size}`}
+      role={tipo === "error" ? "alert" : "status"}
+      onPointerEnter={() => setPausado(true)}
+      onPointerLeave={() => setPausado(false)}
+      onFocus={() => setPausado(true)}
+      onBlur={() => setPausado(false)}
+    >
+      <span className="toast-icon" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {ICONOS[tipo]}
+        </svg>
+      </span>
+
+      <div className="toast-body">
+        {title && <strong className="toast-title">{title}</strong>}
+        {message && <p className="toast-message">{message}</p>}
+      </div>
+
+      <button
+        type="button"
+        className="toast-close"
+        aria-label="Cerrar notificación"
+        onClick={() => onDismiss(id)}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+
+      {seCierraSolo && (
+        <span className="toast-timer" aria-hidden="true">
+          <span
+            className="toast-timer-bar"
+            style={{
+              animationDuration: `${duration}ms`,
+              animationPlayState: pausado ? "paused" : "running",
+            }}
+          />
+        </span>
+      )}
+    </output>
+  );
+}
 
 export default function Toast({ toasts, onDismiss }) {
   if (!toasts.length) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "20px",
-        right: "20px",
-        zIndex: 9999,
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-
-        // Ancho máximo para los toast grandes
-        width: "700px",
-        maxWidth: "calc(100vw - 40px)",
-      }}
-    >
-      {toasts.map((t) => {
-        const palette = palettes[t.type] ?? palettes.info;
-        const isLarge = t.size === "large";
-
-        return (
-          <div
-            key={t.id}
-            style={{
-              // Los grandes ocupan todo el ancho disponible
-              width: isLarge ? "100%" : "auto",
-              maxWidth: "100%",
-
-              // Menos padding vertical para que sea más horizontal
-              padding: isLarge ? "16px 24px" : "12px 18px",
-
-              borderRadius: "var(--radius-md)",
-
-              fontSize: isLarge ? "var(--font-heading)" : "var(--font-small)",
-
-              fontWeight: "500",
-
-              boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
-
-              animation: "slideIn 0.2s ease",
-
-              backgroundColor: palette.background,
-
-              border: `1px solid ${palette.border}`,
-
-              color: palette.color,
-
-              display: "flex",
-
-              alignItems: "center",
-
-              // Más separación horizontal en los grandes
-              gap: isLarge ? "14px" : "8px",
-
-              boxSizing: "border-box",
-            }}
-          >
-            {/* Icono principal */}
-            <span
-              style={{
-                fontSize: isLarge ? "28px" : "var(--font-body)",
-                display: actionIcons[t.type] ? "none" : undefined,
-                flexShrink: 0,
-              }}
-            >
-              {t.type === "success" ? "✓" : "✕"}
-            </span>
-
-            {/* Iconos de acciones */}
-            {actionIcons[t.type] && (
-              <span
-                aria-hidden="true"
-                style={{
-                  fontSize: isLarge ? "28px" : "var(--font-title)",
-                  fontWeight: 700,
-                  flexShrink: 0,
-                }}
-              >
-                {actionIcons[t.type]}
-              </span>
-            )}
-
-            {/* Contenido */}
-            <div
-              style={{
-                flex: 1,
-                minWidth: 0,
-              }}
-            >
-              {t.title && (
-                <strong
-                  style={{
-                    display: "block",
-
-                    fontSize: isLarge ? "var(--font-heading)" : undefined,
-
-                    marginBottom: isLarge ? "4px" : 0,
-                  }}
-                >
-                  {t.title}
-                </strong>
-              )}
-
-              {t.message}
-            </div>
-
-            {/* Botón cerrar */}
-            <button
-              type="button"
-              aria-label="Cerrar notificación"
-              onClick={() => onDismiss(t.id)}
-              style={{
-                border: 0,
-                background: "transparent",
-                color: "inherit",
-                cursor: "pointer",
-                fontSize: "var(--font-title)",
-                lineHeight: 1,
-                padding: 0,
-                flexShrink: 0,
-              }}
-            >
-              ×
-            </button>
-          </div>
-        );
-      })}
+    <div className="toast-stack">
+      {toasts.map((t) => (
+        <ToastItem key={t.id} toast={t} onDismiss={onDismiss} />
+      ))}
     </div>
   );
 }
 
+const toastShape = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  title: PropTypes.string,
+  message: PropTypes.string,
+  size: PropTypes.string,
+  // null = no se cierra solo
+  duration: PropTypes.number,
+});
+
+ToastItem.propTypes = {
+  toast: toastShape.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+};
+
 Toast.propTypes = {
-  toasts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toasts: PropTypes.arrayOf(toastShape).isRequired,
   onDismiss: PropTypes.func.isRequired,
 };
