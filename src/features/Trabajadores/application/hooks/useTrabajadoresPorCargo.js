@@ -1,12 +1,13 @@
 import { trabajadorRepository } from "../../infrastructure/trabajadorRepository";
 import { useQuery } from "@tanstack/react-query";
 
-export const useTrabajadoresPorCargo = (cargoId) => {
+export const useTrabajadoresPorCargo = (cargoId, referenciaId) => {
   const query = useQuery({
-    queryKey: ["trabajadores-por-cargo", cargoId],
-    queryFn: () => trabajadorRepository.getTrabajadoresPorCargo(cargoId),
-    enabled: !!cargoId, // solo ejecuta si cargoId es válido
-    staleTime: 5 * 60 * 1000, // 5 minutos
+    queryKey: ["trabajadores-por-cargo", cargoId, referenciaId],
+    queryFn: () =>
+      trabajadorRepository.getTrabajadoresPorCargo(cargoId, referenciaId),
+    enabled: !!cargoId && !!referenciaId,
+    staleTime: 30 * 1000, // 30 segundos
     gcTime: 10 * 60 * 1000, // 10 minutos
     refetchOnWindowFocus: false,
   });

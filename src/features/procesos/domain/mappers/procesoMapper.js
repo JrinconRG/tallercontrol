@@ -13,6 +13,7 @@ export const procesoMapper = (row) => {
     referenciaNombre: row.rc_nombre,
     totalFases: row.total_a_realizar,
     fasesCompletadas: row.total_finalizadas,
-    color: row.color,
+    color: row.color_nombre,
+    colorHex: row.color_hex,
   });
 };

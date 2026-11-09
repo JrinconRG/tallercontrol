@@ -15,11 +15,12 @@ import { mapSupabaseError } from "../../../shared/errors/mapSupabaseError";
 import { trabajadoresErrorMap } from "./errors/trabajadoresErrorMap";
 
 export const trabajadorRepository = {
-  async getTrabajadoresPorCargo(cargoId) {
+  async getTrabajadoresPorCargo(cargoId, referenciaId) {
     try {
-      const data = await obtenerTrabajadoresPorCargo(cargoId);
+      const data = await obtenerTrabajadoresPorCargo(cargoId, referenciaId);
       return (data || []).map(trabajadorPorCargoMapper);
     } catch (error) {
+      console.error("getTrabajadoresPorCargo:", error);
       throw mapSupabaseError(error, trabajadoresErrorMap);
     }
   },

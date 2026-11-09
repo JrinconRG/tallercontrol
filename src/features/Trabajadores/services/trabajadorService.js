@@ -1,14 +1,18 @@
 import { supabase } from "../../../lib/supabase";
 
-export async function obtenerTrabajadoresPorCargo(cargoId) {
+export async function obtenerTrabajadoresPorCargo(cargoId, referenciaId) {
   if (!cargoId) {
     throw new Error("cargoId es requerido");
   }
+  if (!referenciaId) throw new Error("referenciaId es requerido");
 
   const { data, error } = await supabase
-    .from("vw_trabajadores_por_cargo")
-    .select("*")
-    .eq("cargo_id", cargoId);
+    .from("vw_trabajadores_por_cargo_referencia")
+    .select("cargo_id, t_id, t_nombre, t_apellidos, referencia_id")
+    .eq("cargo_id", cargoId)
+    .eq("referencia_id", referenciaId)
+    .order("t_nombre", { ascending: true })
+    .order("t_apellidos", { ascending: true });
 
   if (error) {
     throw error;

@@ -6,5 +6,6 @@ export const trabajadorPorCargoMapper = (row) => {
     nombre: row.t_nombre,
     apellidos: row.t_apellidos,
     cargoId: row.cargo_id,
+    referenciaId: row.referencia_id,
   });
 };

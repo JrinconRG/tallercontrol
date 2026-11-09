@@ -1,5 +1,10 @@
 import { useState } from "react";
 import Modal from "../../../../components/modal/Modal";
+import Select from "../../../../components/ui/select";
+import CofreResumen from "./CofreResumen";
+import FaseResumen from "./FaseResumen";
+import { obtenerIniciales } from "../../../../utils/ObtenerIniciales";
+
 import { useTrabajadoresPorCargo } from "../../../Trabajadores/application/hooks/useTrabajadoresPorCargo";
 import { useCrearSubproceso } from "../../../subProcesos/application/hooks/useCrearSubProceso";
 import PropTypes from "prop-types";
@@ -9,39 +14,42 @@ import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage
 export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
   const [trabajadorId, setTrabajadorId] = useState("");
   const { proceso, fase } = contexto;
-  console.log("Contexto recibido en CrearSubproceso:", contexto); // Agrega este log para verificar el contexto recibido
   const [errorValidacion, setErrorValidacion] = useState("");
   const { showError } = useToast();
-  // funcion para limpiar el error si se selecciona
+  console.log("proceso", proceso);
 
-  const handleSelectChange = (e) => {
-    setTrabajadorId(e.target.value);
-    if (e.target.value) setErrorValidacion("");
+  // El Select compartido entrega el valor directamente (no un evento)
+  const handleTrabajadorChange = (valor) => {
+    setTrabajadorId(valor);
+    if (valor) setErrorValidacion("");
   };
 
-  //hook para obtener trabajadores por cargo
+  //hook para obtener trabajadores por cargo y precio vigente
   const {
     trabajadoresPorCargo,
     loading: loadingTrabajadores,
     errorMessage: errorTrabajadores,
-  } = useTrabajadoresPorCargo(fase?.siguienteCargoId);
+  } = useTrabajadoresPorCargo(fase?.siguienteCargoId, proceso?.referenciaId);
+
+  const opcionesTrabajadores = (trabajadoresPorCargo ?? []).map((t) => {
+    const nombreCompleto = `${t.nombre} ${t.apellidos}`.trim();
+    return {
+      value: t.id,
+      label: nombreCompleto,
+      iniciales: obtenerIniciales(nombreCompleto),
+    };
+  });
+  const trabajadorValido = opcionesTrabajadores.some(
+    (t) => t.value === trabajadorId,
+  );
 
   //hook para crear subproceso
   const crearSubprocesoMutation = useCrearSubproceso();
 
   async function handleConfirmar() {
-    if (!trabajadorId) {
-      setErrorValidacion(
-        "Por favor, selecciona una referencia de trabajador para continuar.",
-      );
-      return;
-    }
-
-    // ✅ 1. Verifica qué estás enviando al backend
-    console.log("📤 Payload enviado:", {
-      cargoId: fase.siguienteCargoId,
-      trabajadorId,
-    });
+    // El botón ya está deshabilitado sin trabajador; esto es solo respaldo
+    if (!trabajadorId) return;
+    if (!trabajadorValido) return;
 
     crearSubprocesoMutation.mutate(
       {
@@ -51,9 +59,6 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
       },
       {
         onSuccess: (resultado) => {
-          // ✅ 2. Verifica qué devuelve el backend
-          console.log("✅ Resultado del backend:", resultado);
-
           if (!resultado) {
             setErrorValidacion("No se pudo crear el subproceso.");
             return;
@@ -73,7 +78,9 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
           onClose();
         },
         onError: (err) => {
-          showError("No se pudo iniciar la fase", getAppErrorMessage(err));
+          showError("No se pudo iniciar la fase", getAppErrorMessage(err), {
+            size: "large",
+          });
         },
       },
     );
@@ -85,24 +92,26 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
     if (errorTrabajadores) {
       return <p style={{ color: "red" }}>Error: {errorTrabajadores}</p>;
     }
-
+    if (opcionesTrabajadores.length === 0) {
+      return (
+        <p>
+          Ningún trabajador tiene precio vigente para{" "}
+          <strong>{fase.siguienteCargoNombre}</strong> en la referencia{" "}
+          <strong>{proceso.referenciaNombre}</strong>. Revisa la configuración
+          de precios.
+        </p>
+      );
+    }
     return (
       <>
-        <select
+        <Select
           id="referencia-select-trabajador"
+          size="lg"
           value={trabajadorId}
-          onChange={handleSelectChange}
-          disabled={isPending}
-          className={errorValidacion ? "input-error" : ""}
-          style={{ borderColor: errorValidacion ? "red" : "" }}
-        >
-          <option value="">Seleccione un trabajador</option>
-          {trabajadoresPorCargo.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.nombre} {t.apellidos}
-            </option>
-          ))}
-        </select>
+          onChange={handleTrabajadorChange}
+          placeholder="Selecciona un trabajador"
+          options={opcionesTrabajadores}
+        />
         {errorValidacion && (
           <span
             style={{
@@ -121,30 +130,45 @@ export default function CrearSubproceso({ contexto, onClose, onSuccess }) {
   return (
     <Modal
       isOpen={true}
-      title={`Iniciar fase ${fase.siguienteFaseOrden} - ${fase.siguienteCargoNombre}`}
+      title={`Iniciar ${fase.siguienteCargoNombre}`}
+      subtitle={`Fase ${fase.siguienteFaseOrden}`}
       confirmText="Iniciar fase"
       onConfirm={handleConfirmar}
       onClose={onClose}
-      disabled={isPending}
+      loading={isPending}
+      disableConfirm={!trabajadorValido}
     >
-      <p>
-        Proceso: <strong>{proceso.codigoCofre}</strong>
-      </p>
-      <p>
-        Fase: <strong>{fase.siguienteCargoNombre}</strong>
-      </p>
-      <label htmlFor="referencia-select-trabajador">Trabajador asignado</label>
-      {renderTrabajadoresContent()}
+      <CofreResumen
+        codigo={proceso.codigoCofre}
+        color={proceso.color}
+        colorHex={proceso.colorHex}
+        referencia={proceso.referenciaNombre}
+        referenciaCodigo={proceso.referenciaCodigoNombre}
+      />
+
+      <FaseResumen nombre={String(fase.siguienteCargoNombre)} />
+
+      <div className="form-group">
+        <label htmlFor="referencia-select-trabajador">
+          Trabajador asignado
+        </label>
+        {renderTrabajadoresContent()}
+      </div>
     </Modal>
   );
 }
 CrearSubproceso.propTypes = {
   contexto: PropTypes.shape({
     proceso: PropTypes.shape({
+      referenciaId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       codigoCofre: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
         .isRequired,
       referenciaNombre: PropTypes.string.isRequired,
+      referenciaCodigoNombre: PropTypes.string,
+      color: PropTypes.string,
+      colorHex: PropTypes.string,
     }).isRequired,
     fase: PropTypes.shape({
       siguienteCargoId: PropTypes.oneOfType([
