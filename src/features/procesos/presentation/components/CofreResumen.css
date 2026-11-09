@@ -1,0 +1,35 @@
+.cofre-resumen {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  background-color: var(--neutral-50);
+}
+
+.cofre-resumen-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cofre-resumen-codigo {
+  font-size: var(--font-title);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.cofre-resumen-color {
+  font-size: var(--font-subtitle);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cofre-resumen-ref {
+  font-size: var(--font-small);
+  font-weight: 500;
+  color: var(--text-muted);
+}

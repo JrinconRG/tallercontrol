@@ -47,9 +47,10 @@
 }
 
 /* ── Grid de cards ── */
+/* min(100%, 340px): en pantallas más angostas que la card ya no se desborda */
 .grid-procesos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   gap: 16px;
 }
 
@@ -69,16 +70,20 @@
   overflow: hidden;
 }
 
-.card-proceso:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+/* Hover solo en dispositivos con mouse: en tablet/celular se quedaba
+   "pegado" después de tocar la card. */
+@media (hover: hover) {
+  .card-proceso:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
 }
 
 /* Colores del borde izquierdo según estado.
    Estas clases las aplica renderProcesos() via className={"card-proceso"} +
    el estado se pasa como colorTitulo — ver nota en ProcesoDetail.jsx */
 .card-proceso.enProceso    { border-left-color: var(--danger-500) !important; }
-.card-proceso.porIniciar   { border-left-color: var(--success-500) !important; }
+.card-proceso.porIniciar   { border-left-color: var(--brand-500) !important; }
 .card-proceso.siguientFase { border-left-color: var(--brand-500) !important; }
 
 .seccion-mensaje{
@@ -87,7 +92,7 @@
   background: var(--info--100);
   padding: 16px 20px;
   border: 1px solid var(--info--300);    /* borde suave */
-  border-radius: var(--radius-md);  
+  border-radius: var(--radius-md);
 
   display: flex;
   align-items: center;
@@ -98,13 +103,13 @@
   transition: opacity 0.4s ease, transform 0.4s ease;
 
 
-  
+
 }
 .mensaje-confirmacion{
 
   font-size: var(--font-title);
- 
-  margin: 0; 
+
+  margin: 0;
 }
 
 
@@ -117,4 +122,3 @@
   opacity: 0;
   transform: translateY(-10px);
 }
-

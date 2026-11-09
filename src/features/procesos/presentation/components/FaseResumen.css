@@ -1,0 +1,38 @@
+.fase-resumen {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--brand-200);
+  border-radius: var(--radius-md);
+  background-color: var(--brand-50);
+}
+
+.fase-resumen-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fase-resumen-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--action-primary);
+  flex-shrink: 0;
+}
+
+.fase-resumen-etiqueta {
+  font-size: var(--font-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--brand-700);
+}
+
+.fase-resumen-nombre {
+  font-size: var(--font-title);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+}

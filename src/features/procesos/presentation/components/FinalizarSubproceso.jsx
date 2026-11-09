@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Modal from "../../../../components/modal/Modal.jsx";
+import CofreResumen from "./CofreResumen";
+import FaseResumen from "./FaseResumen";
 import { subirEvidencia } from "../../../../services/storage.js";
 import { useFinalizarSubProceso } from "../../../../features/subProcesos/application/hooks/useFinalizarSubProceso.js";
 import { Icon } from "../../../../components/ui/Icon.jsx";
@@ -13,14 +15,26 @@ export default function FinalizarSubproceso({
   onSuccess,
 }) {
   const [file, setFile] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
   const { showError } = useToast();
-  console.log("Subproceso recibido en modal:", subproceso); // Debug: Verificar datos del subproceso
 
-  // limpiar error cuando el usuario selecciono
-  const handleSelectChange = (e) => {
-    setFile(e.target.files[0]);
-    if (e.target.files[0]) setErrorMsg("");
+  // `subproceso` llega como { subproceso, proceso }.
+  // `proceso` es opcional: con él se muestra el color del cofre.
+  const { subproceso: sub, proceso } = subproceso;
+
+  // Vista previa: se crea una sola vez por foto y se libera al cambiarla
+  // o al cerrar el modal (antes se creaba una URL nueva en cada render).
+  const previewUrl = useMemo(
+    () => (file ? URL.createObjectURL(file) : null),
+    [file],
+  );
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0] ?? null);
   };
 
   // llamar hook para finalizar subproceso
@@ -28,30 +42,26 @@ export default function FinalizarSubproceso({
     useFinalizarSubProceso();
 
   async function handleConfirmar() {
-    if (!file) {
-      setErrorMsg("Por favor, selecciona una foto de evidencia.");
-      return;
-    }
+    // El botón ya está deshabilitado sin foto; esto es solo respaldo
+    if (!file) return;
 
     try {
-      setErrorMsg("");
-
       //SUBIR IMAGEN
 
-      const evidenciaPath = `cofre_${subproceso.subproceso.rc_nombre}/proceso_${subproceso.subproceso.id_nombre_proceso}/subproceso_${subproceso.subproceso.nombre_fase}_ID_${subproceso.subproceso.id}.jpg`;
+      const evidenciaPath = `cofre_${sub.rc_nombre}/proceso_${sub.id_nombre_proceso}/subproceso_${sub.nombre_fase}_ID_${sub.id}.jpg`;
 
       await subirEvidencia(file, evidenciaPath);
       const dataParaBackend = {
         p_foto_path: evidenciaPath,
-        p_sub_id_subproceso: subproceso.subproceso.id,
+        p_sub_id_subproceso: sub.id,
       };
       await finalizarSubprocesoMutate(dataParaBackend);
 
       await onSuccess({
-        tipo: subproceso.subproceso.esUltimaFase ? "finalizado" : "fase",
-        codigo: subproceso.subproceso.id_nombre_proceso,
-        nombre: subproceso.subproceso.rc_nombre,
-        fase: subproceso.subproceso.nombre_fase,
+        tipo: sub.esUltimaFase ? "finalizado" : "fase",
+        codigo: sub.id_nombre_proceso,
+        nombre: sub.rc_nombre,
+        fase: sub.nombre_fase,
       });
       onClose();
     } catch (error) {
@@ -62,51 +72,64 @@ export default function FinalizarSubproceso({
   return (
     <Modal
       isOpen
-      title="Finalizar fase"
-      confirmText="Finalizar"
+      title={`Finalizar ${sub.nombre_fase}`}
+      subtitle={
+        sub.esUltimaFase
+          ? "Última fase: el cofre quedará finalizado"
+          : undefined
+      }
+      confirmText="Finalizar fase"
       onConfirm={handleConfirmar}
       onClose={onClose}
       loading={isFinalizing}
+      disableConfirm={!file}
     >
-      <p>
-        <strong>Fase:</strong> {subproceso.subproceso.nombre_fase}
-      </p>
+      <CofreResumen
+        codigo={proceso?.codigoCofre ?? sub.id_nombre_proceso}
+        color={proceso?.color}
+        colorHex={proceso?.colorHex}
+        referencia={proceso?.referenciaNombre ?? sub.rc_nombre}
+        referenciaCodigo={proceso?.referenciaCodigoNombre}
+      />
 
-      <label htmlFor="evidencia">Subir evidencia (foto)</label>
-      {errorMsg && (
-        <p
-          style={{
-            color: "red",
-            fontSize: "var(--font-title)",
-            marginTop: "4px",
-          }}
-        >
-          {errorMsg}
-        </p>
-      )}
-      <div className="file-upload-container">
-        <label htmlFor="evidencia" className="file-upload-label">
-          <Icon name="Camera" size={24} />
-          <span>{file ? "Cambiar Foto" : "Tomar Foto de Evidencia"}</span>
-        </label>
-        <input
-          id="evidencia"
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={handleSelectChange}
-          className="file-input-hidden"
-        />
-        {file && (
-          <div className="image-preview-container">
-            <img
-              src={URL.createObjectURL(file)}
-              alt="Vista previa"
-              className="preview-image"
-            />
-            <p className="file-name-hint">{file.name}</p>
-          </div>
-        )}
+      <FaseResumen
+        etiqueta="Fase a finalizar"
+        nombre={sub.nombre_fase}
+        tono="enCurso"
+      />
+
+      <div className="form-group">
+        <label htmlFor="evidencia">Foto de evidencia</label>
+
+        <div className="file-upload-container">
+          <label htmlFor="evidencia" className="file-upload-label">
+            <Icon name="Camera" size={24} />
+            <span>{file ? "Cambiar foto" : "Tomar foto de evidencia"}</span>
+          </label>
+          <input
+            id="evidencia"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={handleFileChange}
+            className="file-input-hidden"
+          />
+          {!file && (
+            <p className="file-name-hint">
+              Obligatoria para finalizar la fase.
+            </p>
+          )}
+          {file && (
+            <div className="image-preview-container">
+              <img
+                src={previewUrl}
+                alt="Vista previa de la evidencia"
+                className="preview-image"
+              />
+              <p className="file-name-hint">{file.name}</p>
+            </div>
+          )}
+        </div>
       </div>
     </Modal>
   );
@@ -115,11 +138,19 @@ export default function FinalizarSubproceso({
 FinalizarSubproceso.propTypes = {
   subproceso: PropTypes.shape({
     subproceso: PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       rc_nombre: PropTypes.string,
       id_nombre_proceso: PropTypes.string,
       nombre_fase: PropTypes.string,
       sub_id_subproceso: PropTypes.string,
       esUltimaFase: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    }),
+    proceso: PropTypes.shape({
+      codigoCofre: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      referenciaNombre: PropTypes.string,
+      referenciaCodigoNombre: PropTypes.string,
+      color: PropTypes.string,
+      colorHex: PropTypes.string,
     }),
   }).isRequired,
   onClose: PropTypes.func.isRequired,
