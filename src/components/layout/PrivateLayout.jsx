@@ -5,22 +5,20 @@ import { useAuthStore } from "../../stores/authStore.js";
 import AccessibilityControl from "../accessibility/AccessibilityControl";
 
 export default function PrivateLayout() {
-    const { isAuthenticated, role } = useAuthStore();
-    if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
-      }
+  const { isAuthenticated, role } = useAuthStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
-      return (
-        <div className="app-layout">
-          <Sidebar role={role} />
-          <Header />
+  return (
+    <div className="app-layout" data-role={role}>
+      <Sidebar role={role} />
+      <Header />
 
-          <div className="main-content">
-            <Outlet />
-          </div>
-          <AccessibilityControl />
-        </div>
-      );
-    }
-    
-
+      <div className="main-content">
+        <Outlet />
+      </div>
+      <AccessibilityControl />
+    </div>
+  );
+}

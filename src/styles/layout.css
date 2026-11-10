@@ -55,3 +55,78 @@ html[data-text-scale="200"] .app-layout {
   .header { grid-column: auto; }
   .main-content { overflow-y: visible; }
 }
+
+
+
+/* ---------- TRABAJADOR · tablet horizontal: riel ---------- */
+@media (min-width: 48.01rem) and (max-width: 70rem) {
+  .app-layout[data-role="trabajador"] .sidebar-logo {
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  overflow: hidden;
+}
+  .app-layout[data-role="trabajador"] {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    grid-template-rows: 4.375rem 1fr;
+    height: 100vh;
+    min-height: 0;
+  }
+  .app-layout[data-role="trabajador"] .sidebar { grid-row: 1 / span 2; padding: 16px 8px; gap: 20px; }
+  .app-layout[data-role="trabajador"] .header { grid-column: 2; }
+  .app-layout[data-role="trabajador"] .main-content { overflow-y: auto; }
+
+  .app-layout[data-role="trabajador"] .sidebar-item { padding: 12px 4px; min-height: 4.5rem; }
+  .app-layout[data-role="trabajador"] .sidebar-conjunto {
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  .app-layout[data-role="trabajador"] .sidebar-item-label {
+    font-size: 0.8125rem;
+    text-align: center;
+  }
+}
+
+/* ---------- TRABAJADOR · tablet vertical / celular: barra inferior ---------- */
+@media (max-width: 48rem) {
+  .app-layout[data-role="trabajador"] .header-logo { display: block; }
+
+/* Para que quepa junto al botón en pantallas angostas, se oculta el saludo */
+.app-layout[data-role="trabajador"] .header-title { display: none; }
+  .app-layout[data-role="trabajador"] {
+    grid-template-columns: 1fr;
+    grid-template-rows: 4.375rem 1fr auto;
+    height: 100dvh;
+    min-height: 0;
+  }
+  .app-layout[data-role="trabajador"] .sidebar-logo  { display: none; }
+  .app-layout[data-role="trabajador"] .header { grid-row: 1; grid-column: 1; }
+  .app-layout[data-role="trabajador"] .main-content { grid-row: 2; overflow-y: auto; }
+  .app-layout[data-role="trabajador"] .sidebar {
+    grid-row: 3;
+    grid-column: 1;
+    flex-direction: row;
+    padding: 6px 8px;
+    border-right: 0;
+    border-top: 1px solid var(--bg-border);
+  }
+  .app-layout[data-role="trabajador"] .sidebar-menu {
+    flex-direction: row;
+    flex: 1;
+    justify-content: space-around;
+  }
+  .app-layout[data-role="trabajador"] .sidebar-item { min-height: 4rem; flex: 1; }
+  .app-layout[data-role="trabajador"] .sidebar-conjunto {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+  .app-layout[data-role="trabajador"] .sidebar-item-label { font-size: 0.8125rem; text-align: center; }
+}
+
+/* Si activan texto 150/200% desde tu control de accesibilidad, el riel se queda angosto */
+html[data-text-scale="150"] .app-layout[data-role="trabajador"],
+html[data-text-scale="200"] .app-layout[data-role="trabajador"] {
+  grid-template-columns: 8rem minmax(0, 1fr);
+}
+
