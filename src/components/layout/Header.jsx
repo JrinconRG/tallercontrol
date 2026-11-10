@@ -38,10 +38,14 @@ export default function Header() {
 
   return (
     <header className="header">
-      <div className="header-title">{titleByRole[role]}</div>
+      <div className="header-brand">
+        <span className="header-logo">SIGEC</span>
+
+        <div className="header-title">{titleByRole[role]}</div>
+      </div>
 
       <div className="header-actions">
-        <button className="btn btn-primary" onClick={handleLogout}>
+        <button className="btn btn-primary btn-logout " onClick={handleLogout}>
           Cerrar sesión
         </button>
 

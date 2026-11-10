@@ -6,7 +6,19 @@
   justify-content: space-between;
   border-bottom: 1px solid var(--bg-border);
 }
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
+.header-logo {
+  display: none;
+  font-family: var(--font-family-title);
+  font-weight: 700;
+  font-size: var(--font-title);
+  letter-spacing: 0.04em;
+}
 .header-title {
   font-family: var(--font-family-title);
   font-size: var(--font-title);
