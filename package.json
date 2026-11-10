@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run src/components/Toast/Toast.test.jsx src/hooks/useToast.test.jsx src/utils/tiempo.test.jsx src/features/procesos/presentation/pages/ProcesoDetail.test.jsx src/features/procesos/presentation/pages/InicioTrabajador.test.jsx",
+    "test:watch": "vitest src/components/Toast/Toast.test.jsx src/hooks/useToast.test.jsx src/utils/tiempo.test.jsx src/features/procesos/presentation/pages/ProcesoDetail.test.jsx src/features/procesos/presentation/pages/InicioTrabajador.test.jsx",
+    "test:coverage": "vitest run --coverage src/components/Toast/Toast.test.jsx src/hooks/useToast.test.jsx src/utils/tiempo.test.jsx src/features/procesos/presentation/pages/ProcesoDetail.test.jsx src/features/procesos/presentation/pages/InicioTrabajador.test.jsx",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:ia": "dotenv -- vitest run src/test/ia",

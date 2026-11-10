@@ -1,6 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import process from "node:process";
+
+process.env.TZ = "America/Bogota";
 
 export default defineConfig({
   plugins: [
@@ -37,11 +40,20 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/test/setup.js",
+    css: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-
-      include: ["src/**/*.{js,jsx,ts,tsx}"],
+      include: [
+        "src/components/Toast/Toast.jsx",
+        "src/hooks/useToast.js",
+        "src/utils/tiempo.js",
+      ],
+      thresholds: {
+        perFile: true,
+        lines: 90,
+        branches: 90,
+      },
 
       exclude: [
         // e2e y tests

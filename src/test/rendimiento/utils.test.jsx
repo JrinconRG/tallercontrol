@@ -253,6 +253,12 @@ describe("calcularDuracion › correctitud", () => {
     expect(sinZ).toBe(conZ);
   });
 
+  it("[COR-15] fecha timestamptz con offset → conserva la zona horaria", () => {
+    vi.setSystemTime(new Date("2024-06-15T10:45:00Z"));
+
+    expect(calcularDuracion("2024-06-15T12:00:00+02:00")).toBe("45 min");
+  });
+
   it('[COR-14] exactamente 60 minutos → "1h 0min" (no "60 min")', () => {
     // Arrange —
     vi.setSystemTime(new Date("2024-06-15T11:00:00Z"));
