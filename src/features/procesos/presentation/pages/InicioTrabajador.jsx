@@ -8,6 +8,7 @@ import CrearSubproceso from "../components/CrearSubproceso";
 import FinalizarSubproceso from "../components/FinalizarSubproceso";
 import FiltrosProcesos from "../components/FiltrosProcesos";
 import SeccionProcesos from "../components/SeccionProcesos";
+import { useSearchParams } from "react-router-dom";
 import "./InicioTrabajador.css";
 
 export default function InicioTrabajador() {
@@ -212,6 +213,17 @@ export default function InicioTrabajador() {
     });
   }
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("crear")) {
+      setModalCrearProceso(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete("crear");
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   const loading = loadingProcesos || loadingFases || loadingSubprocesos;
   if (loading) return <p>Cargando procesos…</p>;
 
@@ -224,7 +236,7 @@ export default function InicioTrabajador() {
         </div>
         <div className="trabajador-header-actions">
           <button
-            className="btn btn-primary"
+            className="btn btn-primary btn-crear-inline"
             onClick={() => setModalCrearProceso(true)}
           >
             Crear Proceso
