@@ -1,25 +1,38 @@
 import { useState } from "react";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import "../../styles/sidebar.css";
 import { Icon } from "../ui/Icon";
 import { menuSidebardByRole } from "./menuconfig";
 import { useAuthStore } from "../../stores/authStore.js";
+import { useToast } from "../../hooks/useToast";
+import { getAppErrorMessage } from "../../shared/errors/getAppErrorMessage";
 
 export default function Sidebar() {
-  const { role } = useAuthStore();
+  const { role, logout } = useAuthStore();
+  const { showError } = useToast();
+  const navigate = useNavigate();
+
   const location = useLocation();
   const menu = menuSidebardByRole[role] || [];
 
-  const grupoActivoInicial = menu.find(
-    (item) =>
-      item.children &&
-      item.children.some((child) => location.pathname.startsWith(child.path)),
+  const grupoActivoInicial = menu.find((item) =>
+    item.children?.some((child) => location.pathname.startsWith(child.path)),
   )?.label;
 
   const [openGroup, setOpenGroup] = useState(grupoActivoInicial || null);
 
   const toggleGroup = (label) => {
     setOpenGroup((prev) => (prev === label ? null : label));
+  };
+  const actions = {
+    crear: () => navigate("/trabajador/inicio?crear=1"),
+    logout: async () => {
+      try {
+        await logout();
+      } catch (error) {
+        showError("No se pudo cerrar la sesión", getAppErrorMessage(error));
+      }
+    },
   };
 
   return (
@@ -28,7 +41,26 @@ export default function Sidebar() {
 
       <nav className="sidebar-menu">
         {menu.map((item) => {
-          // Item simple, sin hijos -> link directo (tu comportamiento actual)
+          // Acción (Crear, Salir): botón, no ruta
+          if (item.type === "action") {
+            return (
+              <button
+                key={item.action}
+                type="button"
+                className={`sidebar-item sidebar-action ${
+                  item.variant === "primary" ? "sidebar-action--primary" : ""
+                } ${item.pushBottom ? "sidebar-action--end" : ""}`}
+                onClick={actions[item.action]}
+              >
+                <div className="sidebar-conjunto">
+                  <Icon name={item.icon} size={25} />
+                  <div className="sidebar-item-label">{item.label}</div>
+                </div>
+              </button>
+            );
+          }
+
+          // Item simple, sin hijos -> link directo
           if (!item.children) {
             return (
               <NavLink

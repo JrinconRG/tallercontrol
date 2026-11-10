@@ -2,6 +2,20 @@ export const menuSidebardByRole = {
   trabajador: [
     { label: "Inicio", icon: "Home", path: "/trabajador/inicio" },
     { label: "Historial", icon: "History", path: "/trabajador/historial" },
+    {
+      label: "Crear",
+      icon: "Plus",
+      type: "action",
+      action: "crear",
+      variant: "primary",
+    },
+    {
+      label: "Salir",
+      icon: "LogOut",
+      type: "action",
+      action: "logout",
+      pushBottom: true,
+    },
   ],
 
   gerente: [

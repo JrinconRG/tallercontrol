@@ -128,3 +128,40 @@
   background-color: var(--brand-100);
   font-weight: 600;
 }
+
+
+/* ---------- Acciones del sidebar (Crear, Salir) ---------- */
+.sidebar-action {
+  display: none;
+  background: none;
+  border: none;
+  font-family: inherit;
+  width: 100%;
+  cursor: pointer;
+}
+
+@media (max-width: 70rem) {
+  .sidebar-action { display: block; }
+
+  .sidebar-action--primary {
+    background-color: var(--brand-600);
+    color: #fff;
+  }
+  .sidebar-action--primary .sidebar-item-label { color: inherit; }
+
+  /* AJUSTE 1: tu :hover de .sidebar-item lo pintaría gris con texto blanco */
+  .sidebar-action--primary:hover {
+    background-color: var(--brand-700);
+  }
+
+  /* Esconde los botones duplicados del header y de la página */
+  .app-layout[data-role="trabajador"] .btn-logout,
+  .app-layout[data-role="trabajador"] .btn-crear-inline { display: none; }
+}
+
+/* Riel lateral: "Salir" abajo del todo */
+@media (min-width: 48.01rem) and (max-width: 70rem) {
+  /* AJUSTE 2: sin esto, margin-top:auto no tiene espacio que empujar */
+  .app-layout[data-role="trabajador"] .sidebar-menu { flex: 1; }
+  .sidebar-action--end { margin-top: auto; }
+}
