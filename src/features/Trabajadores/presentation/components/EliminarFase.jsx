@@ -2,28 +2,29 @@ import { useState } from "react";
 import { useDesignarCargos } from "../../application/hooks/useDesignarCargo";
 import "./EliminarFase.css";
 import PropTypes from "prop-types";
+import { useToast } from "../../../../hooks/useToast";
 import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
 
-export default function EliminarFase({ cargo, trabajadorId, colors, onToast }) {
+export default function EliminarFase({ cargo, trabajadorId, colors }) {
   const [confirmando, setConfirmando] = useState(false);
   const designarCargoMutation = useDesignarCargos();
+  const { showSuccess, showError } = useToast();
 
+  // mutateAsync + try/catch en vez de callbacks en mutate(): cuando la lista
+  // se refresca, este chip desaparece y los callbacks de mutate() pueden no
+  // ejecutarse (el toast no saldría). Así el aviso siempre se muestra.
   async function handleEliminar() {
-    designarCargoMutation.mutate(
-      { cargoId: cargo.id, trabajadorId: trabajadorId },
-      {
-        onSuccess: () => {
-          onToast({ message: `Fase "${cargo.nombre}" eliminada` });
-          setConfirmando(false);
-        },
-        onError: (error) => {
-          onToast({
-            message: getAppErrorMessage(error),
-          });
-        },
-      },
-    );
-    setConfirmando(false);
+    try {
+      await designarCargoMutation.mutateAsync({
+        cargoId: cargo.id,
+        trabajadorId: trabajadorId,
+      });
+      showSuccess("Fase eliminada", `Se quitó ${cargo.nombre} del empleado.`);
+    } catch (error) {
+      showError("No se pudo eliminar la fase", getAppErrorMessage(error));
+    } finally {
+      setConfirmando(false);
+    }
   }
 
   // Modo confirmacion
@@ -98,5 +99,4 @@ EliminarFase.propTypes = {
   cargo: PropTypes.object,
   trabajadorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   colors: PropTypes.object,
-  onToast: PropTypes.func,
 };

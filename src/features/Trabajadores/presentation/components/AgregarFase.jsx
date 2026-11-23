@@ -1,24 +1,24 @@
+import { useToast } from "../../../../hooks/useToast";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
+
 import { useState, useEffect, useRef } from "react";
 import { useAsignarCargo } from "../../application/hooks/useAsignarCargo";
 import { useCargos } from "../../../cargos/application/hooks/useCargos";
 import PropTypes from "prop-types";
 import "./AgregarFase.css";
 
-export default function AgregarFase({
-  trabajadorId,
-  cargosAsignados,
-  onToast,
-}) {
+export default function AgregarFase({ trabajadorId, cargosAsignados }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [seleccionados, setSeleccionados] = useState([]);
   const popoverRef = useRef(null);
+  const { showSuccess, showError } = useToast();
 
   //  Cargar cargos
   const { cargos, loading: loadingCargos } = useCargos();
   const asignarCargoMutation = useAsignarCargo();
 
-  // 🔹 Cerrar al hacer click afuera
+  //  Cerrar al hacer click afuera
   useEffect(() => {
     if (!open) return;
 
@@ -50,27 +50,45 @@ export default function AgregarFase({
     });
   };
 
-  // 🔹 Confirmar asignación
+  //  Confirmar asignación
   async function handleAsignar() {
-    await Promise.all(
-      seleccionados.map(
-        (cargo) =>
-          console.log(
-            "Asignando cargo",
-            cargo.id,
-            "a trabajador",
-            trabajadorId,
-          ) ||
-          asignarCargoMutation.mutateAsync(
-            { cargoId: cargo.id, trabajadorId: trabajadorId },
-            {
-              onSuccess: () => {
-                onToast({ message: `Fase "${cargo}" asignada` });
-              },
-            },
-          ),
+    const resultados = await Promise.allSettled(
+      seleccionados.map((cargo) =>
+        asignarCargoMutation.mutateAsync({
+          cargoId: cargo.id,
+          trabajadorId: trabajadorId,
+        }),
       ),
     );
+
+    const asignadas = seleccionados.filter(
+      (_, i) => resultados[i].status === "fulfilled",
+    );
+    const fallidas = seleccionados
+      .map((cargo, i) => ({ cargo, resultado: resultados[i] }))
+      .filter(({ resultado }) => resultado.status === "rejected");
+
+    if (asignadas.length > 0) {
+      showSuccess(
+        asignadas.length === 1 ? "Fase asignada" : "Fases asignadas",
+        asignadas.map((c) => c.nombre).join(", "),
+      );
+    }
+
+    if (fallidas.length > 0) {
+      showError(
+        fallidas.length === 1
+          ? "No se pudo asignar la fase"
+          : "No se pudieron asignar algunas fases",
+        `${fallidas.map(({ cargo }) => cargo.nombre).join(", ")}: ${getAppErrorMessage(
+          fallidas[0].resultado.reason,
+        )}`,
+      );
+      // Deja seleccionadas solo las que fallaron, para poder reintentar
+      setSeleccionados(fallidas.map(({ cargo }) => cargo));
+      return;
+    }
+
     cerrarPopover();
   }
 
@@ -119,8 +137,8 @@ export default function AgregarFase({
                 return (
                   <button
                     key={cargo.id}
-                    className={`popover-item 
-                      ${yaAsignado ? "popover-item--disabled" : ""} 
+                    className={`popover-item
+                      ${yaAsignado ? "popover-item--disabled" : ""}
                       ${seleccionado ? "popover-item--selected" : ""}
                     `}
                     onClick={() => !yaAsignado && toggleSeleccion(cargo)}
@@ -174,5 +192,4 @@ export default function AgregarFase({
 AgregarFase.propTypes = {
   trabajadorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   cargosAsignados: PropTypes.array,
-  onToast: PropTypes.func,
 };
