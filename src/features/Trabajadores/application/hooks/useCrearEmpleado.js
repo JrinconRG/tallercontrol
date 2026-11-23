@@ -7,7 +7,9 @@ export const useCrearTrabajador = () => {
   return useMutation({
     mutationFn: (datos) => trabajadorRepository.createEmpleado(datos),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["informacion-empleados"] });
+      void queryClient.invalidateQueries({
+        queryKey: ["informacion-empleados", "trabajadores-select"],
+      });
     },
   });
 };

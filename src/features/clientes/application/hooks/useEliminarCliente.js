@@ -7,7 +7,7 @@ export const useEliminarCliente = () => {
   return useMutation({
     mutationFn: ClienteRepository.deleteCliente,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["clientes-activos"] });
+      void queryClient.invalidateQueries({ queryKey: ["clientes-activos"] });
     },
   });
 };

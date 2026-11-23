@@ -6,7 +6,13 @@ export const useAsignarCargo = () => {
   return useMutation({
     mutationFn: (data) => trabajadorRepository.assignCargo(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["informacion-empleados"] });
+      void queryClient.invalidateQueries({
+        queryKey: [
+          "informacion-empleados",
+          "trabajadores-select",
+          "trabajadores-por-cargo",
+        ],
+      });
     },
   });
 };

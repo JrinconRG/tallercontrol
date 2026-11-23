@@ -7,7 +7,13 @@ export const useDesignarCargos = () => {
   return useMutation({
     mutationFn: (data) => trabajadorRepository.removeCargo(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["informacion-empleados"] });
+      void queryClient.invalidateQueries({
+        queryKey: [
+          "informacion-empleados",
+          "trabajadores-select",
+          "trabajadores-por-cargo",
+        ],
+      });
     },
   });
 };
