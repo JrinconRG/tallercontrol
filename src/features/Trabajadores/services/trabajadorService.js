@@ -39,6 +39,17 @@ export const getInformacionEmpleados = async () => {
   return data;
 };
 
+export const eliminarEmpleado = async (trabajadorId) => {
+  if (!trabajadorId) {
+    throw new Error("trabajadorId es requerido");
+  }
+  const { error } = await supabase.rpc("dar_baja_trabajador", {
+    p_id: trabajadorId,
+  });
+  if (error) throw error;
+  return true;
+};
+
 export const crearEmpleado = async ({
   nombre,
   apellidos,

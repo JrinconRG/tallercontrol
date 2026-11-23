@@ -5,6 +5,7 @@ import {
   asignarCargo,
   designarCargo,
   crearEmpleado,
+  eliminarEmpleado,
 } from "../services/trabajadorService";
 
 import { trabajadorConCargosMapper } from "../domain/mappers/trabajadorConCargosMapper";
@@ -29,6 +30,15 @@ export const trabajadorRepository = {
     try {
       const data = await getTrabajadoresSelect();
       return (data || []).map(trabajadorSelectMapper);
+    } catch (error) {
+      throw mapSupabaseError(error, trabajadoresErrorMap);
+    }
+  },
+
+  async deleteEmpleado(trabajadorId) {
+    try {
+      await eliminarEmpleado(trabajadorId);
+      return trabajadorId;
     } catch (error) {
       throw mapSupabaseError(error, trabajadoresErrorMap);
     }
