@@ -70,8 +70,19 @@ export function mapSupabaseError(error, mensajesPersonalizados = {}) {
     code && Object.hasOwn(PG_CODE_MAP, code)
       ? PG_CODE_MAP[code]
       : UnexpectedError;
+
+  // Los `raise exception` de las funciones SQL llegan con código P0001 y ya
+  // vienen escritos en español para el usuario, así que se muestran tal cual.
+  const mensajeDeLaBase =
+    code === "P0001" &&
+    typeof originalMessage === "string" &&
+    originalMessage.trim()
+      ? originalMessage
+      : undefined;
+
   const message =
     getCustomMessage(mensajesPersonalizados, code, originalMessage) ??
+    mensajeDeLaBase ??
     (ErrorClass !== UnexpectedError
       ? getDefaultCustomMessage(mensajesPersonalizados)
       : undefined) ??
