@@ -41,7 +41,10 @@ export default function AgregarReferenciaCofre({ isOpen, onClose, onToast }) {
       {
         onSuccess: () => {
           resetForm();
-          onToast("Referencia creada exitosamente");
+          onToast(
+            "Referencia creada",
+            "La referencia se creó correctamente.",
+          );
           onClose();
         },
         onError: (error) => {

@@ -1,6 +1,5 @@
 import Table from "../../../../components/Table/Table";
 import Card from "../../../../components/card/Card";
-import Toast from "../../../../components/Toast/Toast";
 import ActionCell from "../../../../components/DeleteConfirmPopover/ActionCell";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
@@ -13,7 +12,7 @@ import "./ReferenciasCofre.css";
 export default function ReferenciasCofre() {
   const [showModal, setShowModal] = useState(false);
   const [referenciaAEliminar, setReferenciaAEliminar] = useState(null);
-  const { toasts, showToast } = useToast();
+  const { showSuccess, showError } = useToast();
 
   const {
     referencias = [],
@@ -32,11 +31,17 @@ export default function ReferenciasCofre() {
 
     eliminarReferencia(referenciaAEliminar.id, {
       onSuccess: () => {
-        showToast("Referencia eliminada", "success");
+        showSuccess(
+          "Referencia eliminada",
+          "La referencia se eliminó correctamente.",
+        );
         setReferenciaAEliminar(null);
       },
       onError: (err) => {
-        showToast(getAppErrorMessage(err), "error");
+        showError(
+          "No se pudo eliminar la referencia",
+          getAppErrorMessage(err),
+        );
         setReferenciaAEliminar(null);
       },
     });
@@ -71,8 +76,6 @@ export default function ReferenciasCofre() {
 
   return (
     <div className="page-conten-referencias">
-      <Toast toasts={toasts} />
-
       <div className="header-page">
         <h1 className="page-tittle">Referencias de Cofres</h1>
         <p className="page-mini-info">
@@ -96,7 +99,7 @@ export default function ReferenciasCofre() {
         <AgregarReferenciaCofre
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          onToast={showToast}
+          onToast={showSuccess}
         />
       </div>
     </div>
