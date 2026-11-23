@@ -1,135 +1,90 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Card from "../../../../components/card/Card";
 import Table from "../../../../components/Table/Table";
 import TableHeader from "../../../../components/Table/TableHeader";
 import Pagination from "../../../../components/pagination/Pagination";
-import { Icon } from "../../../../components/ui/Icon";
+import BotonDescargaNomina from "../components/BotonDescargaNomina";
 import { useGetHistorialNominas } from "../../application/hooks/useObtenerHistorialNominas";
-import { useGetDetalleNominaGenerada } from "../../application/hooks/useObtenerNominaGenerada";
-import { generarPDFNomina } from "../../../../utils/generarPDFNomina";
 import { usePagination } from "../../../../hooks/usePagination";
+import {
+  formatFechaCorta,
+  formatFechaHora,
+  formatPeriodo,
+} from "../../../../utils/formatearFechas";
+import { normalizarTexto } from "../../../../utils/normalizarTexto";
 import "./HistorialNomina.css";
 
 const formatCOP = (val) => "$" + Number(val).toLocaleString("es-CO");
 
-const formatFecha = (fecha) =>
-  fecha
-    ? new Date(fecha).toLocaleDateString("es-CO", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
-    : "—";
-
-const formatPeriodo = (inicio, fin) => {
-  if (!inicio || !fin) return "—";
-  const i = new Date(inicio).toLocaleDateString("es-CO", {
-    day: "2-digit",
-    month: "short",
-  });
-  const f = new Date(fin).toLocaleDateString("es-CO", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-  return `${i} — ${f}`;
+const claveMes = (fecha) => {
+  const d = new Date(fecha);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 };
 
-function BotonDescarga({ nomina }) {
-  const [descargando, setDescargando] = useState(false);
-  const [nominaIdActivo, setNominaIdActivo] = useState(null);
-
-  const { detalleNominaGenerada, loading } =
-    useGetDetalleNominaGenerada(nominaIdActivo);
-
-  const handleDescargar = async () => {
-    setDescargando(true);
-    setNominaIdActivo(nomina.nominaId);
-  };
-
-  useMemo(() => {
-    if (detalleNominaGenerada?.length && descargando) {
-      generarPDFNomina({
-        cabecera: nomina,
-        trabajadores: detalleNominaGenerada,
-      });
-      setDescargando(false);
-      setNominaIdActivo(null);
-    }
-  }, [detalleNominaGenerada, descargando]);
-
-  return (
-    <button
-      type="button"
-      className="btn btn-secondary "
-      onClick={handleDescargar}
-      disabled={loading || descargando}
-      title="Descargar PDF"
-    >
-      {loading || descargando ? (
-        <div className="descarga-spinner" />
-      ) : (
-        <Icon name="Download" size={18} color="var(--brand-600)" />
-      )}
-    </button>
+// Todo lo que se ve en la fila (y el id) es buscable
+const textoBuscable = (n) =>
+  normalizarTexto(
+    [
+      n.nominaId,
+      n.generadaPorNombre,
+      formatPeriodo(n.fechaInicio, n.fechaFin),
+      formatFechaHora(n.fechaGeneracion),
+      n.totalTrabajadores,
+      n.totalPago,
+      formatCOP(n.totalPago),
+    ].join(" "),
   );
-}
 
 export default function HistorialNomina() {
   const [search, setSearch] = useState("");
   const [mesSeleccionado, setMesSeleccionado] = useState("");
-  const { nominasHistoricas, loading, error } = useGetHistorialNominas();
-  console.log("nominasHistoricas", nominasHistoricas);
+  const { nominasHistoricas = [], loading, error } = useGetHistorialNominas();
 
-  // Opciones de mes para el filtro
+  // Opciones de mes para el filtro (más reciente primero)
   const opcionesMes = useMemo(() => {
-    const meses = nominasHistoricas.map((n) => {
-      const d = new Date(n.fechaGeneracion);
-      return {
-        value: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
-        label: d.toLocaleDateString("es-CO", {
+    const meses = nominasHistoricas
+      .map((n) => ({
+        value: claveMes(n.fechaGeneracion),
+        label: new Date(n.fechaGeneracion).toLocaleDateString("es-CO", {
           month: "long",
           year: "numeric",
         }),
-      };
-    });
-    const unicas = [...new Map(meses.map((m) => [m.value, m])).values()];
-    return unicas;
+      }))
+      .filter((m) => m.value);
+    return [...new Map(meses.map((m) => [m.value, m])).values()].sort((a, b) =>
+      b.value.localeCompare(a.value),
+    );
   }, [nominasHistoricas]);
 
   const datosFiltrados = useMemo(() => {
-    const term = search.trim().toLowerCase();
+    const term = normalizarTexto(search);
     return nominasHistoricas.filter((n) => {
-      const matchSearch =
-        !term ||
-        n.generadaPorNombre?.toLowerCase().includes(term) ||
-        String(n.nominaId).includes(term);
-
-      const matchMes = mesSeleccionado
-        ? (() => {
-            const d = new Date(n.fechaGeneracion);
-            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-            return key === mesSeleccionado;
-          })()
-        : true;
-
-      return matchSearch && matchMes;
+      const coincideBusqueda = !term || textoBuscable(n).includes(term);
+      const coincideMes =
+        !mesSeleccionado || claveMes(n.fechaGeneracion) === mesSeleccionado;
+      return coincideBusqueda && coincideMes;
     });
   }, [nominasHistoricas, search, mesSeleccionado]);
 
-  const hayFiltros = search || mesSeleccionado;
-  const limpiarFiltros = () => {
-    setSearch("");
-    setMesSeleccionado("");
-  };
   const {
     page,
     limit,
     paginatedData: datosPaginados,
     setPage,
     setLimit,
-    resetPage,
   } = usePagination(datosFiltrados, 10);
+
+  // Vuelve a la página 1 al cambiar búsqueda o mes
+  useEffect(() => {
+    setPage(1);
+  }, [search, mesSeleccionado, setPage]);
+
+  const hayFiltros = search || mesSeleccionado;
+  const limpiarFiltros = () => {
+    setSearch("");
+    setMesSeleccionado("");
+  };
 
   const columns = [
     {
@@ -142,7 +97,7 @@ export default function HistorialNomina() {
       key: "fechaGeneracion",
       label: "Generada",
       className: "col-date",
-      render: (row) => formatFecha(row.fechaGeneracion),
+      render: (row) => formatFechaHora(row.fechaGeneracion),
     },
     {
       key: "totalTrabajadores",
@@ -166,7 +121,7 @@ export default function HistorialNomina() {
       key: "acciones",
       label: "",
       className: "col-status",
-      render: (row) => <BotonDescarga nomina={row} />,
+      render: (row) => <BotonDescargaNomina nomina={row} />,
     },
   ];
 
@@ -174,7 +129,7 @@ export default function HistorialNomina() {
   if (error) return <p>Error cargando historial.</p>;
 
   return (
-    <div className="page-conten-historial-nomina">
+    <div className="page-content-historial-nomina">
       <div className="header-page">
         <h1 className="page-tittle">Historial de nóminas</h1>
         <p className="page-mini-info">
@@ -187,18 +142,12 @@ export default function HistorialNomina() {
           <div className="page-historial-nomina-card">
             <TableHeader
               searchValue={search}
-              onSearchChange={(val) => {
-                setSearch(val);
-                resetPage();
-              }}
+              onSearchChange={setSearch}
               filters={[
                 {
                   name: "mes",
                   value: mesSeleccionado,
-                  onChange: (val) => {
-                    setMesSeleccionado(val);
-                    resetPage();
-                  },
+                  onChange: setMesSeleccionado,
                   options: opcionesMes,
                   placeholder: "Todos los meses",
                 },
@@ -218,7 +167,7 @@ export default function HistorialNomina() {
 
             <Table columns={columns} data={datosPaginados} rowKey="nominaId" />
 
-            {datosFiltrados.length === 0 && !loading && (
+            {datosFiltrados.length === 0 && (
               <p className="historial-empty">
                 No hay nóminas que coincidan con los filtros.
               </p>
