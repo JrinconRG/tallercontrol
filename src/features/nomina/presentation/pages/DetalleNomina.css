@@ -17,100 +17,89 @@
 /* ==========================================================================
    2. ESTRUCTURA BASE DE LA TABLA (Cajas y Bordes)
    ========================================================================== */
-.custom-table {
+.page-detalle-nomina-card .custom-table {
     width: 100%;
-    border-collapse: separate; 
-    border-spacing: 0;         
-    table-layout: fixed; /* Alineación exacta entre tablas distribuidas */
-    min-width: 1000px;  
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed; /* alineación exacta entre tablas distribuidas */
+    min-width: 1000px;
 }
 
-/* Encabezados (th) */
-.custom-table thead tr th {
+.page-detalle-nomina-card .custom-table thead tr th {
     padding: 16px 22px;
     text-align: left;
-    font-size: var(--font-body); 
+    font-size: var(--font-body);
     font-weight: 700;
     color: var(--neutral-800);
-    background-color: var(--neutral-100); 
+    background-color: var(--neutral-100);
     border-top: 1px solid var(--neutral-400);
     border-bottom: 1px solid var(--neutral-400);
     border-right: 1px solid var(--neutral-400);
     white-space: nowrap;
 }
-.custom-table thead tr th:first-child { 
+.page-detalle-nomina-card .custom-table thead tr th:first-child {
     border-left: 1px solid var(--neutral-400);
 }
 
-/* Celdas del Cuerpo (td) - Sin color base forzado para permitir herencia fluida */
-.custom-table tbody tr td {
+.page-detalle-nomina-card .custom-table tbody tr td {
     padding: 14px 22px;
     color: var(--neutral-700);
     font-size: var(--font-body);
     border-bottom: 1px solid var(--neutral-400);
-    border-right: 1px solid var(--neutral-400); 
+    border-right: 1px solid var(--neutral-400);
     vertical-align: middle;
     white-space: nowrap;
 }
-.custom-table tbody tr td:first-child { 
-    border-left: 1px solid var(--neutral-400); 
+.page-detalle-nomina-card .custom-table tbody tr td:first-child {
+    border-left: 1px solid var(--neutral-400);
 }
 
 /* ==========================================================================
    3. INTERACCIONES DINÁMICAS (Hover, Active y Selección)
    ========================================================================== */
-
-/* Fila interactiva base */
-.custom-table tbody tr {
+.page-detalle-nomina-card .custom-table tbody tr {
     cursor: pointer;
-    background-color: transparent; /* Permite que el fondo lo maneje el tr */
+    background-color: transparent;
     transition: background-color 0.15s ease;
 }
 
-/* Hover: Cambia el fondo de la fila entera de forma natural */
-.custom-table tbody tr:hover {
-    background-color: rgba(55, 53, 47, 0.04); 
+.page-detalle-nomina-card .custom-table tbody tr:hover {
+    background-color: rgba(55, 53, 47, 0.04);
 }
 
-/* Active: Feedback rápido al cliquear */
-.custom-table tbody tr:active {
+.page-detalle-nomina-card .custom-table tbody tr:active {
     background-color: var(--neutral-50);
 }
 
-/* SELECCIONADO: Pintamos la fila completa con el tono crema Notion */
-.custom-table tbody tr.row-selected {
+.page-detalle-nomina-card .custom-table tbody tr.row-selected {
     background-color: var(--info--50);
 }
 
-/* Cambio de color de texto en fila seleccionada para mejorar contraste */
-.custom-table tbody tr.row-selected td {
+.page-detalle-nomina-card .custom-table tbody tr.row-selected td {
     color: var(--neutral-900);
 }
-
 
 /* ==========================================================================
    4. CONTROL ESTRICTO DE COLUMNAS Y COLORES ESPECIALES
    ========================================================================== */
-.col-sh { width: 180px !important; }
-.col-main { width: 250px !important; }
-.col-num { color: var(--neutral-700); }
+.page-detalle-nomina-card .col-sh { width: 180px !important; }
+.page-detalle-nomina-card .col-main { width: 250px !important; }
+.page-detalle-nomina-card .col-num { color: var(--neutral-700); }
 
-/* Las columnas de estados usan variables sutiles translúcidas para que no maten el hover */
-.col-bonificacion {
-    background-color: rgba(230, 249, 241, 0.85) !important; 
-    width: 180px !important;  
+.page-detalle-nomina-card .col-bonificacion {
+    background-color: rgba(230, 249, 241, 0.85) !important;
+    width: 180px !important;
 }
 
-.col-deduccion {
-    background-color: rgba(254, 226, 230, 0.85) !important; 
-    width: 180px !important;  
+.page-detalle-nomina-card .col-deduccion {
+    background-color: rgba(254, 226, 230, 0.85) !important;
+    width: 180px !important;
 }
 
-/* Modificación de las columnas especiales si la fila está seleccionada para mantener consistencia */
-.custom-table tbody tr.row-selected td.col-bonificacion {
-    background-color: #d1f2e4 !important; 
+.page-detalle-nomina-card .custom-table tbody tr.row-selected td.col-bonificacion {
+    background-color: #d1f2e4 !important;
 }
-.custom-table tbody tr.row-selected td.col-deduccion {
+.page-detalle-nomina-card .custom-table tbody tr.row-selected td.col-deduccion {
     background-color: #fca5a5 !important;
 }
 
@@ -120,12 +109,12 @@
 .input-wrapper {
     display: flex;
     align-items: center;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     width: 100%;
 }
 
 .currency-prefix {
-    color: var(--neutral-700); 
+    color: var(--neutral-700);
     font-size: var(--font-body);
 }
 
@@ -136,7 +125,7 @@
     width: 100%;
     max-width: 190px;
     outline: none;
-    color: var(--neutral-700); 
+    color: var(--neutral-700);
 }
 .nomina-input-ajuste::placeholder {
     color: var(--neutral-400);
@@ -144,7 +133,6 @@
     text-align: center;
 }
 
-/* Limpieza de inputs nativos numéricos */
 .nomina-input-ajuste::-webkit-outer-spin-button,
 .nomina-input-ajuste::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -158,7 +146,7 @@ input.nomina-input-ajuste.nomina-input-deduccion { padding-left: 0; }
    6. TABLA DE TOTALES INDEPENDIENTE (FOOTER SEPARADO)
    ========================================================================== */
 .contenedor-totales-independiente {
-    margin-top: 24px; 
+    margin-top: 24px;
     width: 100%;
 }
 
@@ -174,7 +162,7 @@ input.nomina-input-ajuste.nomina-input-deduccion { padding-left: 0; }
     border-bottom: 1px solid var(--neutral-400) !important;
     border-right: 1px solid var(--neutral-400) !important;
     padding: 16px 22px !important;
-    background-color: #ffffff; /* La tabla de totales sí conserva un fondo limpio independiente */
+    background-color: #ffffff;
 }
 
 .tabla-totales-separada tbody tr td:nth-child(2) {
@@ -187,33 +175,36 @@ input.nomina-input-ajuste.nomina-input-deduccion { padding-left: 0; }
     width: 180px !important;
 }
 
-
-.col-main, .col-observaciones {
+.page-detalle-nomina-card .col-main,
+.page-detalle-nomina-card .col-observaciones {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-
-
-.table-footer-label { color: var(--neutral-500) !important; font-weight: 700; }
-td.col-main.table-footer-label { background: var(--neutral-100); 
-border-left: 1px solid var(--neutral-400) !important;}
+.page-detalle-nomina-card .table-footer-label {
+    color: var(--neutral-500) !important;
+    font-weight: 700;
+}
+.page-detalle-nomina-card td.col-main.table-footer-label {
+    background: var(--neutral-100);
+    border-left: 1px solid var(--neutral-400) !important;
+}
 
 /* ==========================================================================
    7. CONTENEDOR DE SCROLL RESPONSIVE (LAYOUT)
    ========================================================================== */
-.table-responsive-wrapper {
+.page-detalle-nomina-card .table-responsive-wrapper {
     width: 100%;
-    overflow-x: auto; 
-    -webkit-overflow-scrolling: touch; 
-    padding-bottom: 10px; 
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
 }
 
-.table-responsive-wrapper::-webkit-scrollbar { height: 8px; }
-.table-responsive-wrapper::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 4px; }
-.table-responsive-wrapper::-webkit-scrollbar-thumb { background: var(--neutral-400); border-radius: 4px; }
-.table-responsive-wrapper::-webkit-scrollbar-thumb:hover { background: var(--neutral-500); }
+.page-detalle-nomina-card .table-responsive-wrapper::-webkit-scrollbar { height: 8px; }
+.page-detalle-nomina-card .table-responsive-wrapper::-webkit-scrollbar-track { background: var(--neutral-100); border-radius: 4px; }
+.page-detalle-nomina-card .table-responsive-wrapper::-webkit-scrollbar-thumb { background: var(--neutral-400); border-radius: 4px; }
+.page-detalle-nomina-card .table-responsive-wrapper::-webkit-scrollbar-thumb:hover { background: var(--neutral-500); }
 
 .page-detalle-nomina-card .custom-table {
     min-width: 1680px; /* suma de todos los anchos de abajo */
@@ -234,30 +225,28 @@ border-left: 1px solid var(--neutral-400) !important;}
     width: 150px !important;
 }
 
-/* Celda de la tabla alineada arriba para que el textarea encaje bien */
-.custom-table tbody tr td.col-observaciones {
+.page-detalle-nomina-card .custom-table tbody tr td.col-observaciones {
     vertical-align: top;
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
-/* Textarea adaptable hacia abajo */
 .nomina-textarea-observaciones {
     width: 100%;
-    min-height: 42px; /* Altura inicial para ~2 líneas */
-    max-height: 120px; /* Límite para que no deforme la fila en exceso */
+    min-height: 42px;
+    max-height: 120px;
     box-sizing: border-box;
     padding: 6px 10px;
     border: 1px solid var(--neutral-400);
     border-radius: 6px;
     background: #ffffff;
     font-size: var(--font-body);
-    font-family: inherit; /* Hereda la tipografía exacta del sistema */
+    font-family: inherit;
     color: var(--neutral-700);
     outline: none;
     line-height: 1.35;
-    resize: vertical; /* Permite al usuario estirarlo verticalmente si necesita ver más */
-    white-space: pre-wrap; /* Mantiene los saltos de línea visibles */
+    resize: vertical;
+    white-space: pre-wrap;
 }
 
 .nomina-textarea-observaciones:focus {
@@ -267,24 +256,19 @@ border-left: 1px solid var(--neutral-400) !important;}
 
 .nomina-textarea-observaciones::placeholder {
     color: var(--neutral-400);
-    white-space: pre-line; /* Permite saltos de línea dentro del placeholder */
+    white-space: pre-line;
 }
 
-
-
 /* ==========================================================================
-   6. ESTILOS DEL FOOTER DENTRO DE LA TABLA (tfoot)
+   8. FOOTER DENTRO DE LA TABLA (tfoot)
    ========================================================================== */
-
-/* Fila espaciadora opcional */
-.custom-table tfoot .table-footer-spacer td {
+.page-detalle-nomina-card .custom-table tfoot .table-footer-spacer td {
     height: 16px;
     border: none !important;
     background: transparent !important;
 }
 
-/* Estilo general para las celdas de totales */
-.custom-table tfoot .table-footer-row td {
+.page-detalle-nomina-card .custom-table tfoot .table-footer-row td {
     font-size: var(--font-body);
     font-weight: 700;
     color: var(--neutral-900) !important;
@@ -294,15 +278,11 @@ border-left: 1px solid var(--neutral-400) !important;}
     padding: 16px 22px !important;
 }
 
-/* Aplicar borde izquierdo a la primera celda visible del footer */
-.custom-table tfoot .table-footer-row td:first-child {
+.page-detalle-nomina-card .custom-table tfoot .table-footer-row td:first-child {
     border-left: 1px solid var(--neutral-300) !important;
 }
 
-
-/* Si usas la celda oculta/vacía en la columna de Identificación */
-.custom-table tfoot .table-footer-row td.celda-oculta {
+.page-detalle-nomina-card .custom-table tfoot .table-footer-row td.celda-oculta {
     background: transparent !important;
     border: none !important;
 }
-
