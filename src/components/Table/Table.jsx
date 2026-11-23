@@ -1,3 +1,10 @@
+import "./Table.css";
+
+const cellProps = (col) => ({
+  className: [col.className, col.wrap && "cell-wrap"].filter(Boolean).join(" "),
+  style: { width: col.width, minWidth: col.minWidth, textAlign: col.align },
+});
+
 export default function Table({
   columns,
   data,
@@ -7,6 +14,7 @@ export default function Table({
   footer,
   footerSpacer = false, // fila vacía entre el cuerpo y el footer (opcional)
   tableClassName = "",
+  rowClassName,
 }) {
   return (
     <div className="table-responsive-wrapper">
@@ -14,7 +22,7 @@ export default function Table({
         <thead>
           <tr>
             {columns?.map((col) => (
-              <th key={col.key} className={col.className}>
+              <th key={col.key} {...cellProps(col)}>
                 {col.label}
               </th>
             ))}
@@ -32,10 +40,12 @@ export default function Table({
               <tr
                 key={key ?? idx}
                 onClick={() => onRowClick?.(row, idx)}
-                className={isSelected ? "row-selected" : ""}
+                className={[isSelected && "row-selected", rowClassName?.(row)]
+                  .filter(Boolean)
+                  .join(" ")}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className={col.className}>
+                  <td key={col.key} {...cellProps(col)}>
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}

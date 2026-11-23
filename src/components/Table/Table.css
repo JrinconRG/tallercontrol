@@ -2,78 +2,59 @@
    CONTENEDOR Y ESTRUCTURA BASE
    ========================================================================== */
 
-/* Contenedor con scroll lateral inteligente */
 .table-responsive-wrapper {
     background-color: transparent;
     width: calc(100% + 32px);
-    margin: 0 -16px -16px -16px;
+    margin: 0 -16px -16px -16px ;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
 .custom-table {
-    width: max(100%, 900px);
-    border-collapse: collapse;
-    table-layout: fixed;
+    width: 100%;
     min-width: 900px;
+    border-collapse: collapse;
+    table-layout: auto;
 }
 
 /* ==========================================================================
    CELDAS: ENCABEZADOS Y CUERPO
    ========================================================================== */
 
-/* Encabezados (th) */
-.custom-table thead tr th {
-    padding: 16px 20px;
+.custom-table th,
+.custom-table td {
+    padding: 14px 22px;
+    font-size: var(--font-body);
+    line-height: 1.4;
     text-align: left;
-    font-size: var(--font-title);
-    font-weight: 700;
-    border-bottom: 2px solid var(--neutral-400);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    overflow-wrap: anywhere;
-    word-break: normal;
-    line-height: 1.35;
-    vertical-align: top;
-    box-sizing: border-box;
-}
-
-/* Celdas del cuerpo (td) - Sin color base forzado para permitir herencia fluida */
-.custom-table tbody tr td {
-    padding: 14px 20px;
-    color: var(--neutral-700);
-    font-size: var(--font-title);
-    border-bottom: 1px solid var(--neutral-400);
     vertical-align: middle;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    overflow-wrap: anywhere;
-    word-break: normal;
-    line-height: 1.4;
     box-sizing: border-box;
 }
 
-.custom-table th > *,
-.custom-table td > * {
-    max-width: 100%;
-    min-width: 0;
+/* Encabezado: fondo gris y bordes como en nómina */
+.custom-table thead tr th {
+    font-weight: 700;
+    color: var(--neutral-800);
+    background-color: var(--neutral-100);
+    border-top: 1px solid var(--neutral-400);
+    border-bottom: 1px solid var(--neutral-400);
 }
 
-.custom-table .badge {
-    white-space: normal;
-    text-align: center;
-    line-height: 1.25;
+/* Cuerpo: línea inferior en todas las filas (también la última, para cerrar la tabla) */
+.custom-table tbody tr td {
+    color: var(--neutral-700);
+    border-bottom: 1px solid var(--neutral-400);
 }
 
-/* Eliminar borde inferior en la última fila */
-.custom-table tbody tr:last-child td {
-    border-bottom: none;
+/* Líneas verticales entre columnas (sin borde exterior) */
+.custom-table th:not(:last-child),
+.custom-table td:not(:last-child) {
+    border-right: 1px solid var(--neutral-400);
 }
 
-/* Ajuste de padding en los extremos de la tabla */
+/* Los extremos compensan los márgenes negativos del wrapper */
 .custom-table th:first-child,
 .custom-table td:first-child {
     padding-left: 32px;
@@ -84,75 +65,71 @@
     padding-right: 32px;
 }
 
+/* Columnas de texto largo (wrap: true en la columna) */
+.custom-table .cell-wrap {
+    white-space: normal;
+    overflow-wrap: break-word;
+    min-width: 180px;
+}
+
+.custom-table .badge {
+    white-space: nowrap;
+}
+
+.custom-table th > *,
+.custom-table td > * {
+    max-width: 100%;
+    min-width: 0;
+}
+
 /* ==========================================================================
-   ESTADOS DE INTERACCIÓN (Hover, Active, Selected)
+   ESTADOS DE INTERACCIÓN
    ========================================================================== */
 
-/* Fila base con comportamiento clickeable */
 .custom-table tbody tr {
     cursor: pointer;
-    background-color: transparent; /* Permite que la fila transmita su color */
+    background-color: transparent;
     transition: background-color 0.15s ease;
 }
 
-/* Efecto Hover: Cambia el fondo de la fila completa limpiamente */
 .custom-table tbody tr:hover {
-    background-color: var(--neutral-100); /* Gris sutil estilo Notion */
+    background-color: rgba(55, 53, 47, 0.04);
 }
 
-/* Efecto Active: Feedback táctil al presionar */
 .custom-table tbody tr:active {
     background-color: var(--neutral-50);
 }
 
-/* Estado Seleccionado: Aplicado al TR para que pinte todo el bloque de golpe */
 .custom-table tbody tr.row-selected {
-    background-color: var(--neutral-200); /* Tono crema sutil estilo Notion */
+    background-color: var(--info--50);
 }
 
-/* Forzar contraste de textos e iconos dentro de la fila seleccionada */
 .custom-table tbody tr.row-selected td {
     color: var(--neutral-900);
 }
 
 /* ==========================================================================
-   CLASES DE UTILIDAD PARA COLUMNAS
+   UTILIDADES PARA COLUMNAS
    ========================================================================== */
 
-/* Shorts: IDs, Códigos, Documentos */
-.col-sh {
-    width: 200px;
-    white-space: nowrap;
-}
+.col-sh     { width: 200px; }
+.col-main   { width: auto; min-width: 200px; }
+.col-date   { width: 160px; }
 
-/* La que crece (Nombres, Descripciones) */
-.col-main {
-    width: auto;
-    min-width: 200px;
-}
-
-/* Fechas */
-.col-date {
-    width: 160px;
-    font-size: var(--font-title) !important;
-}
-
-/* Valores Numéricos / Moneda */
 .col-num {
     width: 140px;
     text-align: right !important;
     font-weight: 700 !important;
-    color: var(--brand-600) !important;
+    font-variant-numeric: tabular-nums;
 }
 
-/* Estados / Badges */
 .col-status {
     width: 130px;
     text-align: center !important;
 }
 
 /* ==========================================================================
-   COMPONENTES INTERNOS (Chips / Cargos)
+   CHIPS / CARGOS
    ========================================================================== */
 
 .cargos-container {
@@ -164,11 +141,15 @@
 .cargo-chip {
     padding: 4px 14px;
     border-radius: var(--radius-md);
-    font-size: var(--font-title); 
+    font-size: var(--font-body);
     font-weight: 500;
     display: inline-flex;
     align-items: center;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
     gap: 20px;
+}
+
+.custom-table tbody tr:last-child td {
+    border-bottom: none;
 }

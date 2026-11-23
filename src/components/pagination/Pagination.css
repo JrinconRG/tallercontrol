@@ -1,13 +1,22 @@
 /* Contenedor principal de la paginación */
 .pagination-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 16px;
-  border-top: 1px solid var(--filter-border, #e5e7eb);
-  gap: 16px;
-  flex-wrap: wrap;
-  font-family: system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid var(--filter-border, #e5e7eb);
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Solo cuando la paginación va dentro de un card:
+   la línea llega a los bordes y el contenido conserva su espacio */
+.card-body > .pagination-container {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 /* Sección izquierda: Selector de límite */
