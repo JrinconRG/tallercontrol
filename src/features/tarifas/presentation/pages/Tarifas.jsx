@@ -9,12 +9,14 @@ import "./Tarifas.css";
 import { useEffect, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
+import { obtenerIniciales } from "../../../../utils/ObtenerIniciales";
 
 export default function Tarifas() {
   const [trabajadorId, setTrabajadorId] = useState("");
 
   const [matrizEditable, setMatrizEditable] = useState({});
   const [matrizOriginal, setMatrizOriginal] = useState({});
+  const [celdaEnEdicion, setCeldaEnEdicion] = useState(null);
   const { showSuccess, showError, showInfo } = useToast();
 
   // hook Obtener tarifas y trabajadores
@@ -32,6 +34,11 @@ export default function Tarifas() {
   // hook para obtener trabajadores para el select
   const { trabajadoresSelect, loading: trabajadoresLoading } =
     useTrabajadoresSelect();
+
+  const opcionesTrabajadores = trabajadoresSelect.map((trabajador) => ({
+    ...trabajador,
+    iniciales: obtenerIniciales(trabajador.label),
+  }));
 
   console.log("trabajadoresSelect:", trabajadoresSelect);
 
@@ -65,45 +72,61 @@ export default function Tarifas() {
     ...cargos.map((cargo) => ({
       key: String(cargo.id),
       label: cargo.nombre,
-      render: (row) => (
-        <div className="input-precio-wrapper">
-          <span className="input-precio-simbolo">$</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            inputMode="decimal"
-            value={row[cargo.id] ?? ""}
-            placeholder="0"
-            onKeyDown={(e) => {
-              if (["e", "E", "+", "-"].includes(e.key)) {
-                e.preventDefault();
+      render: (row) => {
+        const celda = `${row.cofreId}-${cargo.id}`;
+        const valor = row[cargo.id] ?? "";
+        const estaEnEdicion = celdaEnEdicion === celda;
+
+        return (
+          <div className="input-precio-wrapper">
+            <span className="input-precio-simbolo">$</span>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={estaEnEdicion ? valor : formatearTarifa(valor)}
+              placeholder="0"
+              onFocus={() => setCeldaEnEdicion(celda)}
+              onBlur={() => setCeldaEnEdicion(null)}
+              onKeyDown={(e) => {
+                if (["e", "E", "+", "-"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
+              onPaste={(e) => {
+                if (!/^\d*[.,]?\d*$/.test(e.clipboardData.getData("text"))) {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) =>
+                handleChange(
+                  row.cofreId,
+                  cargo.id,
+                  e.target.value
+                    .replace(",", ".")
+                    .replace(/[^\d.]/g, "")
+                    .replace(/\.(?=.*\.)/g, ""),
+                )
               }
-            }}
-            onPaste={(e) => {
-              if (!/^\d*\.?\d*$/.test(e.clipboardData.getData("text"))) {
-                e.preventDefault();
+              className={
+                valor !== null && valor !== ""
+                  ? "input-con-precio"
+                  : "input-sin-precio"
               }
-            }}
-            onChange={(e) =>
-              handleChange(
-                row.cofreId,
-                cargo.id,
-                e.target.value
-                  .replace(/[^\d.]/g, "")
-                  .replace(/\.(?=.*\.)/g, ""),
-              )
-            }
-            className={
-              row[cargo.id] !== null && row[cargo.id] !== ""
-                ? "input-con-precio"
-                : "input-sin-precio"
-            }
-          />
-        </div>
-      ),
+            />
+          </div>
+        );
+      },
     })),
   ];
+
+  function formatearTarifa(valor) {
+    if (valor === null || valor === "") return "";
+    const [entero, decimal] = String(valor).split(".");
+    const enteroFormateado = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return decimal === undefined
+      ? enteroFormateado
+      : `${enteroFormateado},${decimal}`;
+  }
 
   // 🔹 Cambio en celda
   function handleChange(cofreId, cargoId, valor) {
@@ -162,7 +185,7 @@ export default function Tarifas() {
               value: trabajadorId,
               onChange: setTrabajadorId,
               placeholder: "Seleccionar trabajador...",
-              options: trabajadoresSelect,
+              options: opcionesTrabajadores,
             },
           ]}
           extraContent={
@@ -183,7 +206,7 @@ export default function Tarifas() {
                       : "Guardar",
                     onClick: handleGuardar,
                     disabled: guardarTarifasMutation.isPending,
-                    className: "btn-secondary",
+                    className: "btn-primary",
                   },
                 ]
               : []

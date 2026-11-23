@@ -1,4 +1,5 @@
 import { supabase } from "../../../lib/supabase";
+
 export const getMatrizPrecios = async (trabajadorId) => {
   const { data, error } = await supabase.rpc("sp_matriz_precios_json", {
     p_trabajador_id: trabajadorId,

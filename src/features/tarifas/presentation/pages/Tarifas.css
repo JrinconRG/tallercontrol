@@ -30,9 +30,6 @@
   margin: 0 0 4px 0;
 }
 
-.card-tarifas {
-  padding: 24px;
-}
 
 /* Toolbar con badge de cambios pendientes */
 .tarifas-toolbar {
@@ -82,7 +79,7 @@
   user-select: none;
 }
 
-.input-precio-wrapper input[type="number"] {
+.input-precio-wrapper input[type="text"] {
   border: none;
   outline: none;
   background: transparent;
@@ -91,13 +88,6 @@
   color: var(--text-primary);
   font-weight: 500;
   font-family: var(--font-base);
-}
-
-/* Quitar flechas del input number */
-.input-precio-wrapper input[type="number"]::-webkit-inner-spin-button,
-.input-precio-wrapper input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 /* Estado: con precio cargado */
