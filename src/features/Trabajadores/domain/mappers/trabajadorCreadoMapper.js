@@ -1,4 +1,5 @@
-// domain/mappers/trabajadorCreadoMapper.js
-export const trabajadorCreadoMapper = (trabajadorId) => ({
-  trabajadorId,
+export const trabajadorCreadoMapper = (data) => ({
+  trabajadorId: data.id,
+  reincorporado: data.reincorporado,
+  nombreCompleto: data.nombre,
 });
