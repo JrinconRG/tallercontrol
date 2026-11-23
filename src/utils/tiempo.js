@@ -1,8 +1,9 @@
+import { normalizarFechaUTC } from "./dateUtils";
+
 export function calcularDuracion(fechaInicio) {
   if (!fechaInicio) return "Sin Iniciar";
 
-  const fechaStr = fechaInicio.includes("Z") ? fechaInicio : fechaInicio + "Z";
-  const inicio = new Date(fechaStr);
+  const inicio = normalizarFechaUTC(fechaInicio);
   const ahora = new Date();
   const fechita = inicio.getTime();
 
