@@ -9,7 +9,7 @@ import Card from "../../../../../components/card/Card";
 import Pagination from "../../../../../components/pagination/Pagination";
 import MostrarImagenesModal from "../../../../../components/mostrarImagenModal/MostrarImagenModal";
 import "../../../../../pages/Trabajador/Historial/Historial.css";
-
+import { Icon } from "../../../../../components/ui/Icon";
 export default function HistorialGerente() {
   const [search, setSearch] = useState("");
   const [estadoPago, setEstadoPago] = useState("");
@@ -32,10 +32,8 @@ export default function HistorialGerente() {
         (item.asignado || "").toLowerCase().includes(term);
 
       const subprocesos = item.detalleSubprocesos || [];
-      const estaPagadoTotal = item.proPagado || item.pagado;
-      const tienePagosParciales = subprocesos.some(
-        (s) => s.pagado || s.sub_pagado,
-      );
+      const estaPagadoTotal = Boolean(item.pagado);
+      const tienePagosParciales = subprocesos.some((s) => s.pagado);
 
       let coincidePago = true;
       if (estadoPago === "pagado") coincidePago = estaPagadoTotal;
@@ -71,11 +69,11 @@ export default function HistorialGerente() {
 
   // Helper para renderizar badges de pago
   const obtenerBadgePago = (proceso) => {
-    if (proceso.proPagado || proceso.pagado) {
+    if (proceso.pagado) {
       return <span className="badge badge-success">Pagado Total</span>;
     }
     const subprocesos = proceso.detalleSubprocesos || [];
-    if (subprocesos.some((s) => s.pagado || s.sub_pagado)) {
+    if (subprocesos.some((s) => s.pagado)) {
       return <span className="badge badge-warning">Pago Parcial</span>;
     }
     return <span className="badge badge-danger">Pendiente</span>;
@@ -112,33 +110,35 @@ export default function HistorialGerente() {
         <Table
           tableClassName="historial-table"
           columns={[
-            {
-              key: "codigoCofre",
-              label: "Código",
-              className: "historial-col-codigo",
-            },
+            { key: "codigoCofre", label: "Código" },
             {
               key: "referenciaNombre",
               label: "Referencia",
-              className: "historial-col-referencia",
+              wrap: true,
+              minWidth: 160,
             },
-            { key: "color", label: "Color", className: "historial-col-color" },
+            {
+              key: "color",
+              label: "Color",
+              render: (row) => (
+                <ColorBadge color={row.color} colorHex={row.colorHex} />
+              ),
+            },
             {
               key: "asignado",
               label: "Cliente / Asignado",
-              className: "historial-col-asignado",
+              wrap: true,
+              minWidth: 200,
             },
             {
               key: "duracion",
               label: "Duración Total",
-              className: "historial-col-duracion",
               render: (row) =>
                 calcularTiempoTranscurrido(row.fechaInicio, row.fechaFin),
             },
             {
               key: "fechaInicio",
               label: "Inicio",
-              className: "historial-col-inicio",
               render: (row) =>
                 row.fechaInicio
                   ? new Date(row.fechaInicio).toLocaleDateString()
@@ -147,7 +147,6 @@ export default function HistorialGerente() {
             {
               key: "fechaFin",
               label: "Finalización",
-              className: "historial-col-finalizacion",
               render: (row) =>
                 row.fechaFin
                   ? new Date(row.fechaFin).toLocaleDateString()
@@ -156,14 +155,14 @@ export default function HistorialGerente() {
             {
               key: "totalAcumulado",
               label: "Valor Total",
-              className: "historial-col-valor",
+              align: "right",
               render: (row) =>
                 `$${Number(row.totalAcumulado || 0).toLocaleString()}`,
             },
             {
               key: "pagoEstado",
               label: "Estado Liquidación",
-              className: "historial-col-pagoEstado",
+              align: "center",
               render: (row) => obtenerBadgePago(row),
             },
           ]}
@@ -249,9 +248,15 @@ export default function HistorialGerente() {
               </h4>
 
               <Table
+                tableClassName="drawer-table"
                 columns={[
                   { key: "cargoNombre", label: "Fase / Cargo" },
-                  { key: "trabajadorNombreCompleto", label: "Operario" },
+                  {
+                    key: "trabajadorNombreCompleto",
+                    label: "Encargado",
+                    wrap: true,
+                    minWidth: 180,
+                  },
                   {
                     key: "duracionFase",
                     label: "Duración Fase",
@@ -270,17 +275,23 @@ export default function HistorialGerente() {
                   {
                     key: "pagado",
                     label: "Nómina",
-                    render: (row) => (
-                      <span
-                        className={`badge ${
-                          row.pagado || row.sub_pagado
-                            ? "badge-success"
-                            : "badge-warning"
-                        }`}
-                      >
-                        {row.pagado || row.sub_pagado ? "PAGADO" : "PENDIENTE"}
-                      </span>
-                    ),
+                    render: (row) => {
+                      const pagado = Boolean(row.pagado);
+                      return (
+                        <>
+                          <span
+                            className={`badge ${pagado ? "badge-success" : "badge-warning"}`}
+                          >
+                            {pagado ? "PAGADO" : "PENDIENTE"}
+                          </span>
+                          {pagado && row.fechaPago && (
+                            <div className="text-muted">
+                              {new Date(row.fechaPago).toLocaleDateString()}
+                            </div>
+                          )}
+                        </>
+                      );
+                    },
                   },
                   {
                     key: "foto",
@@ -296,7 +307,7 @@ export default function HistorialGerente() {
                             })
                           }
                         >
-                          Ver Foto
+                          <Icon name="Image" />
                         </button>
                       ) : (
                         <span className="text-muted">Sin foto</span>
@@ -304,7 +315,7 @@ export default function HistorialGerente() {
                   },
                 ]}
                 data={procesoDetalle.subprocesos}
-                rowKey="sub_id"
+                rowKey="id"
               />
             </div>
           </dialog>

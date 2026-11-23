@@ -14,11 +14,15 @@ export class SubProceso {
     fotosEvidencia = [],
     duracion,
     pagado,
+    nominaId = null,
+    fechaPago = null,
     valor,
     cargoId,
     cargoNombre,
     ordenProceso,
   }) {
+    this.nominaId = nominaId;
+    this.fechaPago = fechaPago;
     this.id = id;
     this.idProceso = idProceso;
     this.trabajadorId = trabajadorId;
