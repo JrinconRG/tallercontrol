@@ -1,0 +1,36 @@
+.descarga-grupo {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-descarga {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+/* PDF en rojo, Excel en verde: se distinguen sin usar el azul */
+.btn-descarga--pdf {
+  color: var(--danger-600);
+  border-color: var(--danger-600);
+}
+
+.btn-descarga--excel {
+  color: var(--success-600);
+  border-color: var(--success-600);
+}
+
+.btn-descarga:hover:not(:disabled) {
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+/* El spinner toma el color del botón (rojo o verde) */
+.descarga-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--neutral-300);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
