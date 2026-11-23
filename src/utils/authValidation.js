@@ -32,3 +32,49 @@ export const validateLoginCredentials = (identifier, password) => {
 
   return { isValid: true, cleanIdentifier, password };
 };
+
+export const validateEmployeeFields = ({
+  nombre,
+  apellidos,
+  numeroDocumento,
+  celular,
+}) => {
+  if (!nombre || !apellidos || !numeroDocumento || !celular) {
+    return { isValid: false, error: "Por favor, complete todos los campos." };
+  }
+
+  const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,}$/;
+  const apellidosRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{5,}$/;
+  const numeroRegex = /^\d+$/;
+  const celularRegex = /^\d{10}$/;
+
+  if (!nombreRegex.test(nombre)) {
+    return {
+      isValid: false,
+      error: "El nombre debe tener mínimo 3 letras y sin caracteres extraños.",
+    };
+  }
+
+  if (!apellidosRegex.test(apellidos)) {
+    return {
+      isValid: false,
+      error: "Los apellidos deben tener mínimo 5 letras y sin caracteres extraños.",
+    };
+  }
+
+  if (!numeroRegex.test(numeroDocumento)) {
+    return {
+      isValid: false,
+      error: "El documento debe contener solo números positivos.",
+    };
+  }
+
+  if (!celularRegex.test(celular)) {
+    return {
+      isValid: false,
+      error: "El celular debe tener exactamente 10 dígitos.",
+    };
+  }
+
+  return { isValid: true };
+};
