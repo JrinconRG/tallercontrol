@@ -38,6 +38,8 @@ export const getImageUrl = async (path) => {
     if (error) throw error;
     return data?.signedUrl ?? null;
   } catch (error) {
+    console.error("storage:", error);
+
     throw mapSupabaseError(error);
   }
 };
