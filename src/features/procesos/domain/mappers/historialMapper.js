@@ -33,6 +33,9 @@ export const historialProcesosMapper = (data) => {
             fechaFin: sub.fecha_fin,
             duracion: sub.duracion,
             fotosEvidencia: sub.foto,
+            pagado: sub.pagado,
+            nominaId: sub.nomina_id,
+            fechaPago: sub.fecha_pago,
             // Asumimos estado por la fecha_fin si el JSON no lo trae
             estado: sub.fecha_fin ? "finalizado" : "en_proceso",
           }),
