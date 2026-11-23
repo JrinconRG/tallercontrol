@@ -34,7 +34,7 @@ export default function AgregarClienteModal({ isOpen, onClose, onToast }) {
       },
       {
         onSuccess: () => {
-          onToast?.("Cliente creado", "success");
+          onToast?.("Cliente creado", "El cliente se creó correctamente.");
           resetForm();
           onClose();
         },

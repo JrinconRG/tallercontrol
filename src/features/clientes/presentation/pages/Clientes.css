@@ -13,3 +13,5 @@
 .body-page-clientes .btn-primary {
   align-self: flex-start; /* O width: fit-content; */
 }
+
+.page-conten-clientes .col-sh    { min-width: 350px !important; }

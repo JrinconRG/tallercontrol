@@ -1,6 +1,5 @@
 import Table from "../../../../components/Table/Table";
 import Card from "../../../../components/card/Card";
-import Toast from "../../../../components/Toast/Toast";
 import ActionCell from "../../../../components/DeleteConfirmPopover/ActionCell";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
@@ -13,7 +12,7 @@ import "./Clientes.css";
 export default function Clientes() {
   const [showModal, setShowModal] = useState(false);
   const [clienteAEliminar, setClienteAEliminar] = useState(null);
-  const { toasts, showToast } = useToast();
+  const { showSuccess, showError } = useToast();
 
   const { clientes = [], loading, error, errorMessage } = useObtenerClientes();
 
@@ -27,11 +26,11 @@ export default function Clientes() {
 
     eliminarCliente(clienteAEliminar.id, {
       onSuccess: () => {
-        showToast("Cliente eliminado", "success");
+        showSuccess("Cliente eliminado", "El cliente se eliminó correctamente.");
         setClienteAEliminar(null);
       },
       onError: (err) => {
-        showToast(getAppErrorMessage(err), "error");
+        showError("No se pudo eliminar el cliente", getAppErrorMessage(err));
         setClienteAEliminar(null);
       },
     });
@@ -73,8 +72,6 @@ export default function Clientes() {
 
   return (
     <div className="page-conten-clientes">
-      <Toast toasts={toasts} />
-
       <div className="header-page">
         <h1 className="page-tittle">Clientes</h1>
         <p className="page-mini-info">
@@ -97,7 +94,7 @@ export default function Clientes() {
         <AgregarClienteModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          onToast={showToast}
+          onToast={showSuccess}
         />
       </div>
     </div>
