@@ -3,53 +3,31 @@ import { useCrearTrabajador } from "../../application/hooks/useCrearEmpleado";
 
 import Modal from "../../../../components/modal/Modal";
 import PropTypes from "prop-types";
+import { useToast } from "../../../../hooks/useToast";
 import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
+import { validateEmployeeFields } from "../../../../utils/authValidation";
 
-export default function RegistrarEmpleados({ onClose, onToast }) {
+export default function RegistrarEmpleados({ onClose }) {
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [numeroDocumento, setNumeroDocumento] = useState("");
   const [celular, setCelular] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
-  const validarCampos = () => {
-    const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{5,}$/;
-
-    const numeroRegex = /^[\d/]+$/;
-
-    const celularRegex = /^[\d/]{10}$/;
-    if (!nombreRegex.test(nombre)) {
-      return "El nombre debe tener mínimo 5 letras y sin caracteres extraños.";
-    }
-
-    if (!nombreRegex.test(apellidos)) {
-      return "Los apellidos deben tener mínimo 5 letras y sin caracteres extraños.";
-    }
-
-    if (!numeroRegex.test(numeroDocumento)) {
-      return "El documento debe contener solo números positivos.";
-    }
-
-    if (!celularRegex.test(celular)) {
-      return "El celular debe tener exactamente 10 dígitos.";
-    }
-
-    return null;
-  };
+  const { showSuccess } = useToast();
 
   const createEmpleadoMutation = useCrearTrabajador();
 
   const handleConfirmar = async () => {
     setErrorMsg("");
 
-    if (!nombre || !apellidos || !numeroDocumento || !celular) {
-      setErrorMsg("Por favor, complete todos los campos.");
-      return;
-    }
-
-    const error = validarCampos();
-    if (error) {
-      setErrorMsg(error);
+    const validation = validateEmployeeFields({
+      nombre,
+      apellidos,
+      numeroDocumento,
+      celular,
+    });
+    if (!validation.isValid) {
+      setErrorMsg(validation.error);
       return;
     }
 
@@ -61,10 +39,21 @@ export default function RegistrarEmpleados({ onClose, onToast }) {
         celular,
       },
       {
-        onSuccess: () => {
-          onToast?.({ message: `Empleado ${nombre} registrado exitosamente` });
+        onSuccess: (resultado) => {
+          if (resultado.reincorporado) {
+            showSuccess(
+              "Trabajador reincorporado",
+              `${resultado.nombreCompleto} ya estaba registrado y fue reincorporado. Recuerda asignarle sus cargos.`,
+            );
+          } else {
+            showSuccess(
+              "Empleado registrado",
+              `${nombre} ${apellidos} se registró correctamente.`,
+            );
+          }
           onClose();
         },
+        // Los errores se muestran dentro del formulario, junto a los campos
         onError: (error) => setErrorMsg(getAppErrorMessage(error)),
       },
     );
@@ -79,7 +68,7 @@ export default function RegistrarEmpleados({ onClose, onToast }) {
       }
       onConfirm={handleConfirmar}
       onClose={onClose}
-      disabled={createEmpleadoMutation.isPending}
+      disableConfirm={createEmpleadoMutation.isPending}
     >
       {createEmpleadoMutation.isPending ? (
         <p>Registrando empleado...</p>
@@ -132,5 +121,4 @@ export default function RegistrarEmpleados({ onClose, onToast }) {
 }
 RegistrarEmpleados.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onToast: PropTypes.func,
 };

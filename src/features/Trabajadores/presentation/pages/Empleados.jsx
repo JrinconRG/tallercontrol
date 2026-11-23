@@ -7,8 +7,11 @@ import { useState, useEffect, useMemo } from "react";
 import RegistrarEmpleados from "../components/RegistrarEmpleados";
 import AgregarFase from "../components/AgregarFase";
 import EliminarFase from "../components/EliminarFase";
+import ActionCell from "../../../../components/DeleteConfirmPopover/ActionCell";
+import { useEliminarTrabajador } from "../../application/hooks/useEliminarTrabajador";
 import { useToast } from "../../../../hooks/useToast";
-import Toast from "../../../../components/Toast/Toast";
+import { getAppErrorMessage } from "../../../../shared/errors/getAppErrorMessage";
+
 import Pagination from "../../../../components/pagination/Pagination";
 import { usePagination } from "../../../../hooks/usePagination";
 
@@ -32,8 +35,32 @@ export default function Empleados() {
   const [estado, setEstado] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [empleadoDetalleId, setEmpleadoDetalleId] = useState(null);
-  const { toasts, showToast } = useToast();
+  const [empleadoAEliminar, setEmpleadoAEliminar] = useState(null);
+  const { showSuccess, showError } = useToast();
   const { empleados, loading, error } = useInformacionEmpleados();
+  const { mutate: eliminarEmpleado, isPending: isDeleting } =
+    useEliminarTrabajador();
+
+  const handleConfirmarEliminar = () => {
+    if (!empleadoAEliminar) return;
+
+    eliminarEmpleado(empleadoAEliminar.id, {
+      onSuccess: () => {
+        showSuccess(
+          "Empleado dado de baja",
+          "Su historial y nóminas anteriores se conservan.",
+        );
+        setEmpleadoAEliminar(null);
+      },
+      onError: (err) => {
+        showError(
+          "No se pudo dar de baja al empleado",
+          getAppErrorMessage(err),
+        );
+        setEmpleadoAEliminar(null);
+      },
+    });
+  };
 
   useEffect(() => {
     if (!empleadoDetalleId) return;
@@ -85,7 +112,6 @@ export default function Empleados() {
 
   return (
     <div className="page-content-Empleados">
-      <Toast toasts={toasts} />
       <div className="header-page">
         <h1 className="page-tittle">Empleados</h1>
         <p className="page-mini-info">Agregar y visualizar empleados</p>
@@ -123,6 +149,16 @@ export default function Empleados() {
               key: "nombre",
               label: "Nombre del Trabajador",
               className: "col-main",
+              render: (row) => (
+                <ActionCell
+                  row={row}
+                  displayField="nombre"
+                  itemAEliminar={empleadoAEliminar}
+                  setItemAEliminar={setEmpleadoAEliminar}
+                  isDeleting={isDeleting}
+                  handleConfirmarEliminar={handleConfirmarEliminar}
+                />
+              ),
             },
             {
               key: "documento",
@@ -222,7 +258,6 @@ export default function Empleados() {
                         cargo={cargo}
                         trabajadorId={empleadoDetalle.id}
                         colors={colors}
-                        onToast={showToast}
                       />
                     );
                   })}
@@ -231,7 +266,6 @@ export default function Empleados() {
                 <AgregarFase
                   trabajadorId={empleadoDetalle.id}
                   cargosAsignados={empleadoDetalle.cargos ?? []}
-                  onToast={showToast}
                 />
 
                 <hr />
@@ -258,12 +292,7 @@ export default function Empleados() {
         </div>
       )}
 
-      {showModal && (
-        <RegistrarEmpleados
-          onToast={showToast}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+      {showModal && <RegistrarEmpleados onClose={() => setShowModal(false)} />}
     </div>
   );
 }
