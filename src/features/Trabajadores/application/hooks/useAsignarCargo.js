@@ -5,14 +5,12 @@ export const useAsignarCargo = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => trabajadorRepository.assignCargo(data),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: [
-          "informacion-empleados",
-          "trabajadores-select",
-          "trabajadores-por-cargo",
-        ],
-      });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["informacion-empleados"] }),
+        queryClient.invalidateQueries({ queryKey: ["trabajadores-select"] }),
+        queryClient.invalidateQueries({ queryKey: ["trabajadores-por-cargo"] }),
+      ]);
     },
   });
 };
